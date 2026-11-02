@@ -1,0 +1,217 @@
+/*
+ * tokens.css: the design token layer.
+ * Sources: DESIGN_SPEC 1.1 (colors), 1.2 (font families), 1.3 (radii), section 11 (footer stripes).
+ * Every value here is verbatim from the spec. Never restyle a token; add spec values only.
+ *
+ * The Tailwind theme maps utility classes onto these exact vars (@theme inline below),
+ * so class names like bg-cream resolve to var(--cream).
+ */
+
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/* Fonts (DESIGN_SPEC 1.2)                                            */
+/* ------------------------------------------------------------------ */
+/* Outfit Variable, Fraunces Variable and Roboto Mono are self hosted
+   through @fontsource packages imported in src/main.tsx. */
+
+/* Blauer Nue is a licensed commercial font. The faces below pick up the
+   files at public/fonts/ (names: BlauerNue-Regular | Medium | SemiBold |
+   Bold .woff2). Until Lois supplies them the ink stack falls through to
+   the Outfit fallback, see OPEN_QUESTIONS.md entry 17. */
+
+@font-face {
+  font-family: 'Blauer Nue';
+  src: url('/fonts/BlauerNue-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blauer Nue';
+  src: url('/fonts/BlauerNue-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blauer Nue';
+  src: url('/fonts/BlauerNue-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blauer Nue';
+  src: url('/fonts/BlauerNue-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Size-adjust metrics tuning of the fallback is TODO(spec): it must be
+   measured against the real Blauer files. Tracked in OPEN_QUESTIONS 17. */
+
+/* ------------------------------------------------------------------ */
+/* Root tokens                                                        */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light;
+
+  /* Font stacks: exact families plus the sanctioned fallbacks (DESIGN_SPEC 1.2) */
+  --ff-ink: 'Blauer Nue', 'Lexend', 'Outfit Variable', 'Outfit', system-ui, sans-serif;
+  --ff-outfit: 'Outfit Variable', 'Outfit', system-ui, sans-serif;
+  --ff-fraunces: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  --ff-roboto-mono: 'Roboto Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Radii (DESIGN_SPEC 1.3) */
+  --r-button: 40px; /* buttons, full pills */
+  --r-pill: 24px; /* nav pills */
+  --r-card: 36px; /* project, about, hero and service inner cards; tab and panel corners */
+  --r-exp: 18px; /* experience cards */
+  --r-tag: 32px; /* project tag pills */
+  --r-label: 4px; /* sticker labels */
+  --r-sign: 8px; /* signpost signs */
+  --r-social: 5.69px; /* footer social squares */
+  --r-avatar: 24px; /* testimonial avatars */
+
+  /* Colors: ink and text (DESIGN_SPEC 1.1) */
+  --ink: #000000;
+  --ink-warm: #1a160c;
+  --heading: #040100;
+  --body: #202020;
+  --card-text: #282727;
+  --tag-text: #101010;
+  --sub: #101010;
+  --muted: #5e5e5e;
+  --svc-title: #0d0d0d;
+  --dark-2: #2b2b2b;
+  --divider: #dadada;
+
+  /* Surfaces */
+  --cream: #fffef9;
+  --cream-hero: #fffce6;
+  --cream-white: #fffefe;
+  --card: #fbfaf4;
+  --exp-card-1: #fffcf5;
+  --placeholder: #c9c9c9;
+
+  /* Accents */
+  --yellow: #fef5b6;
+  --yellow-deep: #fbf1a8;
+  --pink: #fbc4df;
+  --pink-soft: #fbd4e6;
+  --pink-tab: #fddfe7;
+  --pink-exp: #fce8ed;
+  --tag-pink: #f5e8ec;
+  --blue: #deedfa;
+  --blue-exp: #e0ebff;
+  --sky: #cff5ff;
+  --green-pill: #bad892;
+  --lime: #bed35a;
+  --lime-tab: #f1fdd8;
+  --lime-exp: #e5f0bf;
+  --cta-bg: #deeab3;
+  --lav: #dbbcff;
+  --lav-label: #d3c4f7;
+  --lav-work: #e4d9fe;
+  --lav-exp: #ded1ff;
+  --orange: #ff8c42;
+  --orange-hero: #fd9e60;
+  --orange-cta: #ff9c39;
+  --purple: #781ea7;
+
+  /* Experience section text */
+  --exp-heading: #1f1a1a;
+  --exp-label: #29241f;
+  --exp-role: #45384d;
+  --exp-body: #2e292e;
+  --exp-stroke: rgba(31, 26, 26, 0.25);
+
+  /* Footer text */
+  --footer-text: #fffef3;
+  --footer-sub: #cccccc;
+
+  /* Footer stripe alt color (DESIGN_SPEC section 11; absent from the 1.1 list) */
+  --footer-stripe-alt: #1c1b17;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tailwind theme mapping                                             */
+/* ------------------------------------------------------------------ */
+
+@theme inline {
+  /* Colors: every utility name points at the exact spec var (DESIGN_SPEC 1.1). */
+  --color-ink: var(--ink);
+  --color-ink-warm: var(--ink-warm);
+  --color-heading: var(--heading);
+  --color-body: var(--body);
+  --color-card-text: var(--card-text);
+  --color-tag-text: var(--tag-text);
+  --color-sub: var(--sub);
+  --color-muted: var(--muted);
+  --color-svc-title: var(--svc-title);
+  --color-dark-2: var(--dark-2);
+  --color-divider: var(--divider);
+
+  --color-cream: var(--cream);
+  --color-cream-hero: var(--cream-hero);
+  --color-cream-white: var(--cream-white);
+  --color-card: var(--card);
+  --color-exp-card-1: var(--exp-card-1);
+  --color-placeholder: var(--placeholder);
+
+  --color-yellow: var(--yellow);
+  --color-yellow-deep: var(--yellow-deep);
+  --color-pink: var(--pink);
+  --color-pink-soft: var(--pink-soft);
+  --color-pink-tab: var(--pink-tab);
+  --color-pink-exp: var(--pink-exp);
+  --color-tag-pink: var(--tag-pink);
+  --color-blue: var(--blue);
+  --color-blue-exp: var(--blue-exp);
+  --color-sky: var(--sky);
+  --color-green-pill: var(--green-pill);
+  --color-lime: var(--lime);
+  --color-lime-tab: var(--lime-tab);
+  --color-lime-exp: var(--lime-exp);
+  --color-cta-bg: var(--cta-bg);
+  --color-lav: var(--lav);
+  --color-lav-label: var(--lav-label);
+  --color-lav-work: var(--lav-work);
+  --color-lav-exp: var(--lav-exp);
+  --color-orange: var(--orange);
+  --color-orange-hero: var(--orange-hero);
+  --color-orange-cta: var(--orange-cta);
+  --color-purple: var(--purple);
+
+  --color-exp-heading: var(--exp-heading);
+  --color-exp-label: var(--exp-label);
+  --color-exp-role: var(--exp-role);
+  --color-exp-body: var(--exp-body);
+  --color-exp-stroke: var(--exp-stroke);
+
+  --color-footer-text: var(--footer-text);
+  --color-footer-sub: var(--footer-sub);
+
+  /* Fonts */
+  --font-ink: var(--ff-ink);
+  --font-outfit: var(--ff-outfit);
+  --font-fraunces: var(--ff-fraunces);
+  --font-roboto-mono: var(--ff-roboto-mono);
+
+  /* Radii */
+  --radius-button: var(--r-button);
+  --radius-pill: var(--r-pill);
+  --radius-card: var(--r-card);
+  --radius-exp: var(--r-exp);
+  --radius-tag: var(--r-tag);
+  --radius-label: var(--r-label);
+  --radius-sign: var(--r-sign);
+  --radius-social: var(--r-social);
+  --radius-avatar: var(--r-avatar);
+}

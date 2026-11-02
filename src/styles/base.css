@@ -1,0 +1,92 @@
+/*
+ * base.css: reset behavior, global interaction rules and Phase 0 shell
+ * placeholders. Sources: DESIGN_SPEC sections 0, 12, 13. No component styles.
+ *
+ * Breakpoint note (DESIGN_SPEC 12): the Tailwind defaults md/lg/xl equal
+ * 768/1024/1280, which are exactly the spec's tablet, laptop and desktop
+ * boundaries.
+ *
+ * All tokens live in tokens.css; import order is tokens.css then base.css.
+ */
+
+/* Page surface: matches the top-of-page cream while sections load (DESIGN_SPEC 0). */
+body {
+  background-color: var(--cream);
+}
+
+/* ------------------------------------------------------------------ */
+/* Focus rings (DESIGN_SPEC 12): a 3px black ring with a 2px #fef5b6   */
+/* offset gap, never removed.                                          */
+/* ------------------------------------------------------------------ */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--yellow);
+}
+
+/* ------------------------------------------------------------------ */
+/* Skip link (DESIGN_SPEC 13), hidden until focused. Type follows the  */
+/* sticker label row of DESIGN_SPEC 1.2, padding from 1.4.             */
+/* ------------------------------------------------------------------ */
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 12px;
+  padding: 8px 12px;
+  transform: translateY(-300%);
+  opacity: 0;
+  background: var(--cream);
+  border: 1px solid var(--ink);
+  border-radius: var(--r-label);
+  font-family: var(--ff-outfit);
+  font-size: 16px;
+  line-height: 20.16px;
+  color: var(--ink);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion: the global kill switch. All motion systems must     */
+/* additionally gate on useStaticMode() (MOTION_SPEC section 0).       */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Phase 0 shell placeholders. Taken verbatim from the section 0 table */
+/* and replaced by each section's real build (phases 2, 7 and 10 of    */
+/* OPENCODE_PROMPTS.md).                                               */
+/* ------------------------------------------------------------------ */
+
+/* nav: banner #1a160c over header #fffef9, split at 55px (section 3) */
+.section-bg-nav {
+  background-image: linear-gradient(to bottom, var(--ink-warm) 0 55px, var(--cream) 55px);
+}
+
+/* about: left yellow field, right cream-white, split 50/50 (section 8;
+   the real stripe field lands in phase 7) */
+.section-bg-about {
+  background-image: linear-gradient(to right, var(--yellow) 0 50%, var(--cream-white) 50%);
+}
+
+/* footer: alternating dark bands, 69.5px each (section 11; soft edges land
+   in phase 10) */
+.section-bg-footer {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--ink-warm) 0 69.5px,
+    var(--footer-stripe-alt) 69.5px 139px
+  );
+}
