@@ -1,0 +1,44 @@
+{
+  "metaDefaults": {
+    "timelineLabel": "TIMELINE:",
+    "timeline": "Timeline agreed together",
+    "scopeLabel": "PROJECT SCOPE:",
+    "scope": "Scoped to your project"
+  },
+  "tabs": [
+    {
+      "id": "brand-identity",
+      "label": "Brand identity",
+      "panelColor": "#fddfe7",
+      "title": "Branding & Identity",
+      "description": "For brands that need a clear visual identity, from the first idea to the details people remember.",
+      "whatsIncluded": [
+        "Strategic 1 hour Clarity Session",
+        "Creative direction and a focused mood board.",
+        "Full Logo Suite: Primary, secondary, and submark logos.",
+        "Color palette, typography suite, and usage guidelines.",
+        "Brand pattern, graphics, and custom illustration assets.",
+        "2-3 pieces of brand collateral (e.g., templates, cards..).",
+        "Comprehensive Brand Guidelines",
+        "Two design concept & two rounds of revisions."
+      ],
+      "goodFitFor": [
+        "New businesses ready to launch with intention.",
+        "Growing brands whose visuals no longer fit.",
+        "Teams that need a consistent identity across touchpoints."
+      ]
+    },
+    {
+      "id": "marketing-campaign-design",
+      "label": "Marketing & campaign design",
+      "panelColor": "#f1fdd8",
+      "todoContent": "TODO(copy): title, description, what's included, good fit for. Not present in Figma and not found on the old site (see OPEN_QUESTIONS.md)."
+    },
+    {
+      "id": "digital-content-design",
+      "label": "Digital & content design",
+      "panelColor": "#deedfa",
+      "todoContent": "TODO(copy): title, description, what's included, good fit for. Not present in Figma and not found on the old site (see OPEN_QUESTIONS.md)."
+    }
+  ]
+}

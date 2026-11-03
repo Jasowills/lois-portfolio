@@ -1,0 +1,143 @@
+{
+  "heroDeck": ["garri-granola", "heure-doree", "rika-trips", "africa-built"],
+  "projects": [
+    {
+      "id": "garri-granola",
+      "title": "Garri & Granola",
+      "titleFont": "Blauer Nue 700",
+      "year": 2025,
+      "description": "A homeware concept with a point of view: cultural references, considered objects and a visual world built to feel collected, not decorated.",
+      "tags": ["Brand Identity", "Content strategy"],
+      "accent": "#fef5b6",
+      "images": [
+        {
+          "role": "cover",
+          "alt": "Garri & Granola cover: a still life collage of the brand's homeware pieces and packaging",
+          "width": 2400,
+          "height": 1350,
+          "avif": [
+            "/images/projects/garri-granola-640.avif",
+            "/images/projects/garri-granola-1024.avif",
+            "/images/projects/garri-granola-1600.avif"
+          ],
+          "webp": [
+            "/images/projects/garri-granola-640.webp",
+            "/images/projects/garri-granola-1024.webp",
+            "/images/projects/garri-granola-1600.webp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heure-doree",
+      "title": "Heure Dorée",
+      "titleFont": "Blauer Nue 600",
+      "year": 2026,
+      "description": "A sardine brand identity and packaging direction that gives a pantry staple a more distinctive place on the shelf.",
+      "tags": ["Content distribution", "In Development", "Podcast & media"],
+      "accent": "#fbc4df",
+      "images": [
+        {
+          "role": "cover",
+          "alt": "Heure Dorée cover: colorful sardine tins laid out under warm golden light",
+          "width": 1920,
+          "height": 1080,
+          "avif": [
+            "/images/projects/heure-doree-640.avif",
+            "/images/projects/heure-doree-1024.avif",
+            "/images/projects/heure-doree-1600.avif"
+          ],
+          "webp": [
+            "/images/projects/heure-doree-640.webp",
+            "/images/projects/heure-doree-1024.webp",
+            "/images/projects/heure-doree-1600.webp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rika-trips",
+      "title": "Rika Trips",
+      "titleFont": "Blauer Nue 600",
+      "year": 2025,
+      "description": "Brand and digital marketing for a drinks-depot platform. Strategy, messaging and visual content made for the realities of the business.",
+      "tags": ["E-commerce Website", "Fashion & Lifestyle"],
+      "accent": "#deedfa",
+      "images": [
+        {
+          "role": "cover",
+          "alt": "Rika Trips cover placeholder",
+          "placeholder": true,
+          "placeholderColor": "#c9c9c9",
+          "width": 1288,
+          "height": 712,
+          "avif": ["/images/projects/placeholder-1288.avif"],
+          "webp": ["/images/projects/placeholder-1288.webp"]
+        }
+      ]
+    },
+    {
+      "id": "africa-built",
+      "title": "Africa Built",
+      "titleFont": "Outfit 400",
+      "year": 2025,
+      "description": "Podcast content distribution and design, turning conversations with African builders into social content people can discover and share.",
+      "tags": ["Content distribution", "Canva Websites", "Wedding"],
+      "accent": "#bad892",
+      "images": [
+        {
+          "role": "cover",
+          "alt": "Africa Built cover placeholder",
+          "placeholder": true,
+          "placeholderColor": "#c9c9c9",
+          "width": 1288,
+          "height": 712,
+          "avif": ["/images/projects/placeholder-1288.avif"],
+          "webp": ["/images/projects/placeholder-1288.webp"]
+        }
+      ]
+    },
+    {
+      "id": "fintech-is-easy",
+      "title": "Fintech Is Easy",
+      "titleFont": "Outfit 400",
+      "year": 2024,
+      "description": "Editorial and social design that helps make fintech ideas easier to follow, save and pass along.",
+      "tags": ["Editorial design", "Fintech"],
+      "accent": "#dbbcff",
+      "images": [
+        {
+          "role": "cover",
+          "alt": "Fintech Is Easy cover placeholder",
+          "placeholder": true,
+          "placeholderColor": "#c9c9c9",
+          "width": 1288,
+          "height": 712,
+          "avif": ["/images/projects/placeholder-1288.avif"],
+          "webp": ["/images/projects/placeholder-1288.webp"]
+        }
+      ]
+    },
+    {
+      "id": "gourmet-guide",
+      "title": "Gourmet Guide",
+      "titleFont": "Blauer Nue 600",
+      "year": 2024,
+      "description": "A digital product concept exploring how food discovery and community could come together in one experience.",
+      "tags": ["Content design", "Editorial & fintech"],
+      "accent": "#ff8c42",
+      "images": [
+        {
+          "role": "cover",
+          "alt": "Gourmet Guide cover placeholder",
+          "placeholder": true,
+          "placeholderColor": "#c9c9c9",
+          "width": 1288,
+          "height": 712,
+          "avif": ["/images/projects/placeholder-1288.avif"],
+          "webp": ["/images/projects/placeholder-1288.webp"]
+        }
+      ]
+    }
+  ]
+}

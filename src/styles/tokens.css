@@ -138,6 +138,14 @@
 
   /* Footer stripe alt color (DESIGN_SPEC section 11; absent from the 1.1 list) */
   --footer-stripe-alt: #1c1b17;
+
+  /* Artwork fills used only inside the exported SVG components
+     (DESIGN_SPEC section 2 asset table). --card already covers #fbfaf4. */
+  --logo-shadow: #231f20; /* nav logo cloud shadow */
+  --logo-cloud: #ffffff; /* footer logo cloud */
+  --sign-lo: #959491; /* signpost gradient dark stop */
+  --sign-shade: #767676; /* signpost ball ring stop */
+  --sign-hi: #dcdcdc; /* signpost ball ring light stop */
 }
 
 /* ------------------------------------------------------------------ */

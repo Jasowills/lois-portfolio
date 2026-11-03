@@ -1,0 +1,32 @@
+{
+  "label": "Kind words",
+  "heading": "Trusted by amazing people and teams across the globe.",
+  "cards": [
+    {
+      "todoContent": true,
+      "quote": "When I’m not designing, I’m probably sewing something cute, blasting K-pop or neo-soul (Olivia Dean supremacy 😭), or mentally redesigning every poster I walk past.",
+      "attribution": "-Alyssa, @femfounderstudio",
+      "avatar": {
+        "placeholder": true,
+        "alt": "Placeholder avatar: soft abstract shapes",
+        "width": 144,
+        "height": 129,
+        "avif": "/images/placeholders/soft-placeholder-512.avif",
+        "webp": "/images/placeholders/soft-placeholder-512.webp"
+      }
+    },
+    {
+      "todoContent": true,
+      "quote": "When I’m not designing, I’m probably sewing something cute, blasting K-pop or neo-soul (Olivia Dean supremacy 😭), or mentally redesigning every poster I walk past.",
+      "attribution": "-Alyssa, @femfounderstudio",
+      "avatar": {
+        "placeholder": true,
+        "alt": "Placeholder avatar: soft abstract shapes",
+        "width": 144,
+        "height": 129,
+        "avif": "/images/placeholders/soft-placeholder-512.avif",
+        "webp": "/images/placeholders/soft-placeholder-512.webp"
+      }
+    }
+  ]
+}

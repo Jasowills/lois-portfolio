@@ -1,0 +1,32 @@
+{
+  "label": "THE WORK BEHIND THE WORK",
+  "heading": "I've worn a few creative hats.",
+  "intro": "From shaping a brand's voice to getting the right content in front of people, here's some of the work I've done with teams and clients.",
+  "footnote": "The hat changes with the brief. The care stays the same.",
+  "cards": [
+    {
+      "fill": "#fffcf5",
+      "title": "Krate",
+      "role": "Brand & Digital Marketing",
+      "description": "Brand direction, content planning, campaign concepts and social design for a platform built for drinks wholesalers and depot owners."
+    },
+    {
+      "fill": "#fce8ed",
+      "title": "Africa Built",
+      "role": "Content Distribution & Design",
+      "description": "Repurposing podcast conversations into social-first content, including clips and carousel design."
+    },
+    {
+      "fill": "#e0ebff",
+      "title": "Fintech Is Easy",
+      "role": "Content Design & Distribution",
+      "description": "Packaging fintech ideas for social channels through clear, useful visual storytelling."
+    },
+    {
+      "fill": "#e5f0bf",
+      "title": "Marklite",
+      "role": "Visual Experience Design",
+      "description": "Visual design, motion graphics and digital experience work across software and marketing."
+    }
+  ]
+}
