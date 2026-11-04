@@ -143,7 +143,7 @@ export function Work() {
       id="work"
       data-section="work"
       aria-label="Selected work"
-      className="relative w-full border-y border-ink px-5 pb-16 pt-[76px] min-[900px]:px-16"
+      className="relative w-full border-y border-ink px-5 pb-16 pt-[76px] min-[900px]:px-16 min-[1280px]:h-[2572px]"
       style={{
         backgroundColor: 'var(--lav-work)',
         backgroundImage:

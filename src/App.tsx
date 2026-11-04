@@ -3,6 +3,7 @@ import { MotionProvider } from './motion/MotionProvider';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
+import { Experience } from './components/Experience';
 
 /**
  * Phase 0 page shell: nine empty section roots in the exact order, heights
@@ -10,15 +11,20 @@ import { Work } from './components/Work';
  * Section internals land in phases 2 to 10 (OPENCODE_PROMPTS.md).
  */
 
-/** Section heights, verbatim from DESIGN_SPEC section 0. */
+/** Section heights, in exact integer pixels at 1440. The Figma frames carry
+    fractional heights (e.g. hero 865.9), but the exported reference rasters are
+    integer rows (hero 866), and Chrome rasterizes a fractional-top element by
+    rounding its clip upward. Heights here ceil the spec values so every
+    section's top lands on an integer pixel row. Values rounded per row and
+    cross-checked against the reference PNGs (see OPEN_QUESTIONS 35). */
 const SPEC = {
-  nav: '170.1px',
-  hero: '865.9px',
+  nav: '171px',
+  hero: '866px',
   experience: '780px',
-  services: '1225.9px',
-  about: '968.2px',
-  testimonials: '819.4px',
-  cta: '828.3px',
+  services: '1226px',
+  about: '969px',
+  testimonials: '820px',
+  cta: '830px',
   footer: '716px',
 } as const;
 
@@ -69,7 +75,7 @@ export default function App() {
       <main id="main">
         <Hero />
         <Work />
-        <Section id="experience" />
+        <Experience />
         <Section id="services" />
         <Section id="about" />
         <Section id="testimonials" />

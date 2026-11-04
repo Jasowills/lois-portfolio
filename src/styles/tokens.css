@@ -182,6 +182,14 @@
   --card-check-a: #fafafa; /* white checker square */
   --card-check-b: #ebebeb; /* gray checker square */
 
+  /* Experience section inks (DESIGN_SPEC 6 / 1.1) */
+  --ink-label: #29241f; /* THE WORK BEHIND THE WORK */
+  --ink-exp-h2: #1f1a1a; /* I've worn a few creative hats. */
+  --ink-intro: #2e292e; /* intro line + card descriptions + footnote */
+  --ink-role: #45384d; /* card role lines */
+  /* Experience card 1px border (spec 6: rgba(31,26,26,.25)) */
+  --exp-card-border: rgba(31, 26, 26, 0.25);
+
   --logo-shadow: #231f20; /* nav logo cloud shadow */
   --logo-cloud: #ffffff; /* footer logo cloud (the nav Contact arrow is black: reference raster and master vector) */
   --sign-lo: #959491; /* signpost gradient dark stop */

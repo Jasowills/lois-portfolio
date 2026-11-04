@@ -34,10 +34,15 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: WIDTH, height: 900 }, deviceScaleFactor: 1 });
 await page.goto(`${URL_BASE}/?static=1`, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
+// Deterministic measurement: webfont swap can leave the page at a fractional
+// scroll offset (scroll anchoring), which rounds element screenshots up by a
+// pixel and fakes a height mismatch. Pin the scroll position instead.
+await page.evaluate(() => window.scrollTo(0, 0));
 await page.addStyleTag({ content: '[data-diff-ignore]{background:#c9c9c9 !important;} [data-diff-ignore] *{visibility:hidden !important;}' });
 
 let failed = 0;
 for (const [id, refPath] of SECTIONS) {
+  await page.evaluate(() => window.scrollTo(0, 0));
   const el = page.locator(`[data-section="${id}"]`).first();
   if (!(await el.count())) { console.log(`MISSING  ${id}`); failed++; continue; }
   const shotBuf = await el.screenshot();

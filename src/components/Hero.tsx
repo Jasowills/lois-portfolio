@@ -68,7 +68,7 @@ export function Hero() {
   return (
     <section
       data-section="hero"
-      className="relative w-full bg-cream-hero px-5 pt-[64px] pb-16 md:px-10 md:pt-[84px] md:pb-16 md:pl-[72px]"
+      className="relative w-full bg-cream-hero px-5 pt-[64px] pb-16 md:px-10 md:pt-[84px] md:pb-16 md:pl-[72px] min-[1280px]:h-[866px]"
     >
       <div className="mx-auto w-full max-w-[1440px] flex flex-col items-center">
         <div className="flex w-full max-w-[1328px] flex-col items-center">
