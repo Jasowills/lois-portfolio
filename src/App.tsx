@@ -4,6 +4,7 @@ import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
 import { Experience } from './components/Experience';
+import { Services } from './components/Services';
 
 /**
  * Phase 0 page shell: nine empty section roots in the exact order, heights
@@ -76,7 +77,7 @@ export default function App() {
         <Hero />
         <Work />
         <Experience />
-        <Section id="services" />
+        <Services />
         <Section id="about" />
         <Section id="testimonials" />
         <Section id="cta" />

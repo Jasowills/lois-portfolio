@@ -16,6 +16,7 @@ import sharp from 'sharp';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 const URL_BASE = (process.argv.find(a => a.startsWith('--url=')) || '--url=http://localhost:5173').split('=')[1];
+const STATIC_URL = URL_BASE.includes('?') ? URL_BASE : `${URL_BASE}/?static=1`;
 const WIDTH = 1440;
 const SECTIONS = [
   ['nav', 'reference/01-navigation.png'],
@@ -32,7 +33,7 @@ const SECTIONS = [
 await mkdir('reference/diff', { recursive: true });
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: WIDTH, height: 900 }, deviceScaleFactor: 1 });
-await page.goto(`${URL_BASE}/?static=1`, { waitUntil: 'networkidle' });
+await page.goto(STATIC_URL, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
 // Deterministic measurement: webfont swap can leave the page at a fractional
 // scroll offset (scroll anchoring), which rounds element screenshots up by a
