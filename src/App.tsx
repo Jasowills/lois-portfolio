@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { MotionProvider } from './motion/MotionProvider';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
+import { Work } from './components/Work';
 
 /**
  * Phase 0 page shell: nine empty section roots in the exact order, heights
@@ -13,7 +14,6 @@ import { Hero } from './components/Hero';
 const SPEC = {
   nav: '170.1px',
   hero: '865.9px',
-  work: '2571.9px',
   experience: '780px',
   services: '1225.9px',
   about: '968.2px',
@@ -27,7 +27,6 @@ const SPEC = {
 const BG: Record<keyof typeof SPEC, string> = {
   nav: 'section-bg-nav',
   hero: 'bg-cream-hero',
-  work: 'bg-lav-work',
   experience: 'bg-lav-exp',
   services: 'bg-cream',
   about: 'section-bg-about',
@@ -37,14 +36,13 @@ const BG: Record<keyof typeof SPEC, string> = {
 };
 
 /** Sections framed by a 1px black top and bottom border (DESIGN_SPEC section 0). */
-const BORDERS: ReadonlySet<keyof typeof SPEC> = new Set(['work', 'testimonials', 'cta']);
+const BORDERS: ReadonlySet<keyof typeof SPEC> = new Set(['testimonials', 'cta']);
 
 type SectionId = keyof typeof SPEC;
 
 /** Anchor targets used by the nav pills (DESIGN_SPEC 3.2: Services, Work,
     About pills and #contact for Contact; the CTA section doubles as contact). */
 const ANCHORS: Partial<Record<SectionId, string>> = {
-  work: 'work',
   services: 'services',
   about: 'about',
   cta: 'contact',
@@ -70,7 +68,7 @@ export default function App() {
       <Nav />
       <main id="main">
         <Hero />
-        <Section id="work" />
+        <Work />
         <Section id="experience" />
         <Section id="services" />
         <Section id="about" />

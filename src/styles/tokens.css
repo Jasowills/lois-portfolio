@@ -112,6 +112,15 @@
   --cream-hero: #fffce6;
   --cream-white: #fffefe;
   --card: #fbfaf4;
+  /* Work section plaid: near-invisible grid, measured from the reference
+     export (vertical 90px/75px, horizontal 96px/78px, period ~165/174px). */
+  --work-plaid: #e3d7fe;
+  /* Work card image slot: the export rasterizes the placeholder solid exactly
+     like a Figma canvas fill (201,201,201 per DESIGN_SPEC 5.4). */
+  --image-placeholder: #c9c9c9;
+  /* Work header colors (spec 1.1). */
+  --ink-strong: #040100; /* work H2 */
+  --ink-soft: #282727; /* card descriptions */
   --exp-card-1: #fffcf5;
   --placeholder: #c9c9c9;
 
