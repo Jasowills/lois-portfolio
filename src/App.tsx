@@ -1,13 +1,6 @@
 import clsx from 'clsx';
 import { MotionProvider } from './motion/MotionProvider';
-import { Logo } from './components/svg/Logo';
-import { Signpost } from './components/svg/Signpost';
-import { CtaBlob } from './components/svg/CtaBlob';
-import { Verified } from './components/svg/Verified';
-import { ArrowRight } from './components/svg/ArrowRight';
-import { ArrowUpRight } from './components/svg/ArrowUpRight';
-import { LinkedIn } from './components/svg/LinkedIn';
-import { Mail } from './components/svg/Mail';
+import { Nav } from './components/Nav';
 
 /**
  * Phase 0 page shell: nine empty section roots in the exact order, heights
@@ -47,10 +40,20 @@ const BORDERS: ReadonlySet<keyof typeof SPEC> = new Set(['work', 'testimonials',
 
 type SectionId = keyof typeof SPEC;
 
+/** Anchor targets used by the nav pills (DESIGN_SPEC 3.2: Services, Work,
+    About pills and #contact for Contact; the CTA section doubles as contact). */
+const ANCHORS: Partial<Record<SectionId, string>> = {
+  work: 'work',
+  services: 'services',
+  about: 'about',
+  cta: 'contact',
+};
+
 function Section({ id }: { id: SectionId }) {
   return (
     <section
       data-section={id}
+      id={ANCHORS[id]}
       className={clsx(BG[id], BORDERS.has(id) && 'border-y border-ink')}
       style={{ height: SPEC[id] }}
     />
@@ -63,24 +66,7 @@ export default function App() {
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      {/* Temporary Phase 1 mount proving the Figma SVG exports work in React
-          (display:none so the page renders the exact Phase 0 static design and
-          the visual diff stays clean). Removed in Phase 2 as real sections
-          replace the empties. */}
-      <div aria-hidden="true" style={{ display: 'none' }}>
-        <Logo variant="nav" />
-        <Logo variant="footer" />
-        <Signpost />
-        <CtaBlob />
-        <Verified />
-        <ArrowRight />
-        <ArrowUpRight />
-        <LinkedIn />
-        <Mail />
-      </div>
-      <header>
-        <Section id="nav" />
-      </header>
+      <Nav />
       <main id="main">
         <Section id="hero" />
         <Section id="work" />

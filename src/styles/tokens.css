@@ -139,13 +139,37 @@
   /* Footer stripe alt color (DESIGN_SPEC section 11; absent from the 1.1 list) */
   --footer-stripe-alt: #1c1b17;
 
+  /* Banner size: 16 at desktop, 14 on mobile (DESIGN_SPEC 12) */
+  --fs-banner: 16px;
+  @media (max-width: 767.98px) {
+    --fs-banner: 14px;
+  }
+
+  /* Sticker label border (DESIGN_SPEC 1.3 and 5.2: 0.5px solid #e9e9e9) */
+  --sticker-border: #e9e9e9;
+
   /* Artwork fills used only inside the exported SVG components
      (DESIGN_SPEC section 2 asset table). --card already covers #fbfaf4. */
   --logo-shadow: #231f20; /* nav logo cloud shadow */
-  --logo-cloud: #ffffff; /* footer logo cloud */
+  --logo-cloud: #ffffff; /* footer logo cloud (the nav Contact arrow is black: reference raster and master vector) */
   --sign-lo: #959491; /* signpost gradient dark stop */
   --sign-shade: #767676; /* signpost ball ring stop */
   --sign-hi: #dcdcdc; /* signpost ball ring light stop */
+}
+
+/* The one emoji Figma renders with Noto Color Emoji (flat light-blue heart in
+   the banner text "Get in touch! 🩵", DESIGN_SPEC 3.1). 1108-byte COLR subset
+   (U+1FA75) of the Google-served Noto Color Emoji v50 chunk 2, produced with
+   pyftsubset; unicode-range makes the browser fetch it only for that
+   character and Chrome renders the COLR stack natively. Without it Chrome
+   falls back to Apple Color Emoji, whose raster differs from the reference
+   export. Provenance of the source chunk and the remaining raster delta are
+   logged in OPEN_QUESTIONS. */
+@font-face {
+  font-family: 'Noto Heart';
+  src: url('/fonts/noto-heart-1fa75.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+1FA75;
 }
 
 /* ------------------------------------------------------------------ */
@@ -192,6 +216,7 @@
   --color-lav-label: var(--lav-label);
   --color-lav-work: var(--lav-work);
   --color-lav-exp: var(--lav-exp);
+  --color-sticker-border: var(--sticker-border);
   --color-orange: var(--orange);
   --color-orange-hero: var(--orange-hero);
   --color-orange-cta: var(--orange-cta);
