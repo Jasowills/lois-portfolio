@@ -52,6 +52,21 @@
   font-display: swap;
 }
 
+/* Quicksand variable (300..700), latin subset from the OFL project (see
+   public/fonts/quicksand-OFL.txt). Measured fallback: the Figma export's H1
+   raster (reference/02-hero.png) matches the OFL Quicksand more closely than
+   any other available face at 600 weight (10.4k vs 15k+ differing pixels in
+   the 970x160 H1 crop, refined to 4.9k with per-line letter-spacing). It sits
+   after the real 'Blauer Nue' family in the chain, so licensed files drop in
+   front automatically when they land (OPEN_QUESTIONS 17 and 28). */
+@font-face {
+  font-family: 'Quicksand';
+  src: url('/fonts/quicksand-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Size-adjust metrics tuning of the fallback is TODO(spec): it must be
    measured against the real Blauer files. Tracked in OPEN_QUESTIONS 17. */
 
@@ -63,7 +78,7 @@
   color-scheme: light;
 
   /* Font stacks: exact families plus the sanctioned fallbacks (DESIGN_SPEC 1.2) */
-  --ff-ink: 'Blauer Nue', 'Lexend', 'Outfit Variable', 'Outfit', system-ui, sans-serif;
+  --ff-ink: 'Blauer Nue', 'Quicksand', 'Lexend', 'Outfit Variable', 'Outfit', system-ui, sans-serif;
   --ff-outfit: 'Outfit Variable', 'Outfit', system-ui, sans-serif;
   --ff-fraunces: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --ff-roboto-mono: 'Roboto Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
@@ -150,6 +165,14 @@
 
   /* Artwork fills used only inside the exported SVG components
      (DESIGN_SPEC section 2 asset table). --card already covers #fbfaf4. */
+  /* Hero deck card placeholder raster, measured from reference/02-hero.png:
+     the Figma export never rendered the four project covers, it rasterizes a
+     24px checkerboard instead (white square #fafafa at each card's local
+     top-left, gray #ebebeb next to it), rotated with the card. Logged in
+     OPEN_QUESTIONS 28 together with the swap-in plan for real covers. */
+  --card-check-a: #fafafa; /* white checker square */
+  --card-check-b: #ebebeb; /* gray checker square */
+
   --logo-shadow: #231f20; /* nav logo cloud shadow */
   --logo-cloud: #ffffff; /* footer logo cloud (the nav Contact arrow is black: reference raster and master vector) */
   --sign-lo: #959491; /* signpost gradient dark stop */

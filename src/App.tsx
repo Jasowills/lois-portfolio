@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { MotionProvider } from './motion/MotionProvider';
 import { Nav } from './components/Nav';
+import { Hero } from './components/Hero';
 
 /**
  * Phase 0 page shell: nine empty section roots in the exact order, heights
@@ -68,7 +69,7 @@ export default function App() {
       </a>
       <Nav />
       <main id="main">
-        <Section id="hero" />
+        <Hero />
         <Section id="work" />
         <Section id="experience" />
         <Section id="services" />
