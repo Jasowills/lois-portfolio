@@ -207,6 +207,7 @@ export function About() {
           {/* H2 */}
           <h2
             data-skew
+            data-split="lines"
             className="about-h2 font-outfit"
             style={{
               position: 'absolute',
@@ -230,6 +231,7 @@ export function About() {
             {ABOUT_PARAS.map((p, i) => (
               <p
                 key={i}
+                data-split="words"
                 style={{
                   margin: i === 0 ? 0 : '32px 0 0 0',
                   fontFamily: 'var(--ff-outfit)',

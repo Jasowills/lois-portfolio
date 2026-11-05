@@ -3,6 +3,7 @@ import { Loader } from './components/Loader';
 import { Cursor } from './components/Cursor';
 import { ScrollFeel } from './components/ScrollFeel';
 import { ScrollProgress } from './components/ScrollProgress';
+import { TextSystem } from './components/TextSystem';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
@@ -26,6 +27,7 @@ export default function App() {
       <Loader />
       <Cursor />
       <ScrollFeel />
+      <TextSystem />
       <a href="#main" className="skip-link">
         Skip to content
       </a>

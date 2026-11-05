@@ -141,10 +141,11 @@ export function Services() {
         {/* 7: H2, two lines */}
         <h2
           data-skew
+          data-split="lines"
           className="relative mx-auto mt-[37.9px] w-full max-w-[674px] text-center font-outfit"
           style={{ fontSize: '45px', lineHeight: '50px', letterSpacing: '-0.03em', fontWeight: 400, color: 'var(--heading)' }}
         >
-          <span className="block">The right kind of creative help, for</span>
+          <span className="block">The right kind of creative help, for</span>{' '}
           <span className="block">what you need.</span>
         </h2>
 

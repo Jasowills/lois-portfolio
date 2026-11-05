@@ -42,6 +42,7 @@ export function CTA() {
             {/* H2, box 1055x50 at (192.5, 298.1), centered. */}
             <h2
               data-skew
+              data-split="lines"
               className="cta-h2"
               style={{
                 position: 'absolute',
@@ -63,6 +64,7 @@ export function CTA() {
 
             {/* Paragraph, box 1055x72 at (192.5, 380.1), centered, two lines. */}
             <p
+              data-split="words"
               className="cta-para"
               style={{
                 position: 'absolute',

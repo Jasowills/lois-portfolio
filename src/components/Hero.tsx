@@ -76,11 +76,12 @@ export function Hero() {
               tracking from the reference raster (OPEN_QUESTIONS 29). */}
           <h1
             data-skew
+            data-split="lines"
             className="text-center font-semibold md:font-semibold font-ink text-ink text-[clamp(34px,9.5vw,60px)] leading-[1.2] tracking-[-0.04em] md:text-[60px] md:leading-[72px] md:tracking-normal"
           >
             <span className="block tracking-[-0.04em] md:tracking-[-0.0183333em]">
               Good work deserves
-            </span>
+            </span>{' '}
             <span className="block tracking-[-0.04em] md:tracking-[-0.0416667em]">
               a better-looking introduction.
             </span>

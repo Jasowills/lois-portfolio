@@ -166,12 +166,14 @@ export function Work() {
         />
         <h2
           data-skew
+          data-split="lines"
           className="relative top-[2px] mt-[34px] w-full max-w-[1055px] text-center font-ink font-semibold text-[28px] leading-[34px] text-[var(--ink-strong)] min-[900px]:text-[45px] min-[900px]:leading-[50px]"
           style={{ letterSpacing: '-0.03em' }}
         >
           A little bit of everything. Very much on purpose.
         </h2>
         <p
+          data-split="words"
           className="relative top-[2px] mt-7 w-full max-w-[1003px] text-center font-outfit text-[18px] leading-[28px] text-sub min-[900px]:text-[24px] min-[900px]:leading-[30.24px]"
           style={{ letterSpacing: '-0.01em' }}
         >

@@ -38,12 +38,14 @@ export function Experience() {
         </p>
         <h2
           data-skew
+          data-split="lines"
           className="relative top-[3px] mt-[28px] max-w-full font-fraunces text-[clamp(26px,6.5vw,42px)] leading-[1.2] text-[var(--ink-exp-h2)] min-[1200px]:leading-[51.8px]"
           style={{ fontWeight: 400 }}
         >
           {data.heading}
         </h2>
         <p
+          data-split="words"
           className="relative top-[3px] mt-[28px] max-w-[1100px] font-outfit text-[16px] leading-[22px] text-[var(--ink-intro)] min-[1200px]:text-[18px] min-[1200px]:leading-[22.68px]"
         >
           {data.intro}

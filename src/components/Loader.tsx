@@ -70,13 +70,24 @@ export function Loader() {
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     root.style.overflow = 'hidden';
+    root.dataset.loader = 'running';
 
     const animations: gsap.core.Animation[] = [];
     let fontTimer = 0;
     let exitTimer = 0;
     let cancelled = false;
+    let released = false;
     let navTarget: SVGElement | null = null;
     let navOpacity = '';
+
+    // Tells the text system that the cover is about to open. Until then the
+    // split headings stay staged at their start position behind the cover.
+    const release = () => {
+      if (released) return;
+      released = true;
+      delete root.dataset.loader;
+      window.dispatchEvent(new Event('lois:loader-exit'));
+    };
 
     const centreX = window.innerWidth / 2;
     const centreY = window.innerHeight / 2;
@@ -187,6 +198,7 @@ export function Loader() {
             duration: SPEC.timing.wipe,
             delay: SPEC.timing.wipeDelay,
             ease: EASE.glide,
+            onStart: release,
             onComplete: () => {
               if (!cancelled) setVisible(false);
             },
@@ -194,6 +206,7 @@ export function Loader() {
         );
         animations.push(wipe);
       } else {
+        release();
         setVisible(false);
       }
     };
@@ -215,6 +228,7 @@ export function Loader() {
 
     return () => {
       cancelled = true;
+      release();
       window.clearTimeout(fontTimer);
       window.clearTimeout(exitTimer);
       for (const animation of animations) animation.kill();

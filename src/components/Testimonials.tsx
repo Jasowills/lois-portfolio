@@ -48,6 +48,7 @@ export function Testimonials() {
         {/* H2, box 652x100 at (72, 153.4), two lines, Blauer Nue 600 45/50 ls -1.35. */}
         <h2
           data-skew
+          data-split="lines"
           className="th2"
           style={{
             position: 'absolute',
