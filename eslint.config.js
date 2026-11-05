@@ -30,6 +30,10 @@ export default [
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       ...reactRefresh.configs.vite.rules,
+      // The base rule cannot see type-only usage; the TS-aware rule handles
+      // both values and types, and ignores intentionally unused args.
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
 ];
