@@ -8,6 +8,7 @@
 // already land on this grid).
 
 import data from '../data/experience.json';
+import { SectionEdge } from './SectionEdge';
 
 // Exact values from the spec (DESIGN_SPEC 6). Colors live in tokens.
 const SPEC = {
@@ -28,6 +29,7 @@ export function Experience() {
       aria-label="Experience"
       className="experience-section relative w-full bg-lav-exp px-5 pb-20 pt-[84px] min-[1440px]:h-[780px] min-[1440px]:px-[120px] min-[1440px]:pb-0"
     >
+      <SectionEdge variant="blob" from="var(--lav-work)" />
       <div className="mx-auto flex w-full max-w-[1200px] flex-col">
         <p
           className="relative top-[3px] font-outfit text-[14px] uppercase leading-[17.64px] text-[var(--ink-label)]"
@@ -35,6 +37,7 @@ export function Experience() {
           {data.label}
         </p>
         <h2
+          data-skew
           className="relative top-[3px] mt-[28px] max-w-full font-fraunces text-[clamp(26px,6.5vw,42px)] leading-[1.2] text-[var(--ink-exp-h2)] min-[1200px]:leading-[51.8px]"
           style={{ fontWeight: 400 }}
         >
@@ -52,7 +55,7 @@ export function Experience() {
           className="mt-7 w-full overflow-x-auto min-[1440px]:overflow-visible"
           style={{ scrollSnapType: 'x mandatory' }}
         >
-          <div className="flex min-w-[1200px] gap-[18px] min-[1440px]:min-w-0">
+          <div className="flex min-w-[1200px] gap-[18px] min-[1440px]:min-w-0" data-skew>
             {data.cards.map((card) => (
               <article
                 key={card.title}

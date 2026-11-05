@@ -9,6 +9,7 @@ import { Logo } from './svg/Logo';
 import { Signpost } from './svg/Signpost';
 import { LinkedIn } from './svg/LinkedIn';
 import { Mail } from './svg/Mail';
+import { SectionEdge } from './SectionEdge';
 
 const COPYRIGHT = ' © 2026 Lois Amadi. All rights reserved, all wrongs forgiven... eventually. No pixels were harmed in the making of this site.';
 const CREDIT = 'Designed by me. Tweaked approximately a thousand times.';
@@ -37,6 +38,7 @@ export function Footer() {
       className="footer-section relative w-full section-bg-footer"
       style={{ height: '716px' }}
     >
+      <SectionEdge variant="tear" from="var(--cta-bg)" />
       {/* Left column: logo, socials, copyright, credit. Content context inset
           to the section frame; children use section-absolute coords. The
           signpost group also lives here so it can stack below the credit in
@@ -116,13 +118,14 @@ export function Footer() {
             keeps the desktop absolute layout; the responsive column wraps it
             into a 236px-tall centered group below the credit. */}
         <div className="footer-signs" style={{ display: 'contents' }}>
-          <div className="footer-signpost" style={{ position: 'absolute', top: '76px', left: '1132px', width: '236px' }}>
+          <div className="footer-signpost" data-depth="0.3" style={{ position: 'absolute', top: '76px', left: '1132px', width: '236px' }}>
             <Signpost />
           </div>
           {SIGNS.map((s) => (
             <div
               key={s.label}
               className="footer-sign"
+              data-depth="0.3"
               style={{
                 ['--sign-y' as string]: s.y,
                 position: 'absolute',

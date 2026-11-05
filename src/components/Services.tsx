@@ -15,6 +15,7 @@ import { useMemo, useState } from 'react';
 import data from '../data/services.json';
 import { StickerLabel } from './ui/StickerLabel';
 import { Button } from './ui/Button';
+import { SectionEdge } from './SectionEdge';
 import { useStaticMode } from '../motion/useStaticMode';
 
 const TAB_X = [0, 437.33, 874.66]; // 7.1: tab lefts rel. to the folder content box
@@ -130,14 +131,16 @@ export function Services() {
       aria-label="Services"
       className="services-section relative w-full bg-cream px-5 pb-20 pt-[76px] min-[1440px]:h-[1226px] min-[1440px]:px-[64px] min-[1440px]:pb-0"
     >
+      <SectionEdge variant="tear" from="var(--lav-exp)" />
       <div className="mx-auto flex w-full max-w-[1440px] flex-col">
         {/* 7: sticker label */}
         <div className="flex justify-center" style={{ height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <StickerLabel label="A few ways I can help" fill="var(--lav-label)" rotate={-2} aria-hidden="true" />
+          <StickerLabel label="A few ways I can help" fill="var(--lav-label)" rotate={-2} aria-hidden="true" data-depth="0.4" />
         </div>
 
         {/* 7: H2, two lines */}
         <h2
+          data-skew
           className="relative mx-auto mt-[37.9px] w-full max-w-[674px] text-center font-outfit"
           style={{ fontSize: '45px', lineHeight: '50px', letterSpacing: '-0.03em', fontWeight: 400, color: 'var(--heading)' }}
         >
@@ -146,7 +149,7 @@ export function Services() {
         </h2>
 
         {/* 7: folder */}
-        <div className="svc-folder" style={{ position: 'relative', width: 1312, height: 852, marginTop: '60px' }}>
+        <div className="svc-folder" data-skew style={{ position: 'relative', width: 1312, height: 852, marginTop: '60px' }}>
           {/* 7.2 panel */}
           <div
             role="tabpanel"

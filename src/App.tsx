@@ -1,6 +1,8 @@
 import { MotionProvider } from './motion/MotionProvider';
 import { Loader } from './components/Loader';
 import { Cursor } from './components/Cursor';
+import { ScrollFeel } from './components/ScrollFeel';
+import { ScrollProgress } from './components/ScrollProgress';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
@@ -23,6 +25,7 @@ export default function App() {
     <MotionProvider>
       <Loader />
       <Cursor />
+      <ScrollFeel />
       <a href="#main" className="skip-link">
         Skip to content
       </a>
@@ -37,6 +40,7 @@ export default function App() {
         <CTA />
         <Footer />
       </main>
+      <ScrollProgress />
     </MotionProvider>
   );
 }

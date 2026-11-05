@@ -74,7 +74,10 @@ export function Hero() {
         <div className="flex w-full max-w-[1328px] flex-col items-center">
           {/* 4.1 H1: explicit two lines; one <h1> per page (13). Per-line
               tracking from the reference raster (OPEN_QUESTIONS 29). */}
-          <h1 className="text-center font-semibold md:font-semibold font-ink text-ink text-[clamp(34px,9.5vw,60px)] leading-[1.2] tracking-[-0.04em] md:text-[60px] md:leading-[72px] md:tracking-normal">
+          <h1
+            data-skew
+            className="text-center font-semibold md:font-semibold font-ink text-ink text-[clamp(34px,9.5vw,60px)] leading-[1.2] tracking-[-0.04em] md:text-[60px] md:leading-[72px] md:tracking-normal"
+          >
             <span className="block tracking-[-0.04em] md:tracking-[-0.0183333em]">
               Good work deserves
             </span>
@@ -90,6 +93,7 @@ export function Hero() {
             aria-hidden="true"
             role="presentation"
             data-cursor="drag"
+            data-skew
             className="relative hidden min-[1440px]:block"
             style={{ width: '100%', height: SPEC.deck.h, marginTop: `${SPEC.h1Gap}px` }}
           >

@@ -9,6 +9,7 @@
 
 import data from '../data/testimonials.json';
 import { useStaticMode } from '../motion/useStaticMode';
+import { SectionEdge } from './SectionEdge';
 import { StickerLabel } from './ui/StickerLabel';
 
 const CHECKER_BG =
@@ -36,15 +37,17 @@ export function Testimonials() {
       className="testimonials-section relative w-full bg-cream-white border-y border-ink"
       style={{ height: '821px' }}
     >
+      <SectionEdge variant="tear" from="var(--yellow)" />
       {/* content context (inset to the framed area; children use section-absolute coords) */}
       <div className="testimonials-inner" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
         {/* Sticker, left aligned at x=72, y=76, rot +3.96. */}
-        <div className="tsticker" style={{ position: 'absolute', top: '76px', left: '72px', width: '137px', height: '36px' }}>
+        <div className="tsticker" data-depth="0.4" style={{ position: 'absolute', top: '76px', left: '72px', width: '137px', height: '36px' }}>
           <StickerLabel label="Kind words" fill="var(--lime)" rotate={3.96} />
         </div>
 
         {/* H2, box 652x100 at (72, 153.4), two lines, Blauer Nue 600 45/50 ls -1.35. */}
         <h2
+          data-skew
           className="th2"
           style={{
             position: 'absolute',
@@ -67,7 +70,7 @@ export function Testimonials() {
             card renders as a 619x443 border-box offset -0.5px and the 1px ink
             stroke is an overlay child (no CSS border, so content is positioned
             against the border box like Figma). */}
-        <div className="tcards">
+        <div className="tcards" data-skew>
         {cards.map((c) => (
           <div
             key={c.key}

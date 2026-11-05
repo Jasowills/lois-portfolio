@@ -19,6 +19,7 @@ import type { CSSProperties } from 'react';
 import projectsJson from '../data/projects.json';
 import { Button } from './ui/Button';
 import { StickerLabel } from './ui/StickerLabel';
+import { SectionEdge } from './SectionEdge';
 import { Verified } from './svg/Verified';
 
 const SPEC = {
@@ -154,9 +155,17 @@ export function Work() {
           'repeating-linear-gradient(90deg, var(--work-plaid) 0px, var(--work-plaid) 90px, transparent 90px, transparent 165px)',
       }}
     >
+      <SectionEdge variant="tear" from="var(--cream-hero)" />
       <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center">
-        <StickerLabel label="Selected work" fill="var(--yellow)" rotate={2.81} className="flex h-9 items-center" />
+        <StickerLabel
+          label="Selected work"
+          fill="var(--yellow)"
+          rotate={2.81}
+          className="flex h-9 items-center"
+          data-depth="0.4"
+        />
         <h2
+          data-skew
           className="relative top-[2px] mt-[34px] w-full max-w-[1055px] text-center font-ink font-semibold text-[28px] leading-[34px] text-[var(--ink-strong)] min-[900px]:text-[45px] min-[900px]:leading-[50px]"
           style={{ letterSpacing: '-0.03em' }}
         >
@@ -170,6 +179,7 @@ export function Work() {
         </p>
 
         <div
+          data-skew
           className="mt-[60px] grid w-full max-w-[1312px] grid-cols-1 items-start gap-6 min-[900px]:grid-cols-2"
         >
           {projects.map((project, index) => (

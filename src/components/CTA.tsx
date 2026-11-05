@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { CtaBlob } from './svg/CtaBlob';
 import { Button } from './ui/Button';
 import { ContactDrawer } from './ContactDrawer';
+import { SectionEdge } from './SectionEdge';
 
 export function CTA() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -28,8 +29,9 @@ export function CTA() {
         className="cta-section relative w-full bg-cta-bg border-y border-ink"
         style={{ height: '830px' }}
       >
+        <SectionEdge variant="blob" from="var(--cream-white)" />
         {/* Blob: absolute x 64..1376, y 86..754, 1312x668, overflow visible. */}
-        <div className="cta-blob" style={{ position: 'absolute', top: '86px', left: '64px', width: '1312px', height: '668px', overflow: 'visible' }}>
+        <div className="cta-blob" data-depth="-0.2" style={{ position: 'absolute', top: '86px', left: '64px', width: '1312px', height: '668px', overflow: 'visible' }}>
           <CtaBlob />
         </div>
 
@@ -39,6 +41,7 @@ export function CTA() {
           <div className="cta-copy" style={{ position: 'absolute', top: '298.1px', left: '192.5px', width: '1055px', height: '244px' }}>
             {/* H2, box 1055x50 at (192.5, 298.1), centered. */}
             <h2
+              data-skew
               className="cta-h2"
               style={{
                 position: 'absolute',

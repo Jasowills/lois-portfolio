@@ -15,6 +15,7 @@
 import type { CSSProperties } from 'react';
 import { StickerLabel } from './ui/StickerLabel';
 import { Button } from './ui/Button';
+import { SectionEdge } from './SectionEdge';
 import { Logo } from './svg/Logo';
 
 // Stripe field: repeating period 94px (47px bands), soft ramps of 5px at each
@@ -91,6 +92,7 @@ export function About() {
       className="about-section relative w-full overflow-hidden"
       style={{ height: '969px' }}
     >
+      <SectionEdge variant="blob" from="var(--cream)" />
       {/* 8.1 Left half: yellow stripe field with 1px black right border. */}
       <div
         className="about-left"
@@ -105,10 +107,11 @@ export function About() {
         }}
       >
         {/* content context for the left half (children use absolute coords) */}
-        <div className="about-left-canvas" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+        <div className="about-left-canvas" data-skew style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           {/* 8.1 card 1: rot -3.32, unrot top-left (73, 65.05) */}
           <div
             className="about-card"
+            data-depth="-0.08"
             style={{
               position: 'absolute',
               left: '73px',
@@ -127,6 +130,7 @@ export function About() {
           {/* 8.1 card 2: rot +1.64, unrot top-left (73, 505.75) */}
           <div
             className="about-card"
+            data-depth="0.06"
             style={{
               position: 'absolute',
               left: '73px',
@@ -148,6 +152,7 @@ export function About() {
             <div
               key={i}
               className="about-badge"
+              data-depth={i === 0 ? '0.35' : '0.3'}
               style={{
                 position: 'absolute',
                 left: b.left,
@@ -195,12 +200,13 @@ export function About() {
         {/* content context for the right half (children use absolute coords) */}
         <div className="about-right-inner" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           {/* sticker */}
-          <div className="about-sticker" style={{ position: 'absolute', top: '76px', left: '52px', width: '68px', height: '36px' }}>
+          <div className="about-sticker" data-depth="0.4" style={{ position: 'absolute', top: '76px', left: '52px', width: '68px', height: '36px' }}>
             <StickerLabel label="About" fill="var(--lime)" rotate={-5.4} />
           </div>
 
           {/* H2 */}
           <h2
+            data-skew
             className="about-h2 font-outfit"
             style={{
               position: 'absolute',
