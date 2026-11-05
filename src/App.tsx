@@ -1,4 +1,5 @@
 import { MotionProvider } from './motion/MotionProvider';
+import { Loader } from './components/Loader';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
@@ -19,6 +20,7 @@ import { Footer } from './components/Footer';
 export default function App() {
   return (
     <MotionProvider>
+      <Loader />
       <a href="#main" className="skip-link">
         Skip to content
       </a>

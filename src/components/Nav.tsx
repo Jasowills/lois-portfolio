@@ -241,7 +241,7 @@ export function Nav() {
             <Pill pill={PILLS.work} />
           </div>
           <a href="/" aria-label="the lois.og, home" className="block">
-            <Logo variant="nav" width={SPEC.header.logoW} height={SPEC.header.logoH} />
+            <Logo variant="nav" width={SPEC.header.logoW} height={SPEC.header.logoH} data-nav-logo />
           </a>
           <div className="flex items-center justify-start" style={{ gap: SPEC.header.groupGap }}>
             <Pill pill={PILLS.about} />
@@ -272,7 +272,7 @@ export function Nav() {
           }}
         >
           <a href="/" aria-label="the lois.og, home" className="block">
-            <Logo variant="nav" width={SPEC.header.logoW} height={SPEC.header.logoH} />
+            <Logo variant="nav" width={SPEC.header.logoW} height={SPEC.header.logoH} data-nav-logo />
           </a>
           <button
             type="button"
