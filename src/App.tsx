@@ -6,6 +6,7 @@ import { Work } from './components/Work';
 import { Experience } from './components/Experience';
 import { Services } from './components/Services';
 import { About } from './components/About';
+import { Testimonials } from './components/Testimonials';
 
 /**
  * Phase 0 page shell: nine empty section roots in the exact order, heights
@@ -25,7 +26,7 @@ const SPEC = {
   experience: '780px',
   services: '1226px',
   about: '969px',
-  testimonials: '820px',
+  testimonials: '821px',
   cta: '830px',
   footer: '716px',
 } as const;
@@ -80,7 +81,7 @@ export default function App() {
         <Experience />
         <Services />
         <About />
-        <Section id="testimonials" />
+        <Testimonials />
         <Section id="cta" />
         <Section id="footer" />
       </main>
