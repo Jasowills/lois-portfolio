@@ -7,6 +7,7 @@ import { Experience } from './components/Experience';
 import { Services } from './components/Services';
 import { About } from './components/About';
 import { Testimonials } from './components/Testimonials';
+import { CTA } from './components/CTA';
 
 /**
  * Phase 0 page shell: nine empty section roots in the exact order, heights
@@ -82,7 +83,7 @@ export default function App() {
         <Services />
         <About />
         <Testimonials />
-        <Section id="cta" />
+        <CTA />
         <Section id="footer" />
       </main>
     </MotionProvider>
