@@ -10,6 +10,7 @@ import '@fontsource/roboto-mono/700.css';
 
 import './styles/tokens.css';
 import './styles/base.css';
+import './styles/responsive.css';
 
 import App from './App';
 

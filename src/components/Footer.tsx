@@ -1,5 +1,9 @@
 // Footer (DESIGN_SPEC 11, 12, 13): dark stripe footer with the logo, social
 // row, copyright/credit and the signpost with five HTML signs.
+//
+// Responsive (DESIGN_SPEC 12): at 1439 and below the section becomes a single
+// centered column, the logo scales, and the signpost group moves below the
+// copyright with its tilts intact. Desktop keeps the exact absolute geometry.
 
 import { Logo } from './svg/Logo';
 import { Signpost } from './svg/Signpost';
@@ -30,39 +34,54 @@ export function Footer() {
       data-section="footer"
       id="footer"
       aria-label="Footer"
-      className="relative w-full section-bg-footer"
+      className="footer-section relative w-full section-bg-footer"
       style={{ height: '716px' }}
     >
-      {/* Left column: logo, socials, copyright, credit. */}
-      <div style={{ position: 'absolute', top: '76px', left: '72px', width: '1060px' }}>
-        <Logo variant="footer" width={506.9} height={271.2} />
+      {/* Left column: logo, socials, copyright, credit. Content context inset
+          to the section frame; children use section-absolute coords. The
+          signpost group also lives here so it can stack below the credit in
+          the responsive column layout. */}
+      <div className="footer-left" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+        <Logo
+          className="footer-logo"
+          variant="footer"
+          width={506.9}
+          height={271.2}
+          style={{ position: 'absolute', top: '76px', left: '72px' }}
+        />
 
-        {/* Social row at y=412.4. */}
-        {SOCIALS.map((s) => (
-          <div
-            key={s.id}
-            style={{
-              position: 'absolute',
-              top: '412.4px',
-              left: s.x,
-              width: '59.8px',
-              height: '52.4px',
-              background: s.bg,
-              borderRadius: '5.69px',
-            }}
-          >
-            <div style={{ position: 'absolute', inset: '11.4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: 'var(--ink)', display: 'inline-flex' }}>{s.glyph}</span>
+        {/* Social row at y=412.4. display:contents on desktop keeps each tile
+            on its exact absolute x; the responsive column turns this into a
+            flex row. */}
+        <div className="footer-socials" style={{ display: 'contents' }}>
+          {SOCIALS.map((s) => (
+            <div
+              key={s.id}
+              className="footer-social"
+              style={{
+                position: 'absolute',
+                top: '412.4px',
+                left: s.x,
+                width: '59.8px',
+                height: '52.4px',
+                background: s.bg,
+                borderRadius: '5.69px',
+              }}
+            >
+              <div style={{ position: 'absolute', inset: '11.4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ color: 'var(--ink)', display: 'inline-flex' }}>{s.glyph}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
         {/* Copyright at y=530, two lines, Outfit 400 28/35.3, ls -0.56, #fffef3. */}
         <p
+          className="footer-copy"
           style={{
             position: 'absolute',
             top: '530px',
-            left: 0,
+            left: '72px',
             width: '847px',
             fontFamily: 'var(--ff-outfit)',
             fontWeight: 400,
@@ -77,10 +96,11 @@ export function Footer() {
 
         {/* Credit at y=624, Outfit 400 22/27.7, ls -0.44, #cccccc. */}
         <p
+          className="footer-credit"
           style={{
             position: 'absolute',
             top: '624px',
-            left: 0,
+            left: '72px',
             fontFamily: 'var(--ff-outfit)',
             fontWeight: 400,
             fontSize: '22px',
@@ -91,42 +111,49 @@ export function Footer() {
         >
           {CREDIT}
         </p>
-      </div>
 
-      {/* Signpost at x=1132, y=76, with five HTML signs. */}
-      <div style={{ position: 'absolute', top: '76px', left: '1132px', width: '236px' }}>
-        <Signpost />
-        {SIGNS.map((s) => (
-          <div
-            key={s.label}
-            style={{
-              position: 'absolute',
-              top: s.y,
-              left: '1138px',
-              width: '224px',
-              height: '61px',
-              border: '1px solid var(--ink)',
-              borderRadius: '8px',
-              background: s.fill,
-              transform: `rotate(${s.rot})`,
-            }}
-          >
-            <div style={{ position: 'absolute', inset: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span
-                style={{
-                  fontFamily: s.font,
-                  fontWeight: s.font === 'var(--ff-ink)' ? 500 : 400,
-                  fontSize: '24px',
-                  lineHeight: '28.8px',
-                  color: 'var(--ink)',
-                  textAlign: 'center',
-                }}
-              >
-                {s.label}
-              </span>
-            </div>
+        {/* Signpost at x=1132, y=76, with five HTML signs. display:contents
+            keeps the desktop absolute layout; the responsive column wraps it
+            into a 236px-tall centered group below the credit. */}
+        <div className="footer-signs" style={{ display: 'contents' }}>
+          <div className="footer-signpost" style={{ position: 'absolute', top: '76px', left: '1132px', width: '236px' }}>
+            <Signpost />
           </div>
-        ))}
+          {SIGNS.map((s) => (
+            <div
+              key={s.label}
+              className="footer-sign"
+              style={{
+                ['--sign-y' as string]: s.y,
+                position: 'absolute',
+                top: s.y,
+                left: '1138px',
+                width: '224px',
+                height: '61px',
+                border: '1px solid var(--ink)',
+                borderRadius: '8px',
+                background: s.fill,
+                transform: `rotate(${s.rot})`,
+              }}
+            >
+              <div style={{ position: 'absolute', inset: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span
+                  className="footer-sign-label"
+                  style={{
+                    fontFamily: s.font,
+                    fontWeight: s.font === 'var(--ff-ink)' ? 500 : 400,
+                    fontSize: '24px',
+                    lineHeight: '28.8px',
+                    color: 'var(--ink)',
+                    textAlign: 'center',
+                  }}
+                >
+                  {s.label}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

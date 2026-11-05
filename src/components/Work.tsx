@@ -112,7 +112,7 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
         </p>
 
         {/* Tags */}
-        <ul aria-label="Tags" className="flex flex-nowrap gap-4">
+        <ul aria-label="Tags" className="flex flex-wrap gap-4 min-[1440px]:flex-nowrap">
           {project.tags.map((tag) => (
             <li
               key={tag}
@@ -143,7 +143,7 @@ export function Work() {
       id="work"
       data-section="work"
       aria-label="Selected work"
-      className="relative w-full border-y border-ink px-5 pb-16 pt-[76px] min-[900px]:px-16 min-[1280px]:h-[2572px]"
+      className="relative w-full border-y border-ink px-5 pb-16 pt-[76px] min-[900px]:px-16 min-[1440px]:h-[2572px]"
       style={{
         backgroundColor: 'var(--lav-work)',
         backgroundImage:

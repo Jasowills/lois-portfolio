@@ -48,16 +48,16 @@ const SPEC = {
   badge: [
     { // 8.1 badge 1: top-right of card 1, rot +3.32, fill #f5e8ec, true size 101.8x50.1
       fill: '#f5e8ec',
-      left: '502.1px', // card-local: unrot badge top-left (575.1, 32.72) - card1 top-left (73, 65.05)
-      top: '-32.33px',
+      left: '575.1px', // 8: unrot badge top-left in section coords
+      top: '32.72px',
       w: '101.8px',
       h: '50.1px',
       rot: '+3.32deg',
     },
     { // 8.1 badge 2: top-left of card 2, rot -15.12, fill #ff9c39, true size 104.3x53.5
       fill: '#ff9c39',
-      left: '-4.05px', // card-local: unrot badge top-left (68.95, 493.45) - card2 top-left (73, 505.75)
-      top: '-12.3px',
+      left: '68.95px', // 8: unrot badge top-left in section coords
+      top: '493.45px',
       w: '104.3px',
       h: '53.5px',
       rot: '-15.12deg',
@@ -88,11 +88,12 @@ export function About() {
       data-section="about"
       id="about"
       aria-label="About"
-      className="relative w-full overflow-hidden"
+      className="about-section relative w-full overflow-hidden"
       style={{ height: '969px' }}
     >
       {/* 8.1 Left half: yellow stripe field with 1px black right border. */}
       <div
+        className="about-left"
         style={{
           position: 'absolute',
           left: 0,
@@ -103,10 +104,11 @@ export function About() {
           borderRight: '1px solid var(--ink)',
         }}
       >
-        {/* padding 64 52 64 72 -> content box y 64..905, x 72..668 */}
-        <div style={{ position: 'absolute', top: '64px', left: '72px', right: '52px', bottom: '64px' }}>
+        {/* content context for the left half (children use absolute coords) */}
+        <div className="about-left-canvas" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           {/* 8.1 card 1: rot -3.32, unrot top-left (73, 65.05) */}
           <div
+            className="about-card"
             style={{
               position: 'absolute',
               left: '73px',
@@ -124,6 +126,7 @@ export function About() {
           </div>
           {/* 8.1 card 2: rot +1.64, unrot top-left (73, 505.75) */}
           <div
+            className="about-card"
             style={{
               position: 'absolute',
               left: '73px',
@@ -144,6 +147,7 @@ export function About() {
           {SPEC.badge.map((b, i) => (
             <div
               key={i}
+              className="about-badge"
               style={{
                 position: 'absolute',
                 left: b.left,
@@ -178,6 +182,7 @@ export function About() {
 
       {/* 8.2 Right half: bg #fffefe. */}
       <div
+        className="about-right"
         style={{
           position: 'absolute',
           left: '720px',
@@ -187,20 +192,20 @@ export function About() {
           background: '#fffefe',
         }}
       >
-        {/* padding 76 72 64 52 -> content y 76..905, x 772..1368 */}
-        <div style={{ position: 'absolute', top: '76px', left: '52px', right: '72px', bottom: '64px' }}>
+        {/* content context for the right half (children use absolute coords) */}
+        <div className="about-right-inner" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           {/* sticker */}
-          <div style={{ position: 'absolute', top: '76px', left: '772px', width: '68px', height: '36px' }}>
+          <div className="about-sticker" style={{ position: 'absolute', top: '76px', left: '52px', width: '68px', height: '36px' }}>
             <StickerLabel label="About" fill="var(--lime)" rotate={-5.4} />
           </div>
 
           {/* H2 */}
           <h2
-            className="font-outfit"
+            className="about-h2 font-outfit"
             style={{
               position: 'absolute',
               top: '150.2px',
-              left: '772px',
+              left: '52px',
               width: '596px',
               height: '100px',
               fontFamily: 'var(--ff-ink)',
@@ -215,7 +220,7 @@ export function About() {
           </h2>
 
           {/* bio */}
-          <div style={{ position: 'absolute', top: '282.2px', left: '772px', width: '596px', height: '512px' }}>
+          <div className="about-bio" style={{ position: 'absolute', top: '282.2px', left: '52px', width: '596px', height: '512px' }}>
             {ABOUT_PARAS.map((p, i) => (
               <p
                 key={i}
@@ -235,7 +240,7 @@ export function About() {
           </div>
 
           {/* button */}
-          <div style={{ position: 'absolute', top: '846.2px', left: '772px' }}>
+          <div className="about-btn" style={{ position: 'absolute', top: '846.2px', left: '52px' }}>
             <Button
               label="A little more about me"
               arrow="up-right"

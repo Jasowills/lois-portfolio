@@ -33,17 +33,19 @@ export function Testimonials() {
       data-section="testimonials"
       id="testimonials"
       aria-label="Testimonials"
-      className="relative w-full bg-cream-white border-y border-ink"
+      className="testimonials-section relative w-full bg-cream-white border-y border-ink"
       style={{ height: '821px' }}
     >
-      <div style={{ position: 'absolute', top: '76px', left: '72px', right: '72px', bottom: '64px' }}>
+      {/* content context (inset to the framed area; children use section-absolute coords) */}
+      <div className="testimonials-inner" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
         {/* Sticker, left aligned at x=72, y=76, rot +3.96. */}
-        <div style={{ position: 'absolute', top: '76px', left: '72px', width: '137px', height: '36px' }}>
+        <div className="tsticker" style={{ position: 'absolute', top: '76px', left: '72px', width: '137px', height: '36px' }}>
           <StickerLabel label="Kind words" fill="var(--lime)" rotate={3.96} />
         </div>
 
         {/* H2, box 652x100 at (72, 153.4), two lines, Blauer Nue 600 45/50 ls -1.35. */}
         <h2
+          className="th2"
           style={{
             position: 'absolute',
             top: '153.4px',
@@ -61,24 +63,29 @@ export function Testimonials() {
           Trusted by amazing people and teams across the globe.
         </h2>
 
-        {/* Quote cards. */}
+        {/* Quote cards. Entry 30 convention: Figma strokes are centered, so the
+            card renders as a 619x443 border-box offset -0.5px and the 1px ink
+            stroke is an overlay child (no CSS border, so content is positioned
+            against the border box like Figma). */}
+        <div className="tcards">
         {cards.map((c) => (
           <div
             key={c.key}
+            className="tcard"
             style={{
               position: 'absolute',
-              top: '313.4px',
-              left: c.key === 0 ? '72px' : '750px',
-              width: '618px',
-              height: '442px',
+              top: '312.9px',
+              left: c.key === 0 ? '71.5px' : '749.5px',
+              width: '619px',
+              height: '443px',
               background: 'var(--blue)',
-              border: '1px solid var(--ink)',
-              borderRadius: '36px',
+              borderRadius: '36.5px',
               overflow: 'hidden',
             }}
           >
             {/* Avatar: 144x129, radius 24, 1px stroke, centered (x offset 205). */}
             <div
+              className="tavatar"
               style={{
                 position: 'absolute',
                 top: '40px',
@@ -91,7 +98,7 @@ export function Testimonials() {
               }}
             />
             {/* Quote: 554x128, Outfit 400 24/32 ls -0.48. */}
-            <div style={{ position: 'absolute', top: '205px', left: '32px', width: '554px', height: '128px', textAlign: 'center' }}>
+            <div className="tquote" style={{ position: 'absolute', top: '206.5px', left: '32px', width: '554px', height: '128px', textAlign: 'center' }}>
               <p
                 style={{
                   fontFamily: 'var(--ff-outfit)',
@@ -106,7 +113,7 @@ export function Testimonials() {
               </p>
             </div>
             {/* Attribution: Outfit 500 28/44.6 ls -0.54. */}
-            <div style={{ position: 'absolute', top: '369px', left: '32px', width: '554px', height: '44.6px', textAlign: 'center' }}>
+            <div className="tattr" style={{ position: 'absolute', top: '360.5px', left: '32px', width: '554px', height: '44.6px', textAlign: 'center' }}>
               <p
                 style={{
                   fontFamily: 'var(--ff-outfit)',
@@ -120,8 +127,21 @@ export function Testimonials() {
                 {c.attribution}
               </p>
             </div>
+
+            {/* Card stroke overlay (painted over children, no content offset). */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                border: '1px solid var(--ink)',
+                borderRadius: '36.5px',
+                pointerEvents: 'none',
+              }}
+            />
           </div>
         ))}
+        </div>
       </div>
     </section>
   );

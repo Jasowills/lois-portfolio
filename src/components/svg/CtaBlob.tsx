@@ -15,6 +15,7 @@ export function CtaBlob({ ...rest }: SVGProps<SVGSVGElement>) {
       viewBox={SPEC.viewBox}
       fill="none"
       overflow="visible"
+      preserveAspectRatio="none"
       aria-hidden="true"
       {...rest}
     >

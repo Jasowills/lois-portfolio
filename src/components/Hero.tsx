@@ -68,7 +68,7 @@ export function Hero() {
   return (
     <section
       data-section="hero"
-      className="relative w-full bg-cream-hero px-5 pt-[64px] pb-16 md:px-10 md:pt-[84px] md:pb-16 md:pl-[72px] min-[1280px]:h-[866px]"
+      className="relative w-full bg-cream-hero px-5 pt-[64px] pb-16 md:px-10 md:pt-[84px] md:pb-16 md:pl-[72px] min-[1440px]:h-[866px]"
     >
       <div className="mx-auto w-full max-w-[1440px] flex flex-col items-center">
         <div className="flex w-full max-w-[1328px] flex-col items-center">
@@ -89,7 +89,7 @@ export function Hero() {
           <div
             aria-hidden="true"
             role="presentation"
-            className="relative hidden md:block"
+            className="relative hidden min-[1440px]:block"
             style={{ width: '100%', height: SPEC.deck.h, marginTop: `${SPEC.h1Gap}px` }}
           >
             {SPEC.deck.cards.map((card, i) => (
@@ -113,17 +113,18 @@ export function Hero() {
             ))}
           </div>
 
-          {/* 12 mobile: horizontally scrollable snap-aligned deck, card 78vw,
-              tilts kept, 12% overlap */}
+          {/* 12 mobile: horizontally scrollable snap-aligned deck, card 78vw
+              (capped at 520 on tablet/laptop so it stays a deck), tilts kept,
+              12% overlap. Shown below the desktop breakpoint. */}
           <div
             aria-hidden="true"
             role="presentation"
-            className="relative w-full overflow-x-auto md:hidden"
+            className="hero-mobile-deck relative w-full overflow-x-auto min-[1440px]:hidden"
             style={{
               /* Height covers the rotated bbox (391*sin(6.69deg) +
                  250*cos(6.69deg) = 293.4px => 0.7519 x cardW), else the
                  corners clip. */
-              height: `calc(78vw * 0.7519 + 64px)`,
+              height: `calc(min(78vw, 520px) * 0.7519 + 64px)`,
               marginTop: `${SPEC.h1Gap}px`,
               scrollSnapType: 'x mandatory',
             }}
@@ -134,14 +135,14 @@ export function Hero() {
                   key={card.id}
                   style={{
                     flex: 'none',
-                    width: '78vw',
-                    height: `calc(78vw * ${SPEC.deck.cardH} / ${SPEC.deck.cardW})`,
+                    width: 'min(78vw, 520px)',
+                    height: `calc(min(78vw, 520px) * ${SPEC.deck.cardH} / ${SPEC.deck.cardW})`,
                     boxSizing: 'border-box',
                     border: '1px solid var(--ink)',
                     borderRadius: 'var(--r-card)',
                     transform: `rotate(${card.rot}deg)`,
                     scrollSnapAlign: 'center',
-                    marginLeft: i === 0 ? '11vw' : 'calc(-0.12 * 78vw)',
+                    marginLeft: i === 0 ? 'calc(0.14 * min(78vw, 520px))' : 'calc(-0.12 * min(78vw, 520px))',
                     background: CHECKER_BG,
                   }}
                 />
@@ -151,7 +152,7 @@ export function Hero() {
 
           {/* 4.1 Paragraph: three centered lines */}
           <p
-            className="w-full text-center font-outfit text-ink text-[18px] leading-[26px] tracking-[-0.02em] md:w-[924px] md:text-[26px] md:leading-[36px]"
+            className="w-full text-center font-outfit text-ink text-[18px] leading-[26px] tracking-[-0.02em] md:max-w-[924px] md:text-[26px] md:leading-[36px]"
             style={{ marginTop: `${SPEC.paraGap}px` }}
           >
             I'm Lois, a brand and visual designer turning good ideas into

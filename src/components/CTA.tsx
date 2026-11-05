@@ -25,20 +25,21 @@ export function CTA() {
         data-section="cta"
         id="contact"
         aria-label="Contact"
-        className="relative w-full bg-cta-bg border-y border-ink"
+        className="cta-section relative w-full bg-cta-bg border-y border-ink"
         style={{ height: '830px' }}
       >
         {/* Blob: absolute x 64..1376, y 86..754, 1312x668, overflow visible. */}
-        <div style={{ position: 'absolute', top: '86px', left: '64px', width: '1312px', height: '668px', overflow: 'visible' }}>
+        <div className="cta-blob" style={{ position: 'absolute', top: '86px', left: '64px', width: '1312px', height: '668px', overflow: 'visible' }}>
           <CtaBlob />
         </div>
 
         {/* Centered content block, vertically centered in the blob. */}
-        <div style={{ position: 'absolute', top: '0px', left: '0px', right: '0px', bottom: '0px' }}>
+        <div className="cta-content" style={{ position: 'absolute', top: '0px', left: '0px', right: '0px', bottom: '0px' }}>
           {/* Content column: H2 top 298.1, para top 380.1, button top 484.1. */}
-          <div style={{ position: 'absolute', top: '298.1px', left: '192.5px', width: '1055px', height: '244px' }}>
+          <div className="cta-copy" style={{ position: 'absolute', top: '298.1px', left: '192.5px', width: '1055px', height: '244px' }}>
             {/* H2, box 1055x50 at (192.5, 298.1), centered. */}
             <h2
+              className="cta-h2"
               style={{
                 position: 'absolute',
                 top: 0,
@@ -59,6 +60,7 @@ export function CTA() {
 
             {/* Paragraph, box 1055x72 at (192.5, 380.1), centered, two lines. */}
             <p
+              className="cta-para"
               style={{
                 position: 'absolute',
                 top: '80px',
@@ -78,7 +80,7 @@ export function CTA() {
             </p>
 
             {/* Button, 317x58 at (561.5, 484.1). */}
-            <div style={{ position: 'absolute', top: '184px', left: 0, width: '1055px', height: '58px', display: 'flex', justifyContent: 'center' }}>
+            <div className="cta-button" style={{ position: 'absolute', top: '184px', left: 0, width: '1055px', height: '58px', display: 'flex', justifyContent: 'center' }}>
               <Button
                 label="Tell me what you're working on"
                 arrow="up-right"

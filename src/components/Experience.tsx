@@ -26,7 +26,7 @@ export function Experience() {
       data-section="experience"
       id="experience"
       aria-label="Experience"
-      className="relative w-full bg-lav-exp px-5 pb-20 pt-[84px] min-[1200px]:h-[780px] min-[1200px]:px-[120px] min-[1200px]:pb-0"
+      className="experience-section relative w-full bg-lav-exp px-5 pb-20 pt-[84px] min-[1440px]:h-[780px] min-[1440px]:px-[120px] min-[1440px]:pb-0"
     >
       <div className="mx-auto flex w-full max-w-[1200px] flex-col">
         <p
@@ -48,14 +48,14 @@ export function Experience() {
 
         {/* 6/12: cards row; horizontal scroll-snap below 900px */}
         <div
-          className="mt-7 w-full overflow-x-auto min-[1200px]:overflow-visible"
+          className="mt-7 w-full overflow-x-auto min-[1440px]:overflow-visible"
           style={{ scrollSnapType: 'x mandatory' }}
         >
-          <div className="flex min-w-[1200px] gap-[18px] min-[1200px]:min-w-0">
+          <div className="flex min-w-[1200px] gap-[18px] min-[1440px]:min-w-0">
             {data.cards.map((card) => (
               <article
                 key={card.title}
-                className="relative flex h-[330px] w-[282px] shrink-0 flex-col overflow-hidden"
+                className="exp-card relative flex h-[330px] w-[78vw] shrink-0 flex-col overflow-hidden min-[900px]:w-[282px]"
                 style={{
                   scrollSnapAlign: 'start',
                   background: card.fill,

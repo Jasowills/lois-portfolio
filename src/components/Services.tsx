@@ -37,16 +37,17 @@ function PanelBody({ tab }: { tab: (typeof data.tabs)[number] }) {
   ];
 
   return (
-    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '36px' }}>
+    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '36px' }} className="svc-body">
       {/* 7.2.1 title + desc */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+      <div className="svc-head" style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
         <h3
-          className="font-outfit"
+          className="svc-title font-outfit"
           style={{ position: 'absolute', top: titleTop, left: 0, right: 0, fontSize: '28px', lineHeight: '35.3px', letterSpacing: '-0.03em', fontWeight: 500, color: '#0d0d0d' }}
         >
           {tab.title}
         </h3>
         <p
+          className="svc-desc"
           style={{ position: 'absolute', top: descTop, left: 0, right: 0, fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: '#202020' }}
         >
           {tab.description}
@@ -54,11 +55,11 @@ function PanelBody({ tab }: { tab: (typeof data.tabs)[number] }) {
       </div>
 
       {/* 7.2.2 divider */}
-      <div style={{ position: 'absolute', top: dividerTop, left: 0, right: 0, height: 1, background: '#dadada' }} />
+      <div className="svc-divider" style={{ position: 'absolute', top: dividerTop, left: 0, right: 0, height: 1, background: '#dadada' }} />
 
       {/* 7.2.3 two columns */}
-      <div style={{ position: 'absolute', top: columnsTop, left: 0, right: 0, display: 'flex', gap: 24 }}>
-        <div style={{ width: 576, flexShrink: 0 }}>
+      <div className="svc-cols" style={{ position: 'absolute', top: columnsTop, left: 0, right: 0, display: 'flex', gap: 24 }}>
+        <div className="svc-col" style={{ width: 576, flexShrink: 0 }}>
           <p style={{ fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: '#202020' }}>WHAT&#x27;S INCLUDED:</p>
           <ul style={{ marginTop: 12, paddingLeft: 0, listStyle: 'none' }}>
             {included.map((item) => (
@@ -66,7 +67,7 @@ function PanelBody({ tab }: { tab: (typeof data.tabs)[number] }) {
             ))}
           </ul>
         </div>
-        <div style={{ width: 576, flexShrink: 0 }}>
+        <div className="svc-col" style={{ width: 576, flexShrink: 0 }}>
           <p style={{ fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: '#202020' }}>A GOOD FIT FOR:</p>
           <ul style={{ marginTop: 12, paddingLeft: 0, listStyle: 'none' }}>
             {goodFit.map((item) => (
@@ -77,8 +78,8 @@ function PanelBody({ tab }: { tab: (typeof data.tabs)[number] }) {
       </div>
 
       {/* 7.2.4 bottom row: meta lines + See what I do button */}
-      <div style={{ position: 'absolute', top: bottomRowTop, left: 0, right: 0, display: 'flex', alignItems: 'center' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="svc-bottom" style={{ position: 'absolute', top: bottomRowTop, left: 0, right: 0, display: 'flex', alignItems: 'center' }}>
+        <div className="svc-meta" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {meta.map(([label, value]) => (
             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
               <span style={{ background: '#f5f5f5', height: 32, padding: '0 8px', borderRadius: 32, display: 'inline-flex', alignItems: 'center' }}>
@@ -88,7 +89,7 @@ function PanelBody({ tab }: { tab: (typeof data.tabs)[number] }) {
             </div>
           ))}
         </div>
-        <div style={{ position: 'absolute', left: 990, top: 0, bottom: 0, display: 'flex', alignItems: 'center' }}>
+        <div className="svc-btn" style={{ position: 'absolute', left: 990, top: 0, bottom: 0, display: 'flex', alignItems: 'center' }}>
           <Button label="See what I do" arrow="up-right" fill="var(--yellow)" href="#contact" aria-label="See what I do" />
         </div>
       </div>
@@ -127,7 +128,7 @@ export function Services() {
       data-section="services"
       id="services"
       aria-label="Services"
-      className="relative w-full bg-cream px-5 pb-20 pt-[76px] min-[1280px]:h-[1226px] min-[1280px]:px-[64px] min-[1280px]:pb-0"
+      className="services-section relative w-full bg-cream px-5 pb-20 pt-[76px] min-[1440px]:h-[1226px] min-[1440px]:px-[64px] min-[1440px]:pb-0"
     >
       <div className="mx-auto flex w-full max-w-[1440px] flex-col">
         {/* 7: sticker label */}
@@ -145,12 +146,13 @@ export function Services() {
         </h2>
 
         {/* 7: folder */}
-        <div style={{ position: 'relative', width: 1312, height: 852, marginTop: '60px' }}>
+        <div className="svc-folder" style={{ position: 'relative', width: 1312, height: 852, marginTop: '60px' }}>
           {/* 7.2 panel */}
           <div
             role="tabpanel"
             id={`${tabListId}-panel`}
             aria-labelledby={`${tabListId}-tab-${contentIdx}`}
+            className="svc-panel"
             style={{
               position: 'absolute',
               top: 144,
@@ -168,6 +170,7 @@ export function Services() {
             }}
           >
             <div
+              className="svc-card"
               style={{
                 position: 'absolute',
                 top: 32,
@@ -188,6 +191,7 @@ export function Services() {
           <div
             role="tablist"
             aria-label="Ways I can help"
+            className="svc-tabs"
             style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 144 }}
           >
             {tabs.map((tab, i) => {
@@ -216,7 +220,7 @@ export function Services() {
                       setSelectedId(next.id);
                     }
                   }}
-                  className="absolute"
+                  className="svc-tab absolute"
                   style={{
                     top: isActive ? 0 : '20px',
                     left: TAB_X[i],

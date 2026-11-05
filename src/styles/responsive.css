@@ -1,0 +1,544 @@
+/*
+ * responsive.css: derived layouts for DESIGN_SPEC section 12.
+ *
+ * Desktop (>=1440) is the exact Figma canvas and is owned by each component's
+ * inline styles. Every rule below lives in a max-width media query, so the
+ * 1440 visual-diff render is untouched. Values are either percentages of the
+ * 1440 spec geometry or container-query units of the fixed 720px half used by
+ * About, cited inline.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Below the exact desktop canvas (1280-1439 included, because the     */
+/* 1440 art does not fit a narrower viewport): fluid, no page overflow. */
+/* ------------------------------------------------------------------ */
+@media (max-width: 1439px) {
+  /* CTA (12: blob scales to container width, text scales down, button
+     full width on mobile). The organic blob stretches to the section box. */
+  .cta-section {
+    height: auto !important;
+    min-height: clamp(520px, 62vw, 760px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(48px, 7vw, 96px) clamp(20px, 5vw, 72px);
+  }
+
+  .cta-blob {
+    top: clamp(16px, 3vw, 40px) !important;
+    bottom: clamp(16px, 3vw, 40px) !important;
+    left: clamp(16px, 4.44vw, 64px) !important;
+    right: clamp(16px, 4.44vw, 64px) !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .cta-blob svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cta-content {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cta-copy {
+    position: static !important;
+    width: 100% !important;
+    max-width: 1055px;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(20px, 2.5vw, 32px);
+  }
+
+  .cta-h2 {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    font-size: clamp(30px, 3.6vw, 45px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .cta-para {
+    position: static !important;
+    width: 100% !important;
+    max-width: 720px;
+    height: auto !important;
+    font-size: clamp(18px, 2vw, 26px) !important;
+    line-height: 1.4 !important;
+  }
+
+  .cta-button {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Testimonials (12: cards stack). Two fluid columns from 900 up, one
+     below, with the card content flowing instead of pinned to 443px. */
+  .testimonials-section {
+    height: auto !important;
+    padding: 76px clamp(20px, 5vw, 72px) 64px;
+  }
+
+  .testimonials-inner {
+    position: static !important;
+  }
+
+  .tsticker {
+    position: static !important;
+    margin-bottom: 41.4px;
+  }
+
+  .th2 {
+    position: static !important;
+    width: 100% !important;
+    max-width: 652px;
+    height: auto !important;
+    font-size: clamp(32px, 3.125vw, 45px) !important;
+    line-height: 1.111 !important;
+  }
+
+  .tcards {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .tcard {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 40px 32px;
+  }
+
+  .tavatar {
+    position: static !important;
+  }
+
+  .tquote,
+  .tattr {
+    position: static !important;
+    width: 100% !important;
+    max-width: 554px;
+    height: auto !important;
+  }
+
+  .tquote p {
+    font-size: clamp(18px, 2vw, 24px) !important;
+    line-height: 1.33 !important;
+  }
+
+  .tattr p {
+    font-size: clamp(20px, 2.2vw, 28px) !important;
+    line-height: 1.4 !important;
+  }
+
+  /* About (12: halves stack, cards scale with the same tilts). The left
+     canvas keeps its 720x969 proportions via container units; the right
+     half becomes a normal text column. */
+  .about-section {
+    display: flex;
+    height: auto !important;
+  }
+
+  .about-left {
+    position: relative !important;
+    flex: 0 0 50%;
+    width: 50% !important;
+    height: auto !important;
+    container-type: inline-size;
+    /* 94px period / 47px bands at 720 (DESIGN_SPEC 8.1). */
+    background: repeating-linear-gradient(
+      to right,
+      #fef5b6 0,
+      #fef5b6 5.833cqw,
+      #fbf1a8 6.528cqw,
+      #fbf1a8 12.361cqw,
+      #fef5b6 13.056cqw
+    ) !important;
+  }
+
+  .about-left-canvas {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    height: 134.583cqw; /* 969 / 720 */
+  }
+
+  .about-card {
+    width: 82.361cqw !important; /* 593 / 720 */
+    height: 55.208cqw !important; /* 397.5 / 720 */
+    border-radius: 5cqw !important; /* 36 / 720 */
+  }
+
+  .about-card:nth-child(1) {
+    left: 10.139cqw !important; /* 73 / 720 */
+    top: 9.035cqw !important; /* 65.05 / 720 */
+  }
+
+  .about-card:nth-child(2) {
+    left: 10.139cqw !important;
+    top: 70.243cqw !important; /* 505.75 / 720 */
+  }
+
+  .about-badge:nth-child(3) {
+    left: 79.875cqw !important; /* 575.1 / 720 */
+    top: 4.544cqw !important; /* 32.72 / 720 */
+    width: 14.139cqw !important; /* 101.8 / 720 */
+    height: 6.958cqw !important; /* 50.1 / 720 */
+  }
+
+  .about-badge:nth-child(4) {
+    left: 9.576cqw !important; /* 68.95 / 720 */
+    top: 68.535cqw !important; /* 493.45 / 720 */
+    width: 14.486cqw !important; /* 104.3 / 720 */
+    height: 7.431cqw !important; /* 53.5 / 720 */
+  }
+
+  .about-right {
+    position: relative !important;
+    left: auto !important;
+    flex: 0 0 50%;
+    width: 50% !important;
+    height: auto !important;
+  }
+
+  .about-right-inner {
+    position: static !important;
+    padding: 76px clamp(24px, 4vw, 52px) 64px;
+  }
+
+  .about-sticker {
+    position: static !important;
+  }
+
+  .about-h2 {
+    position: static !important;
+    width: 100% !important;
+    max-width: 596px;
+    height: auto !important;
+    margin-top: 38.2px;
+    font-size: clamp(32px, 3.125vw, 45px) !important;
+    line-height: 1.111 !important;
+  }
+
+  .about-bio {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 32px;
+  }
+
+  .about-bio p {
+    font-size: clamp(18px, 1.67vw, 24px) !important;
+    line-height: 1.33 !important;
+  }
+
+  .about-btn {
+    position: static !important;
+    margin-top: 40px;
+  }
+
+  /* Footer (12: logo scales, signpost below the copyright, centered). */
+  .footer-section {
+    height: auto !important;
+    padding: 76px clamp(20px, 5vw, 72px) 64px;
+  }
+
+  .footer-left {
+    position: static !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-logo {
+    position: static !important;
+    width: clamp(260px, 35.2vw, 506.9px) !important;
+    height: auto !important;
+  }
+
+  .footer-socials {
+    display: flex !important;
+    gap: 14.1px;
+    margin-top: 32px;
+  }
+
+  .footer-social {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  .footer-copy {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: 847px;
+    margin-top: 44px;
+    font-size: clamp(20px, 1.94vw, 28px) !important;
+    line-height: 1.26 !important;
+  }
+
+  .footer-credit {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    margin-top: 24px;
+    font-size: clamp(18px, 1.53vw, 22px) !important;
+  }
+
+  .footer-signs {
+    display: block !important;
+    position: relative;
+    width: 236px;
+    height: 520px;
+    margin: 48px auto 0;
+  }
+
+  .footer-signpost {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+
+  .footer-sign {
+    top: calc(var(--sign-y) - 76px) !important;
+    left: 6px !important;
+  }
+
+  .footer-sign-label {
+    font-size: clamp(20px, 1.67vw, 24px) !important;
+  }
+
+  /* Services (12: tabs become a scrollable strip, panel stacks). */
+  .services-section {
+    height: auto !important;
+    padding: 76px clamp(20px, 5vw, 64px) 64px !important;
+  }
+
+  .svc-folder {
+    width: 100% !important;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .svc-tabs {
+    position: static !important;
+    order: 1;
+    height: auto !important;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .svc-tab {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: auto !important;
+    min-width: 240px;
+    height: auto !important;
+    flex: 1 1 0;
+    padding: 24px 20px !important;
+    font-size: clamp(20px, 2.2vw, 32px) !important;
+    line-height: 1.2 !important;
+    border-radius: 24px 24px 0 0 !important;
+    border-bottom-width: 0 !important;
+  }
+
+  .svc-panel {
+    position: static !important;
+    order: 2;
+    top: auto !important;
+    height: auto !important;
+    margin-top: -1px;
+    padding: 20px !important;
+    border-radius: 0 0 24px 24px !important;
+  }
+
+  .svc-card {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 24px !important;
+  }
+
+  .svc-body {
+    position: relative !important;
+    inset: auto !important;
+    padding: clamp(20px, 3vw, 36px) !important;
+  }
+
+  .svc-head {
+    position: static !important;
+  }
+
+  .svc-title {
+    position: static !important;
+    font-size: clamp(22px, 2vw, 28px) !important;
+  }
+
+  .svc-desc {
+    position: static !important;
+    margin-top: 12px;
+    font-size: clamp(17px, 1.6vw, 22px) !important;
+  }
+
+  .svc-divider {
+    position: static !important;
+    margin-top: 24px;
+  }
+
+  .svc-cols {
+    position: static !important;
+    margin-top: 24px;
+  }
+
+  .svc-col {
+    width: 50% !important;
+  }
+
+  .svc-bottom {
+    position: static !important;
+    margin-top: 32px;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+  }
+
+  .svc-btn {
+    position: static !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Tablet and mobile: structural stacks (DESIGN_SPEC 12 breakpoint 900) */
+/* ------------------------------------------------------------------ */
+@media (max-width: 899px) {
+  .services-section h2 {
+    font-size: clamp(30px, 7.5vw, 40px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .svc-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .svc-meta {
+    width: 100%;
+  }
+
+  .svc-meta > div {
+    height: auto !important;
+    min-height: 32px;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .tcards {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 619px;
+    margin-inline: auto;
+  }
+
+  .about-section {
+    display: block;
+  }
+
+  .about-left,
+  .about-right {
+    width: 100% !important;
+    flex: none;
+  }
+
+  .about-right-inner {
+    padding: 56px 20px 64px;
+  }
+
+  .about-h2 {
+    font-size: clamp(30px, 7.5vw, 40px) !important;
+  }
+
+  .svc-cols {
+    flex-direction: column;
+  }
+
+  .svc-col {
+    width: 100% !important;
+  }
+
+  .footer-signs {
+    margin-top: 40px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile (<768): 20px page gutters and the type scale from 12          */
+/* ------------------------------------------------------------------ */
+@media (max-width: 767px) {
+  .cta-section {
+    padding-block: 48px;
+  }
+
+  .cta-h2 {
+    font-size: clamp(28px, 7.6vw, 34px) !important;
+  }
+
+  .cta-button > a,
+  .cta-button > button {
+    width: 100% !important;
+    max-width: 320px;
+  }
+
+  .testimonials-section {
+    padding: 56px 20px 48px;
+  }
+
+  .th2 {
+    font-size: clamp(28px, 7.6vw, 36px) !important;
+  }
+
+  .tcard {
+    padding: 32px 20px;
+  }
+
+  .about-right-inner {
+    padding: 48px 20px 56px;
+  }
+
+  .footer-section {
+    padding: 56px 20px 48px;
+  }
+
+  .footer-copy {
+    font-size: 20px !important;
+  }
+
+  .footer-credit {
+    font-size: 18px !important;
+  }
+
+  .services-section {
+    padding: 56px 20px 48px !important;
+  }
+}
