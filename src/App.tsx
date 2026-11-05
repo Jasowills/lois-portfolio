@@ -1,5 +1,6 @@
 import { MotionProvider } from './motion/MotionProvider';
 import { Loader } from './components/Loader';
+import { Cursor } from './components/Cursor';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <MotionProvider>
       <Loader />
+      <Cursor />
       <a href="#main" className="skip-link">
         Skip to content
       </a>

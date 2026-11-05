@@ -48,6 +48,7 @@ export function Experience() {
 
         {/* 6/12: cards row; horizontal scroll-snap below 900px */}
         <div
+          data-cursor="drag"
           className="mt-7 w-full overflow-x-auto min-[1440px]:overflow-visible"
           style={{ scrollSnapType: 'x mandatory' }}
         >

@@ -51,6 +51,23 @@ body {
 }
 
 /* ------------------------------------------------------------------ */
+/* Custom cursor (MOTION_SPEC 2.2). The class is added only while the   */
+/* desktop cursor overlay is mounted. Interactive elements keep their  */
+/* DOM semantics; form fields keep the system caret.                   */
+/* ------------------------------------------------------------------ */
+html.cursor-custom body {
+  cursor: none;
+}
+
+html.cursor-custom :is(a, button, [role='button'], summary, [data-cursor]) {
+  cursor: none;
+}
+
+html.cursor-custom :is(input, textarea, select, [contenteditable='true']) {
+  cursor: auto;
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the global kill switch. All motion systems must     */
 /* additionally gate on useStaticMode() (MOTION_SPEC section 0).       */
 /* ------------------------------------------------------------------ */

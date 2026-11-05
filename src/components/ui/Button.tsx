@@ -36,6 +36,8 @@ type BaseProps = {
   /** View Project variant: label 600 (DESIGN_SPEC 1.4 last row). */
   strong?: boolean;
   className?: string;
+  /** Custom cursor override for buttons nested inside tagged regions. */
+  'data-cursor'?: 'link' | 'view' | 'drag';
 };
 
 type ButtonProps = BaseProps &

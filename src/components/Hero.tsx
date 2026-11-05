@@ -89,6 +89,7 @@ export function Hero() {
           <div
             aria-hidden="true"
             role="presentation"
+            data-cursor="drag"
             className="relative hidden min-[1440px]:block"
             style={{ width: '100%', height: SPEC.deck.h, marginTop: `${SPEC.h1Gap}px` }}
           >
@@ -119,6 +120,7 @@ export function Hero() {
           <div
             aria-hidden="true"
             role="presentation"
+            data-cursor="drag"
             className="hero-mobile-deck relative w-full overflow-x-auto min-[1440px]:hidden"
             style={{
               /* Height covers the rotated bbox (391*sin(6.69deg) +

@@ -48,6 +48,7 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
   return (
     <article
       data-accent={project.accent}
+      data-cursor="view"
       aria-label={project.title}
       className="group relative flex w-full flex-col items-stretch overflow-hidden min-[900px]:min-h-[var(--card-min-h)]"
       style={{
@@ -73,6 +74,7 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
           strong
           fill="var(--orange-cta)"
           href={href}
+          data-cursor="link"
           aria-label={`View project: ${project.title}`}
           className="absolute bottom-6 left-6 -translate-x-4 opacity-0 transition duration-300 focus-visible:translate-x-0 focus-visible:opacity-100 group-hover:translate-x-0 group-hover:opacity-100 group-focus-within:translate-x-0 group-focus-within:opacity-100"
         />
