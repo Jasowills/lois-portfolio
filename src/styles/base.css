@@ -17,6 +17,23 @@ body {
 }
 
 /* ------------------------------------------------------------------ */
+/* Screen-reader-only text (MOTION_SPEC 3 banner typing): the visible   */
+/* characters are aria-hidden, the full copy and link name stay in the  */
+/* accessibility tree.                                                 */
+/* ------------------------------------------------------------------ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ------------------------------------------------------------------ */
 /* Focus rings (DESIGN_SPEC 12): a 3px black ring with a 2px #fef5b6   */
 /* offset gap, never removed.                                          */
 /* ------------------------------------------------------------------ */

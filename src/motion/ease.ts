@@ -22,11 +22,20 @@ export const EASE = {
   squash: 'squash',
 } as const;
 
+type Bezier = [number, number, number, number];
+
+const SNAP: Bezier = [0.2, 0.9, 0.2, 1];
+const POP: Bezier = [0.34, 1.56, 0.64, 1];
+const GLIDE: Bezier = [0.16, 1, 0.3, 1];
+
+/** Cubic-bezier tuples for motion/react, which rejects CSS strings. */
+export const EASE_BEZIER = { snap: SNAP, pop: POP, glide: GLIDE };
+
 /** CSS equivalents for motion/react and CSS transitions. */
 export const EASE_CSS = {
-  snap: 'cubic-bezier(0.2, 0.9, 0.2, 1)',
-  pop: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-  glide: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  snap: `cubic-bezier(${SNAP.join(', ')})`,
+  pop: `cubic-bezier(${POP.join(', ')})`,
+  glide: `cubic-bezier(${GLIDE.join(', ')})`,
 } as const;
 
 export const DURATION = {
