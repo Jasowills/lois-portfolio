@@ -20,6 +20,8 @@ export const EASE = {
   glide: 'glide',
   swing: 'swing',
   squash: 'squash',
+  // MOTION_SPEC 4.1 names back.out(1.5) for the card-deal rotation.
+  deal: 'back.out(1.5)',
 } as const;
 
 type Bezier = [number, number, number, number];

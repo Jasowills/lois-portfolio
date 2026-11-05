@@ -1,7 +1,18 @@
 // Hero (DESIGN_SPEC 4.1/4.2, 12, 13): the cream introduction section with the
 // two-line H1, the tilted four-card deck, the intro paragraph and the orange
-// CTA button. Static render only; motion phases may add over it, never change
-// this default state (MOTION_SPEC 0).
+// CTA button.
+//
+// Static render is the exact DESIGN_SPEC state. Motion (MOTION_SPEC 4.1 to
+// 4.3) is layered into wrappers so each transform has one owner:
+//   card root   absolute position, drag x
+//   fan         scroll-out rotation and spread
+//   tilt        resting tilt, hover straighten, idle wobble
+//   spread      neighbour push on hover
+//   breathe     idle y and hover scale
+//   move        entrance arc and pointer parallax
+//   art         inner-image parallax and entrance zoom
+// The final resting values equal the spec values; reduced motion and static
+// mode never reach any of the animation code.
 //
 // Vertical rhythm note: DESIGN_SPEC 4.1 gives the paragraph node as 924x90,
 // but the reference raster (`reference/02-hero.png`) shows three text lines at
@@ -13,11 +24,18 @@
 //
 // Card stroke geometry: Figma strokes are center-aligned, so the visible card
 // is the 391x250 frame plus 0.5px of 1px black stroke on every side. The
-// rendered border box is therefore 392x251, offset -0.5px, radius 36.5, and the
+// rendered border box is therefore 392x251, offset -0.5px, radius 36.5. The
 // checkerboard pattern origin sits at the frame corner (0.5px). Logged in
 // OPEN_QUESTIONS 30.
 
+import { useEffect, useRef, useState } from 'react';
+import projectsJson from '../data/projects.json';
 import { Button } from './ui/Button';
+import { EASE } from '../motion/ease';
+import { gsap, ScrollTrigger, SplitText, Draggable } from '../motion/gsap';
+import { onLoaderRelease } from '../motion/loaderGate';
+import { useMediaQuery } from '../motion/useMediaQuery';
+import { useMotion } from '../motion/useMotion';
 
 /* Exact geometry from the spec (DESIGN_SPEC 4.1 + 4.2 table + 12 hero row).
    Colors and fonts stay in tokens (tokens.css); pattern colors are tokens too. */
@@ -54,6 +72,20 @@ const SPEC = {
     ],
   },
   btn: { fill: 'var(--orange-hero)' }, // 4.1 + 1.4 button row (186x58)
+  motion: {
+    stack: { scale: 0.7, y: 60 },
+    stagger: 0.12,
+    dealDuration: 1.05,
+    shadow: '6px 6px 0 rgba(0, 0, 0, 1)',
+    idle: { y: 4, rotation: 0.4, base: 5, step: 0.6 },
+    parallax: 14,
+    depths: [0.6, 1, 1.4, 0.8],
+    innerParallax: 12,
+    innerScale: 1.12,
+    hover: { rotation: 0.2, scale: 1.06, neighbour: 24, dim: 0.9 },
+    fan: { rotation: 0.6, spread: 30 },
+    drag: 140,
+  },
 } as const;
 
 /* The conic tile places the gray square in the top-right and bottom-left
@@ -64,9 +96,640 @@ const CHECKER_BG =
   ` var(--card-check-b) 50% 75%, var(--card-check-a) 75%)` +
   ` 0.5px 0.5px / ${SPEC.deck.checkPeriod} ${SPEC.deck.checkPeriod}`;
 
+const CARD_IDS = new Set<string>(projectsJson.projects.map((project) => project.id));
+
+const LAYER = {
+  position: 'absolute',
+  inset: 0,
+  display: 'block',
+} as const;
+
+type CardParts = {
+  root: HTMLDivElement;
+  fan: HTMLElement;
+  tilt: HTMLElement;
+  spread: HTMLElement;
+  breathe: HTMLElement;
+  move: HTMLElement;
+  art: HTMLElement;
+  artInner: HTMLElement;
+  stitch: SVGRectElement | null;
+  needle: SVGGElement | null;
+  rotation: number;
+};
+
+function readCardParts(root: HTMLDivElement, rotation: number): CardParts | null {
+  const find = (name: string) => root.querySelector<HTMLElement>(`[data-hero-${name}]`);
+  const fan = find('fan');
+  const tilt = find('tilt');
+  const spread = find('spread');
+  const breathe = find('breathe');
+  const move = find('move');
+  const art = find('art');
+  const artInner = find('art-inner');
+  if (!fan || !tilt || !spread || !breathe || !move || !art || !artInner) return null;
+  return {
+    root,
+    fan,
+    tilt,
+    spread,
+    breathe,
+    move,
+    art,
+    artInner,
+    stitch: root.querySelector<SVGRectElement>('[data-hero-stitch]'),
+    needle: root.querySelector<SVGGElement>('[data-hero-needle]'),
+    rotation,
+  };
+}
+
 export function Hero() {
+  const { quality, reducedMotion } = useMotion();
+  const active = !reducedMotion;
+  const rich = active && quality !== 'low';
+  const desktop = useMediaQuery('(min-width: 1440px)');
+  const finePointer = useMediaQuery('(pointer: fine)');
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
+  const paraRef = useRef<HTMLParagraphElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [dealDone, setDealDone] = useState(false);
+
+  // Entrance: stacked deck deal, paragraph word rise and button pop. Runs
+  // once per activation, after the loader cover starts its wipe.
+  useEffect(() => {
+    if (!active) return;
+    const section = sectionRef.current;
+    const deck = deckRef.current;
+    if (!section || !deck) return;
+
+    const cleanups: Array<() => void> = [];
+    const cards = cardRefs.current
+      .map((root, index) =>
+        root ? readCardParts(root, SPEC.deck.cards[index]?.rot ?? 0) : null,
+      )
+      .filter((card): card is CardParts => card !== null);
+
+    const timeline = gsap.timeline({
+      paused: true,
+      onComplete: () => setDealDone(true),
+    });
+
+    if (desktop && cards.length) {
+      const width = deck.getBoundingClientRect().width;
+      for (const [index, card] of cards.entries()) {
+        const spec = SPEC.deck.cards[index];
+        const fromCentre =
+          width / 2 - (spec.left + SPEC.deck.boxW / 2 + SPEC.deck.boxDx);
+        gsap.set(card.move, {
+          x: fromCentre,
+          y: SPEC.motion.stack.y,
+          scale: SPEC.motion.stack.scale,
+        });
+        gsap.set(card.tilt, { rotation: 0 });
+        gsap.set(card.artInner, { scale: SPEC.motion.innerScale });
+        gsap.set(card.root, {
+          opacity: 0,
+          boxShadow: SPEC.motion.shadow,
+        });
+
+        const at = index * SPEC.motion.stagger;
+        timeline
+          .to(
+            card.move,
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              duration: SPEC.motion.dealDuration,
+              ease: EASE.glide,
+            },
+            at,
+          )
+          .to(
+            card.tilt,
+            {
+              rotation: spec.rot,
+              duration: 0.9,
+              ease: EASE.deal,
+            },
+            at,
+          )
+          .to(
+            card.artInner,
+            {
+              scale: 1,
+              duration: 1.1,
+              ease: EASE.glide,
+            },
+            at + 0.1,
+          )
+          .to(
+            card.root,
+            { opacity: 1, duration: 0.3, ease: 'none' },
+            at,
+          )
+          .to(
+            card.root,
+            {
+              boxShadow: '0px 0px 0 rgba(0, 0, 0, 0)',
+              duration: 0.3,
+              ease: 'none',
+            },
+            at + 0.85,
+          );
+      }
+    } else if (!desktop) {
+      const mobileCards = Array.from(
+        section.querySelectorAll<HTMLElement>('[data-hero-mobile-card]'),
+      );
+      if (mobileCards.length) {
+        gsap.set(mobileCards, { opacity: 0, y: 28, scale: 0.94 });
+        timeline.to(
+          mobileCards,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.08,
+            ease: EASE.glide,
+          },
+          0,
+        );
+      }
+    }
+
+    let split: SplitText | null = null;
+    const para = paraRef.current;
+    if (para) {
+      split = SplitText.create(para, {
+        type: 'words',
+        autoSplit: false,
+        aria: 'auto',
+      });
+      if (split.words.length) {
+        gsap.set(split.words, { opacity: 0, y: 14 });
+        timeline.to(
+          split.words,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.45,
+            stagger: 0.02,
+            ease: EASE.glide,
+          },
+          0.65,
+        );
+      }
+    }
+
+    const button = buttonRef.current;
+    if (button) {
+      gsap.set(button, { opacity: 0, scale: 0.8 });
+      timeline.to(
+        button,
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.55,
+          ease: EASE.pop,
+        },
+        0.85,
+      );
+    }
+
+    cleanups.push(onLoaderRelease(() => timeline.play()));
+    cleanups.push(() => {
+      timeline.kill();
+      split?.revert();
+      split?.kill();
+      for (const card of cards) {
+        gsap.set(card.move, { clearProps: 'transform' });
+        gsap.set(card.tilt, { clearProps: 'transform' });
+        gsap.set(card.artInner, { clearProps: 'transform' });
+        gsap.set(card.root, {
+          clearProps: 'opacity,box-shadow',
+        });
+      }
+      if (button) gsap.set(button, { clearProps: 'opacity,transform' });
+    });
+
+    return () => {
+      for (const cleanup of cleanups) cleanup();
+    };
+  }, [active, desktop]);
+
+  // Scroll-out fan: cards rotate 1.6x their resting tilt and spread outward.
+  useEffect(() => {
+    if (!active || !desktop) return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const cards = cardRefs.current
+      .map((root, index) =>
+        root ? readCardParts(root, SPEC.deck.cards[index]?.rot ?? 0) : null,
+      )
+      .filter((card): card is CardParts => card !== null);
+    if (!cards.length) return;
+
+    const tweens: gsap.core.Tween[] = [];
+    const fades: gsap.core.Tween[] = [];
+    for (const [index, card] of cards.entries()) {
+      const sign = index < 2 ? -1 : 1;
+      const drift = [18, 44, -20, 52][index] ?? 0;
+      tweens.push(
+        gsap.fromTo(
+          card.fan,
+          { rotation: 0, x: 0, y: 0 },
+          {
+            rotation: card.rotation * SPEC.motion.fan.rotation,
+            x: sign * SPEC.motion.fan.spread,
+            y: drift,
+            immediateRender: false,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true,
+            },
+          },
+        ),
+      );
+      // Clear only once the cards are already leaving the viewport, not while
+      // the deck is still the main subject.
+      fades.push(
+        gsap.to(card.fan, {
+          opacity: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top-=520',
+            end: 'bottom top',
+            scrub: true,
+          },
+        }),
+      );
+    }
+
+    return () => {
+      for (const tween of [...tweens, ...fades]) {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      }
+      for (const card of cards) {
+        gsap.set(card.fan, { clearProps: 'transform,opacity' });
+      }
+    };
+  }, [active, desktop]);
+
+  // After the deal: idle breathing, pointer parallax, hover stitch and drag.
+  useEffect(() => {
+    if (!dealDone || !rich || !desktop) return;
+    const section = sectionRef.current;
+    const deck = deckRef.current;
+    if (!section || !deck) return;
+
+    const cards = cardRefs.current
+      .map((root, index) =>
+        root ? readCardParts(root, SPEC.deck.cards[index]?.rot ?? 0) : null,
+      )
+      .filter((card): card is CardParts => card !== null);
+    if (!cards.length) return;
+
+    let sectionActive = true;
+    let hovered = -1;
+    let dragging = -1;
+    const idleByCard = new Map<number, gsap.core.Tween[]>();
+    const quick = cards.map((card) => ({
+      moveX: gsap.quickTo(card.move, 'x', { duration: 0.6, ease: EASE.glide }),
+      moveY: gsap.quickTo(card.move, 'y', { duration: 0.6, ease: EASE.glide }),
+      artX: gsap.quickTo(card.artInner, 'x', { duration: 0.6, ease: EASE.glide }),
+      artY: gsap.quickTo(card.artInner, 'y', { duration: 0.6, ease: EASE.glide }),
+    }));
+
+    const shouldPause = () => document.hidden || !sectionActive;
+
+    const stopIdle = (index: number) => {
+      const tweens = idleByCard.get(index);
+      if (!tweens) return;
+      for (const tween of tweens) tween.kill();
+      idleByCard.delete(index);
+    };
+
+    const startIdle = (index: number) => {
+      const card = cards[index];
+      if (!card) return;
+      stopIdle(index);
+      const direction = index % 2 === 0 ? 1 : -1;
+      const tweens = [
+        gsap.to(card.breathe, {
+          y: SPEC.motion.idle.y * direction,
+          duration: SPEC.motion.idle.base + index * SPEC.motion.idle.step,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        }),
+        gsap.to(card.tilt, {
+          rotation:
+            card.rotation +
+            SPEC.motion.idle.rotation * (index % 2 === 0 ? 1 : -1),
+          duration:
+            SPEC.motion.idle.base +
+            0.5 +
+            index * SPEC.motion.idle.step,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        }),
+      ];
+      if (shouldPause()) for (const tween of tweens) tween.pause();
+      idleByCard.set(index, tweens);
+    };
+
+    const placeNeedle = (card: CardParts, progress: number) => {
+      if (!card.stitch || !card.needle) return;
+      const total = card.stitch.getTotalLength();
+      const point = card.stitch.getPointAtLength(total * progress);
+      const ahead = card.stitch.getPointAtLength(
+        Math.min(total, total * progress + 1),
+      );
+      const angle =
+        (Math.atan2(ahead.y - point.y, ahead.x - point.x) * 180) / Math.PI;
+      card.needle.setAttribute(
+        'transform',
+        `translate(${point.x} ${point.y}) rotate(${angle})`,
+      );
+    };
+
+    const enter = (index: number) => {
+      if (hovered === index || dragging >= 0) return;
+      if (hovered >= 0) leave(hovered);
+      hovered = index;
+      stopIdle(index);
+      for (const [i, card] of cards.entries()) {
+        const isFocus = i === index;
+        const direction = i < index ? -1 : 1;
+        gsap.to(card.spread, {
+          x: isFocus ? 0 : direction * SPEC.motion.hover.neighbour,
+          duration: 0.35,
+          ease: EASE.glide,
+          overwrite: true,
+        });
+        gsap.to(card.tilt, {
+          filter: isFocus
+            ? 'brightness(1)'
+            : `brightness(${SPEC.motion.hover.dim})`,
+          duration: 0.3,
+          ease: EASE.glide,
+          overwrite: true,
+        });
+        card.root.style.zIndex = String(isFocus ? 50 : i + 1);
+      }
+      const card = cards[index];
+      gsap.to(card.tilt, {
+        rotation: card.rotation * SPEC.motion.hover.rotation,
+        duration: 0.35,
+        ease: EASE.glide,
+        overwrite: true,
+      });
+      gsap.to(card.breathe, {
+        y: 0,
+        scale: SPEC.motion.hover.scale,
+        duration: 0.35,
+        ease: EASE.glide,
+        overwrite: true,
+      });
+      if (card.stitch) {
+        gsap.killTweensOf(card.stitch);
+        gsap.set(card.stitch, { opacity: 1 });
+        gsap.set(card.needle, { opacity: 1 });
+        const draw = gsap.to(card.stitch, {
+          strokeDashoffset: 0,
+          duration: 0.7,
+          ease: EASE.glide,
+          onUpdate: () => placeNeedle(card, draw.progress()),
+          onComplete: () => {
+            gsap.to(card.needle, { opacity: 0, duration: 0.2 });
+          },
+        });
+        placeNeedle(card, 0);
+      }
+    };
+
+    const leave = (index: number) => {
+      const card = cards[index];
+      if (!card) return;
+      if (hovered === index) hovered = -1;
+      for (const [i, other] of cards.entries()) {
+        gsap.to(other.spread, {
+          x: 0,
+          duration: 0.35,
+          ease: EASE.glide,
+          overwrite: true,
+        });
+        gsap.to(other.tilt, {
+          filter: 'brightness(1)',
+          rotation: other.rotation,
+          duration: 0.35,
+          ease: EASE.glide,
+          overwrite: true,
+          onComplete: () => {
+            if (hovered !== i) startIdle(i);
+          },
+        });
+        if (i !== index) other.root.style.zIndex = String(i + 1);
+      }
+      gsap.to(card.breathe, {
+        y: 0,
+        scale: 1,
+        duration: 0.35,
+        ease: EASE.glide,
+        overwrite: true,
+      });
+      card.root.style.zIndex = String(index + 1);
+      if (card.stitch) {
+        gsap.killTweensOf(card.stitch);
+        gsap.to(card.stitch, {
+          strokeDashoffset: card.stitch.getTotalLength(),
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.in',
+        });
+        gsap.to(card.needle, { opacity: 0, duration: 0.2 });
+      }
+    };
+
+    const listeners: Array<() => void> = [];
+    cards.forEach((card, index) => {
+      const onEnter = () => enter(index);
+      const onLeave = () => leave(index);
+      card.root.addEventListener('pointerenter', onEnter);
+      card.root.addEventListener('pointerleave', onLeave);
+      listeners.push(() => {
+        card.root.removeEventListener('pointerenter', onEnter);
+        card.root.removeEventListener('pointerleave', onLeave);
+      });
+
+      if (card.stitch) {
+        const total = card.stitch.getTotalLength();
+        card.stitch.style.strokeDasharray = '10 8';
+        card.stitch.style.strokeDashoffset = String(total);
+        gsap.set(card.stitch, { opacity: 0 });
+        gsap.set(card.needle, { opacity: 0 });
+      }
+      startIdle(index);
+    });
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (dragging >= 0) return;
+      const rect = deck.getBoundingClientRect();
+      const nx = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+      const ny = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+      for (const index of cards.keys()) {
+        const depth = SPEC.motion.depths[index] ?? 1;
+        quick[index]?.moveX(-nx * SPEC.motion.parallax * depth);
+        quick[index]?.moveY(-ny * SPEC.motion.parallax * depth * 0.6);
+        quick[index]?.artX(-nx * SPEC.motion.innerParallax * depth);
+        quick[index]?.artY(-ny * SPEC.motion.innerParallax * depth * 0.6);
+      }
+    };
+
+    const onPointerLeave = () => {
+      for (const index of cards.keys()) {
+        quick[index]?.moveX(0);
+        quick[index]?.moveY(0);
+        quick[index]?.artX(0);
+        quick[index]?.artY(0);
+        if (hovered === index) leave(index);
+      }
+    };
+
+    deck.addEventListener('pointermove', onPointerMove);
+    deck.addEventListener('pointerleave', onPointerLeave);
+    listeners.push(() => {
+      deck.removeEventListener('pointermove', onPointerMove);
+      deck.removeEventListener('pointerleave', onPointerLeave);
+    });
+
+    const draggables: Array<{ kill: () => void }> = [];
+    if (finePointer) {
+      cards.forEach((card, index) => {
+        const instance = Draggable.create(card.root, {
+          type: 'x',
+          bounds: {
+            minX: -SPEC.motion.drag,
+            maxX: SPEC.motion.drag,
+            minY: 0,
+            maxY: 0,
+          },
+          dragClickables: true,
+          onDragStart: () => {
+            dragging = index;
+            stopIdle(index);
+            card.root.style.zIndex = '60';
+          },
+          onDrag: () => {
+            const centre = (item: CardParts) => {
+              const rect = item.root.getBoundingClientRect();
+              return rect.left + rect.width / 2;
+            };
+            const order = [...cards].sort((a, b) => centre(a) - centre(b));
+            order.forEach((item, rank) => {
+              item.root.style.zIndex = String(rank + 1);
+            });
+            card.root.style.zIndex = '60';
+          },
+          onRelease: () => {
+            gsap.to(card.root, {
+              x: 0,
+              duration: 0.6,
+              ease: EASE.glide,
+              onComplete: () => {
+                dragging = -1;
+                card.root.style.zIndex = String(index + 1);
+                if (hovered !== index) startIdle(index);
+              },
+            });
+          },
+        })[0];
+        if (instance) draggables.push(instance);
+      });
+    }
+
+    const fanTrigger = ScrollTrigger.create({
+      trigger: section,
+      start: 'top bottom',
+      end: 'bottom top',
+      onToggle: (self) => {
+        sectionActive = self.isActive;
+        for (const tweens of idleByCard.values()) {
+          for (const tween of tweens) {
+            if (shouldPause()) tween.pause();
+            else tween.resume();
+          }
+        }
+      },
+    });
+
+    const onVisibility = () => {
+      for (const tweens of idleByCard.values()) {
+        for (const tween of tweens) {
+          if (shouldPause()) tween.pause();
+          else tween.resume();
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    return () => {
+      for (const cleanup of listeners) cleanup();
+      for (const [index] of cards.entries()) stopIdle(index);
+      for (const instance of draggables) instance.kill();
+      fanTrigger.kill();
+      document.removeEventListener('visibilitychange', onVisibility);
+      for (const card of cards) {
+        gsap.killTweensOf(card.root);
+        gsap.killTweensOf(card.fan);
+        gsap.killTweensOf(card.tilt);
+        gsap.killTweensOf(card.spread);
+        gsap.killTweensOf(card.breathe);
+        gsap.killTweensOf(card.move);
+        gsap.killTweensOf(card.art);
+        gsap.killTweensOf(card.artInner);
+        if (card.stitch) gsap.killTweensOf(card.stitch);
+        if (card.needle) gsap.killTweensOf(card.needle);
+        gsap.set(card.root, {
+          x: 0,
+          opacity: 1,
+          boxShadow: 'none',
+          zIndex: cards.indexOf(card) + 1,
+        });
+        gsap.set(card.tilt, {
+          rotation: card.rotation,
+          filter: 'none',
+        });
+        gsap.set(card.spread, { x: 0 });
+        gsap.set(card.breathe, { y: 0, scale: 1 });
+        gsap.set(card.art, { x: 0, y: 0 });
+        gsap.set(card.artInner, { x: 0, y: 0, scale: 1 });
+        if (card.stitch) {
+          card.stitch.style.strokeDashoffset = String(
+            card.stitch.getTotalLength(),
+          );
+          gsap.set(card.stitch, { opacity: 0 });
+        }
+        if (card.needle) gsap.set(card.needle, { opacity: 0 });
+      }
+    };
+  }, [dealDone, rich, desktop, finePointer]);
+
   return (
     <section
+      ref={sectionRef}
       data-section="hero"
       className="relative w-full bg-cream-hero px-5 pt-[64px] pb-16 md:px-10 md:pt-[84px] md:pb-16 md:pl-[72px] min-[1440px]:h-[866px]"
     >
@@ -91,7 +754,7 @@ export function Hero() {
               tilted cards, stacking order rises left to right. Decorative
               placeholder raster; real covers expose alt text when they land. */}
           <div
-            aria-hidden="true"
+            ref={deckRef}
             role="presentation"
             data-cursor="drag"
             data-skew
@@ -101,6 +764,13 @@ export function Hero() {
             {SPEC.deck.cards.map((card, i) => (
               <div
                 key={card.id}
+                ref={(node) => {
+                  cardRefs.current[i] = node;
+                }}
+                data-hero-card={card.id}
+                data-project-id={CARD_IDS.has(card.id) ? card.id : undefined}
+                data-cursor="view"
+                className="group"
                 style={{
                   position: 'absolute',
                   left: `${card.left + SPEC.deck.boxDx}px`,
@@ -108,14 +778,99 @@ export function Hero() {
                   width: `${SPEC.deck.boxW}px`,
                   height: `${SPEC.deck.boxH}px`,
                   boxSizing: 'border-box',
-                  border: '1px solid var(--ink)',
                   borderRadius: '36.5px',
                   overflow: 'hidden',
-                  transform: `rotate(${card.rot}deg)`,
                   zIndex: i + 1,
-                  background: CHECKER_BG,
+                  background: 'transparent',
+                  lineHeight: 0,
                 }}
-              />
+              >
+                <div data-hero-fan style={LAYER}>
+                  <div
+                    data-hero-tilt
+                    style={{
+                      ...LAYER,
+                      transform: `rotate(${card.rot}deg)`,
+                      transformOrigin: 'center center',
+                    }}
+                  >
+                    <div data-hero-spread style={LAYER}>
+                      <div data-hero-breathe style={LAYER}>
+                        <div data-hero-move style={LAYER}>
+                          <div
+                            data-hero-art
+                            style={{
+                              ...LAYER,
+                              overflow: 'hidden',
+                              borderRadius: '36.5px',
+                              background: CHECKER_BG,
+                            }}
+                          >
+                            <div
+                              data-hero-art-inner
+                              style={{
+                                ...LAYER,
+                                background: CHECKER_BG,
+                              }}
+                            />
+                          </div>
+                          <div
+                            aria-hidden="true"
+                            style={{
+                              ...LAYER,
+                              border: '1px solid var(--ink)',
+                              borderRadius: '36.5px',
+                              pointerEvents: 'none',
+                              zIndex: 8,
+                            }}
+                          />
+                          {active ? (
+                            <svg
+                              aria-hidden="true"
+                              viewBox={`0 0 ${SPEC.deck.boxW} ${SPEC.deck.boxH}`}
+                              width={SPEC.deck.boxW}
+                              height={SPEC.deck.boxH}
+                              style={{
+                                position: 'absolute',
+                                inset: 0,
+                                width: '100%',
+                                height: '100%',
+                                pointerEvents: 'none',
+                                zIndex: 9,
+                                overflow: 'visible',
+                              }}
+                            >
+                              <rect
+                                data-hero-stitch
+                                x="1.5"
+                                y="1.5"
+                                width={SPEC.deck.boxW - 3}
+                                height={SPEC.deck.boxH - 3}
+                                rx="35.5"
+                                fill="none"
+                                stroke="var(--ink)"
+                                strokeWidth="2"
+                              />
+                              <g data-hero-needle>
+                                <line
+                                  x1="0"
+                                  y1="0"
+                                  x2="16"
+                                  y2="-4"
+                                  stroke="var(--ink)"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                />
+                                <circle cx="0" cy="0" r="2" fill="var(--ink)" />
+                              </g>
+                            </svg>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
 
@@ -140,6 +895,7 @@ export function Hero() {
               {SPEC.deck.cards.map((card, i) => (
                 <div
                   key={card.id}
+                  data-hero-mobile-card={card.id}
                   style={{
                     flex: 'none',
                     width: 'min(78vw, 520px)',
@@ -159,6 +915,7 @@ export function Hero() {
 
           {/* 4.1 Paragraph: three centered lines */}
           <p
+            ref={paraRef}
             className="w-full text-center font-outfit text-ink text-[18px] leading-[26px] tracking-[-0.02em] md:max-w-[924px] md:text-[26px] md:leading-[36px]"
             style={{ marginTop: `${SPEC.paraGap}px` }}
           >
@@ -169,6 +926,7 @@ export function Hero() {
 
           {/* 4.1 Button at x=643, y=743.9 (centered on the 736 column center) */}
           <div
+            ref={buttonRef}
             className="flex w-full justify-center"
             style={{ marginTop: `${SPEC.btnGap}px` }}
           >
