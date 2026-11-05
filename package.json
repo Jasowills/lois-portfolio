@@ -14,6 +14,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "diff": "node scripts/visual-diff.mjs",
+    "capture:motion": "node scripts/capture-motion.mjs",
     "assets:figma": "node scripts/figma-export.mjs",
     "assets:scrape": "node scripts/scrape-projects.mjs"
   },
