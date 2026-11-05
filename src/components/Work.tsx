@@ -68,16 +68,17 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
         }}
       >
         {/* Hidden reveal CTA (visible on hover / keyboard focus). */}
-        <Button
-          label="View Project"
-          arrow="up-right"
-          strong
-          fill="var(--orange-cta)"
-          href={href}
-          data-cursor="link"
-          aria-label={`View project: ${project.title}`}
-          className="absolute bottom-6 left-6 -translate-x-4 opacity-0 transition duration-300 focus-visible:translate-x-0 focus-visible:opacity-100 group-hover:translate-x-0 group-hover:opacity-100 group-focus-within:translate-x-0 group-focus-within:opacity-100"
-        />
+        <div className="absolute bottom-6 left-6 -translate-x-4 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-focus-within:translate-x-0 group-focus-within:opacity-100">
+          <Button
+            label="View Project"
+            arrow="up-right"
+            strong
+            fill="var(--orange-cta)"
+            href={href}
+            data-cursor="link"
+            aria-label={`View project: ${project.title}`}
+          />
+        </div>
       </div>
 
       {/* Body */}
