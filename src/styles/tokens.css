@@ -118,6 +118,11 @@
   /* Work card image slot: the export rasterizes the placeholder solid exactly
      like a Figma canvas fill (201,201,201 per DESIGN_SPEC 5.4). */
   --image-placeholder: #c9c9c9;
+  /* Motion-only surfaces (MOTION_SPEC 4.4, 5.1, 5.3): dialog dim, card glare
+     and the sticker's flash paper shadow. */
+  --overlay-dim: rgba(26, 22, 12, 0.32);
+  --glare: rgba(255, 255, 255, 0.9);
+  --shadow-paper: rgba(0, 0, 0, 0.28);
   /* Work header colors (spec 1.1). */
   --ink-strong: #040100; /* work H2 */
   --ink-soft: #282727; /* card descriptions */

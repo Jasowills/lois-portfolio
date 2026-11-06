@@ -488,7 +488,7 @@ export function ProjectOverlay({
           position: 'fixed',
           inset: 0,
           zIndex: SPEC.backdropZ,
-          background: 'rgba(26, 22, 12, 0.32)',
+          background: 'var(--overlay-dim)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
         }}
