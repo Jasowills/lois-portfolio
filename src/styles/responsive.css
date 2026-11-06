@@ -291,9 +291,15 @@
     align-items: flex-start;
   }
 
-  .footer-logo {
+  .footer-logo-wrap {
     position: static !important;
     width: clamp(260px, 35.2vw, 506.9px) !important;
+    height: auto !important;
+  }
+
+  .footer-logo {
+    position: static !important;
+    width: 100% !important;
     height: auto !important;
   }
 
@@ -328,12 +334,14 @@
     font-size: clamp(18px, 1.53vw, 22px) !important;
   }
 
-  .footer-signs {
+  .footer-signpost-wrap {
     display: block !important;
-    position: relative;
+    position: relative !important;
     width: 236px;
     height: 520px;
     margin: 48px auto 0;
+    left: auto !important;
+    top: auto !important;
   }
 
   .footer-signpost {

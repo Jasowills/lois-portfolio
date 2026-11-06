@@ -49,11 +49,13 @@ export function Signpost({ ...rest }: SVGProps<SVGSVGElement>) {
         </filter>
       </defs>
       <g filter="url(#sp-shadow)">
-        <ellipse cx="118" cy="563.5" rx="63" ry="12.5" fill="url(#sp-base)" />
+        <ellipse className="signpost-base" cx="118" cy="563.5" rx="63" ry="12.5" fill="url(#sp-base)" />
       </g>
-      <path d="M118.5 3v549" stroke="url(#sp-pole)" strokeWidth={17} />
-      <circle cx="118" cy="24" r="24" fill="url(#sp-ball)" />
-      <circle cx="118" cy="24" r="23" stroke="url(#sp-ring)" strokeOpacity={0.4} strokeWidth={2} />
+      <path className="signpost-pole" d="M118.5 3v549" stroke="url(#sp-pole)" strokeWidth={17} />
+      <g className="signpost-ball">
+        <circle cx="118" cy="24" r="24" fill="url(#sp-ball)" />
+        <circle cx="118" cy="24" r="23" stroke="url(#sp-ring)" strokeOpacity={0.4} strokeWidth={2} />
+      </g>
     </svg>
   );
 }

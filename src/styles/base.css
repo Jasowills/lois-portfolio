@@ -425,6 +425,72 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Footer (MOTION_SPEC 11, DOM version). The stripe field drifts one   */
+/* period slowly; the logo inflates and sparkles, the signpost draws   */
+/* and the signs drop. Hover raises brightness via a class so GSAP     */
+/* keeps owning rotation. Pixel burst and sparkles are spawned on      */
+/* demand and removed after the tween.                                 */
+/* ------------------------------------------------------------------ */
+.footer-stripes--drift {
+  --footer-stripe-period: 139px;
+  animation: footer-stripe-drift 60s linear infinite;
+}
+
+@keyframes footer-stripe-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: var(--footer-stripe-period) 0;
+  }
+}
+
+.footer-sparkle {
+  position: absolute;
+  left: 255px;
+  top: 78px;
+  width: 20px;
+  height: 20px;
+  color: var(--footer-text);
+  pointer-events: none;
+}
+
+.footer-sign {
+  cursor: pointer;
+  transition: filter 0.25s ease, box-shadow 0.25s ease;
+}
+
+.footer-sign--hover {
+  filter: brightness(1.06);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.footer-sign--button {
+  padding: 0;
+}
+
+.footer-pixel-trigger {
+  position: relative;
+}
+
+.footer-pixel-host {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.footer-pixel-square {
+  position: absolute;
+  left: -4.5px;
+  top: -6px;
+  width: 9px;
+  height: 9px;
+}
+
+/* ------------------------------------------------------------------ */
 /* Testimonials (MOTION_SPEC 9, DOM version). The attribution          */
 /* highlight is a scaleX bar that only appears during the reveal; the  */
 /* base transform clips it in static and reduced motion.               */

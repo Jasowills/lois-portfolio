@@ -487,6 +487,27 @@ function LogoLink({ animated }: { animated: boolean }) {
   const anchor = useRef<HTMLAnchorElement>(null);
   const hover = useRef<gsap.core.Timeline | null>(null);
 
+  const playSquash = () => {
+    if (!animated || !anchor.current) return;
+    const svg = anchor.current.querySelector<SVGSVGElement>('svg');
+    if (!svg) return;
+
+    hover.current?.kill();
+    hover.current = gsap
+      .timeline({ defaults: { transformOrigin: '50% 50%' } })
+      .to(svg, { scaleX: 1.08, scaleY: 0.92, duration: 0.16, ease: EASE.squash })
+      .to(svg, { scaleX: 0.96, scaleY: 1.06, duration: 0.14, ease: EASE.squash })
+      .to(svg, { scaleX: 1, scaleY: 1, duration: 0.22, ease: EASE.squash });
+  };
+
+  // The footer's Back to Top dispatches lois:back-to-top when the page lands.
+  useEffect(() => {
+    const onBackToTop = () => playSquash();
+    window.addEventListener('lois:back-to-top', onBackToTop);
+    return () => window.removeEventListener('lois:back-to-top', onBackToTop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [animated]);
+
   useEffect(
     () => () => {
       hover.current?.kill();
@@ -511,18 +532,11 @@ function LogoLink({ animated }: { animated: boolean }) {
 
   const handleEnter = () => {
     if (!animated || !anchor.current) return;
+    playSquash();
+
     const svg = anchor.current.querySelector<SVGSVGElement>('svg');
-    if (!svg) return;
-
-    hover.current?.kill();
-    hover.current = gsap
-      .timeline({ defaults: { transformOrigin: '50% 50%' } })
-      .to(svg, { scaleX: 1.08, scaleY: 0.92, duration: 0.16, ease: EASE.squash })
-      .to(svg, { scaleX: 0.96, scaleY: 1.06, duration: 0.14, ease: EASE.squash })
-      .to(svg, { scaleX: 1, scaleY: 1, duration: 0.22, ease: EASE.squash });
-
-    const sparkle = svg.querySelector<SVGGElement>('[data-logo-sparkle]');
-    if (sparkle) {
+    const sparkle = svg?.querySelector<SVGGElement>('[data-logo-sparkle]');
+    if (sparkle && svg) {
       gsap.fromTo(
         sparkle,
         { rotate: 0 },
