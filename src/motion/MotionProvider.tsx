@@ -57,10 +57,11 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     return startQualityGuard(quality, (next) => setQuality(next));
   }, [staticMode, quality]);
 
-  // Lenis boot: lerp 0.09 on desktop, native touch scrolling, GSAP ticker
-  // drives raf, ScrollTrigger follows every scroll event.
+  // Lenis boot: lerp 0.09 on desktop, GSAP ticker drives raf, ScrollTrigger
+  // follows every scroll event. Touch keeps native momentum (MOTION_SPEC 12),
+  // so Lenis is not created for coarse pointers.
   useEffect(() => {
-    if (staticMode) return;
+    if (staticMode || window.matchMedia('(pointer: coarse)').matches) return;
 
     let cancelled = false;
     const instance = new Lenis({

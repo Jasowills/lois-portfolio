@@ -254,38 +254,43 @@ export function Button({ label, fill, arrow, href, strong, className, ...rest }:
 
         {icon && arrows ? (
           <span
-            aria-hidden="true"
-            className="relative inline-flex shrink-0 overflow-hidden"
+            data-button-bob
+            className="relative inline-flex shrink-0"
             style={{ width: '24px', height: '24px', zIndex: 1 }}
           >
-            <motion.span
-              data-button-arrow="out"
-              variants={arrows.out}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                display: 'inline-flex',
-                opacity: 1,
-                transform: 'translate(0px, 0px)',
-              }}
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 inline-flex overflow-hidden"
             >
-              {icon}
-            </motion.span>
-            <motion.span
-              data-button-arrow="in"
-              variants={arrows.in}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                display: 'inline-flex',
-                opacity: 0,
-                transform: `translate(-${SPEC.arrowTravel}px, ${
-                  arrow === 'up-right' ? SPEC.arrowTravel : 0
-                }px)`,
-              }}
-            >
-              {icon}
-            </motion.span>
+              <motion.span
+                data-button-arrow="out"
+                variants={arrows.out}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'inline-flex',
+                  opacity: 1,
+                  transform: 'translate(0px, 0px)',
+                }}
+              >
+                {icon}
+              </motion.span>
+              <motion.span
+                data-button-arrow="in"
+                variants={arrows.in}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'inline-flex',
+                  opacity: 0,
+                  transform: `translate(-${SPEC.arrowTravel}px, ${
+                    arrow === 'up-right' ? SPEC.arrowTravel : 0
+                  }px)`,
+                }}
+              >
+                {icon}
+              </motion.span>
+            </span>
           </span>
         ) : null}
       </span>
