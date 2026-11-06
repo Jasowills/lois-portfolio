@@ -126,6 +126,44 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Services (MOTION_SPEC 7.1 / 7.3). The tab face is a fixed 144px     */
+/* box clipped to the inactive 104px, so the rise never touches layout. */
+/* The label is inline-block so the bullet stamp can scale it.         */
+/* ------------------------------------------------------------------ */
+.svc-bullet {
+  display: inline-block;
+  transform-origin: 50% 55%;
+}
+
+@media (min-width: 1440px) {
+  .svc-tab-bg {
+    clip-path: inset(20px 0 20px 0);
+  }
+
+  .svc-tab[data-active='true'] .svc-tab-bg {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .svc-tab-label {
+    transform: translateY(20px);
+  }
+
+  .svc-tab[data-active='true'] .svc-tab-label {
+    transform: translateY(0);
+  }
+
+  .svc-tab-line {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+
+  .svc-tab[data-active='true'] .svc-tab-line {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the global kill switch. All motion systems must     */
 /* additionally gate on useStaticMode() (MOTION_SPEC section 0).       */
 /* ------------------------------------------------------------------ */
