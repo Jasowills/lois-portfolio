@@ -491,6 +491,37 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Hero mobile gyroscope tilt (MOTION_SPEC 12): a small prompt for the  */
+/* user gesture iOS requires before device orientation events arrive.  */
+/* ------------------------------------------------------------------ */
+.hero-tilt-me {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-family: var(--ff-outfit);
+  font-size: 14px;
+  line-height: 17.6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+@media (min-width: 1440px) {
+  .hero-tilt-me {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Testimonials (MOTION_SPEC 9, DOM version). The attribution          */
 /* highlight is a scaleX bar that only appears during the reveal; the  */
 /* base transform clips it in static and reduced motion.               */

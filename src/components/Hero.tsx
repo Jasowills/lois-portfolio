@@ -165,6 +165,8 @@ export function Hero() {
   const buttonRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [dealDone, setDealDone] = useState(false);
+  const [tiltGranted, setTiltGranted] = useState(false);
+  const [tiltDismissed, setTiltDismissed] = useState(false);
   const [openProject, setOpenProject] = useState<{
     project: Project;
     source: HTMLElement;
@@ -180,6 +182,99 @@ export function Hero() {
     const project = PROJECTS.get(id);
     if (!project) return;
     setOpenProject({ project, source, trigger });
+  };
+
+  // MOTION_SPEC 12 (Hero, touch): tilt the sub-1440 deck by gyroscope. iOS
+  // needs a user gesture before DeviceOrientationEvent works, so it shows a
+  // tiny "Tilt me" prompt. Other mobile devices attach on mount. A device with
+  // no reliable orientation signal simply keeps the existing breathing fallback
+  // because no orientation event updates the target.
+  type OrientationConstructor = typeof DeviceOrientationEvent & { requestPermission?: () => Promise<'granted' | 'denied'> };
+  const canTilt = !desktop && !finePointer && !reducedMotion;
+  const tiltNeedsPermission =
+    canTilt &&
+    typeof window !== 'undefined' &&
+    typeof (window as Window & { DeviceOrientationEvent?: OrientationConstructor }).DeviceOrientationEvent === 'function' &&
+    typeof (window as Window & { DeviceOrientationEvent?: OrientationConstructor }).DeviceOrientationEvent?.requestPermission === 'function' &&
+    (/iPhone|iPad|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+  const tiltPrompt = tiltNeedsPermission && !tiltGranted && !tiltDismissed;
+  const tiltEnabled = canTilt && (!tiltNeedsPermission || tiltGranted);
+
+  useEffect(() => {
+    if (!tiltEnabled || desktop || finePointer || reducedMotion) return;
+    const deck = sectionRef.current?.querySelector<HTMLElement>('.hero-mobile-deck');
+    if (!deck) return;
+    const wrappers = Array.from(
+      deck.querySelectorAll<HTMLElement>('[data-hero-mobile-tilt]'),
+    );
+    if (wrappers.length === 0) return;
+
+    const clamp = (value: number, max: number) => Math.max(-max, Math.min(max, value));
+    let baseline: number | null = null;
+    let targetX = 0;
+    let targetY = 0;
+    let visible = false;
+    const state = wrappers.map(() => ({ x: 0, y: 0 }));
+
+    const onDeviceOrientation = (event: DeviceOrientationEvent) => {
+      if (!visible || event.beta == null || event.gamma == null) return;
+      baseline ??= event.beta;
+      targetX = clamp(event.beta - baseline, 12);
+      targetY = clamp(event.gamma, 18);
+    };
+    const onOrientationSettled = () => {
+      baseline = null;
+      targetX = 0;
+      targetY = 0;
+    };
+    const onResize = () => {
+      baseline = null;
+    };
+    const tick = () => {
+      if (!visible) {
+        targetX = 0;
+        targetY = 0;
+      }
+      state.forEach((entry, index) => {
+        entry.x += (targetX - entry.x) * 0.08;
+        entry.y += (targetY - entry.y) * 0.08;
+        const influence = 1 - index * 0.05;
+        wrappers[index].style.transform = `perspective(900px) rotateX(${(-entry.x * influence).toFixed(2)}deg) rotateY(${(entry.y * influence).toFixed(2)}deg)`;
+      });
+    };
+    const observer = new IntersectionObserver((entries) => {
+      visible = entries.some((entry) => entry.isIntersecting);
+      if (!visible) onOrientationSettled();
+    });
+    observer.observe(deck);
+    window.addEventListener('deviceorientation', onDeviceOrientation, false);
+    window.addEventListener('deviceorientationabsolute', onDeviceOrientation, false);
+    window.addEventListener('resize', onResize, false);
+    window.addEventListener('blur', onOrientationSettled);
+    gsap.ticker.add(tick);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('deviceorientation', onDeviceOrientation, false);
+      window.removeEventListener('deviceorientationabsolute', onDeviceOrientation, false);
+      window.removeEventListener('resize', onResize, false);
+      window.removeEventListener('blur', onOrientationSettled);
+      gsap.ticker.remove(tick);
+      wrappers.forEach((wrapper) => {
+        wrapper.style.transform = '';
+      });
+    };
+  }, [tiltEnabled, desktop, finePointer, reducedMotion]);
+
+  const requestTilt = async () => {
+    try {
+      const grant = await (DeviceOrientationEvent as OrientationConstructor).requestPermission?.();
+      if (grant === 'granted') setTiltGranted(true);
+      else setTiltDismissed(true);
+    } catch {
+      setTiltDismissed(true);
+    }
   };
 
   // Entrance: stacked deck deal, paragraph word rise and button pop. Runs
@@ -951,34 +1046,55 @@ export function Hero() {
               scrollSnapType: 'x mandatory',
             }}
           >
+            {/* iOS needs a user gesture before DeviceOrientationEvent works. */}
+            {tiltPrompt ? (
+              <button
+                type="button"
+                className="hero-tilt-me"
+                onClick={requestTilt}
+                aria-label="Enable tilt motion"
+              >
+                Tilt me
+              </button>
+            ) : null}
             <div className="flex h-full items-center">
               {SPEC.deck.cards.map((card, i) => (
-                <button
+                <div
                   key={card.id}
-                  type="button"
-                  data-hero-mobile-card={card.id}
-                  aria-label={`View project: ${
-                    PROJECTS.get(card.id)?.title ?? card.id
-                  }`}
-                  onClick={(event) =>
-                    openCard(card.id, event.currentTarget, event.currentTarget)
-                  }
-                  className="media-trigger"
+                  data-hero-mobile-tilt
+                  className="hero-mobile-tilt"
                   style={{
                     flex: 'none',
                     width: 'min(78vw, 520px)',
                     height: `calc(min(78vw, 520px) * ${SPEC.deck.cardH} / ${SPEC.deck.cardW})`,
-                    boxSizing: 'border-box',
-                    padding: 0,
-                    border: '1px solid var(--ink)',
-                    borderRadius: 'var(--r-card)',
-                    transform: `rotate(${card.rot}deg)`,
                     scrollSnapAlign: 'center',
                     marginLeft: i === 0 ? 'calc(0.14 * min(78vw, 520px))' : 'calc(-0.12 * min(78vw, 520px))',
-                    background: CHECKER_BG,
-                    cursor: 'pointer',
+                    transformStyle: 'preserve-3d',
                   }}
-                />
+                >
+                  <button
+                    type="button"
+                    data-hero-mobile-card={card.id}
+                    aria-label={`View project: ${
+                      PROJECTS.get(card.id)?.title ?? card.id
+                    }`}
+                    onClick={(event) =>
+                      openCard(card.id, event.currentTarget, event.currentTarget)
+                    }
+                    className="media-trigger"
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      height: '100%',
+                      padding: 0,
+                      border: '1px solid var(--ink)',
+                      borderRadius: 'var(--r-card)',
+                      transform: `rotate(${card.rot}deg)`,
+                      background: CHECKER_BG,
+                      cursor: 'pointer',
+                    }}
+                  />
+                </div>
               ))}
             </div>
           </div>
