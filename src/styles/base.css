@@ -113,6 +113,19 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Experience (MOTION_SPEC 6). The card fill deepens 6% on hover; the  */
+/* value comes from the card data through --exp-fill.                  */
+/* ------------------------------------------------------------------ */
+.exp-card {
+  background: var(--exp-fill);
+  transition: background-color 240ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.exp-card:hover {
+  background: color-mix(in srgb, var(--exp-fill) 94%, var(--ink));
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the global kill switch. All motion systems must     */
 /* additionally gate on useStaticMode() (MOTION_SPEC section 0).       */
 /* ------------------------------------------------------------------ */
