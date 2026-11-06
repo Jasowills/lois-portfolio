@@ -118,6 +118,17 @@
     left: auto !important;
     width: 100% !important;
     height: auto !important;
+    padding: 0 !important;
+  }
+
+  .tcard-tilt {
+    position: static !important;
+  }
+
+  /* On fluid widths the frame gives up its absolute canvas and the inner
+     carries the flow layout, background and padding. */
+  .tcard-inner {
+    position: static !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -544,8 +555,8 @@
     font-size: clamp(28px, 7.6vw, 36px) !important;
   }
 
-  .tcard {
-    padding: 32px 20px;
+  .tcard-inner {
+    padding: 32px 20px !important;
   }
 
   .about-right-inner {

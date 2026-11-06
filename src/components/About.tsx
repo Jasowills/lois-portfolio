@@ -759,7 +759,7 @@ export function About() {
         <div className="about-right-inner" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           {/* sticker */}
           <div ref={stickerWrapRef} className="about-sticker" data-depth="0.4" style={{ position: 'absolute', top: '76px', left: '52px', width: '68px', height: '36px' }}>
-            <div className="about-sticker-base" style={{ transform: `rotate(${SPEC.sticker.rotate}deg)`, transformOrigin: 'center center' }}>
+            <div className="sticker-base" style={{ transform: `rotate(${SPEC.sticker.rotate}deg)`, transformOrigin: 'center center' }}>
               <div data-about-sticker-slap className="about-sticker-slap">
                 <StickerLabel label="About" fill="var(--lime)" />
               </div>

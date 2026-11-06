@@ -216,6 +216,43 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Sticker slap wrappers: the rotation base hugs the label so the      */
+/* rest angle pivots around the sticker itself, not its layout slot.   */
+/* ------------------------------------------------------------------ */
+.sticker-base {
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------------ */
+/* Testimonials (MOTION_SPEC 9, DOM version). The attribution          */
+/* highlight is a scaleX bar that only appears during the reveal; the  */
+/* base transform clips it in static and reduced motion.               */
+/* ------------------------------------------------------------------ */
+.tattr-wrap {
+  position: relative;
+  display: inline-block;
+  padding: 0 4px;
+}
+
+.tattr-hl {
+  position: absolute;
+  top: 22%;
+  bottom: 22%;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  background: var(--yellow);
+  border-radius: 3px;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.tattr-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the global kill switch. All motion systems must     */
 /* additionally gate on useStaticMode() (MOTION_SPEC section 0).       */
 /* ------------------------------------------------------------------ */
