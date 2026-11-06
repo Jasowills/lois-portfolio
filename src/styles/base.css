@@ -164,6 +164,58 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* About (MOTION_SPEC 8, DOM version). The stripe field drifts one      */
+/* pattern period per 40s. The stitch and needle are measured overlays  */
+/* inside the bio, so neither changes the text layout or the split DOM. */
+/* ------------------------------------------------------------------ */
+.about-badge-face {
+  box-shadow: 2px 2px 0 0 var(--logo-shadow);
+}
+
+.about-stitch {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 8px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.about-needle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 96px;
+  height: 40px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.about-left {
+  --about-stripe-period: 94px;
+}
+
+.about-stripes--drift {
+  animation: about-stripe-drift 40s linear infinite;
+}
+
+@keyframes about-stripe-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: var(--about-stripe-period) 0;
+  }
+}
+
+@media (max-width: 1439px) {
+  .about-left {
+    --about-stripe-period: 13.056cqw;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the global kill switch. All motion systems must     */
 /* additionally gate on useStaticMode() (MOTION_SPEC section 0).       */
 /* ------------------------------------------------------------------ */
