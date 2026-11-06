@@ -43,6 +43,16 @@ body {
   box-shadow: 0 0 0 2px var(--yellow);
 }
 
+/* Project-card triggers fill their rounded art window, so the outer focus
+   ring would be clipped. Draw the same 3px ink ring and 2px yellow gap
+   inside the card edge instead. */
+.media-trigger:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 0 0 3px var(--ink),
+    inset 0 0 0 5px var(--yellow);
+}
+
 /* ------------------------------------------------------------------ */
 /* Skip link (DESIGN_SPEC 13), hidden until focused. Type follows the  */
 /* sticker label row of DESIGN_SPEC 1.2, padding from 1.4.             */

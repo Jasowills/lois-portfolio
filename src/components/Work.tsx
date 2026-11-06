@@ -15,12 +15,18 @@
 // portfolio home until per-project case-study URLs exist (OPEN_QUESTIONS 32);
 // the whole card is clickable through the title link's stretched pseudo.
 
-import type { CSSProperties } from 'react';
+import { lazy, Suspense, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
 import projectsJson from '../data/projects.json';
 import { Button } from './ui/Button';
 import { StickerLabel } from './ui/StickerLabel';
 import { SectionEdge } from './SectionEdge';
 import { Verified } from './svg/Verified';
+import type { Project } from './Overlay';
+
+// MOTION_SPEC 13 asks for the overlay to stay out of the initial bundle.
+const ProjectOverlay = lazy(() =>
+  import('./Overlay').then((module) => ({ default: module.ProjectOverlay })),
+);
 
 const SPEC = {
   padTop: '76px', // 5.2: sticker label at y=76
@@ -31,10 +37,7 @@ const SPEC = {
   radius: 'var(--r-card)',
 } as const;
 
-type Project = (typeof projectsJson.projects)[number];
-
-/* Title type per 5.5 (verbatim table). */
-function titleStyle(font: string): CSSProperties {
+/* Title type per 5.5 (verbatim table). */function titleStyle(font: string): CSSProperties {
   if (font === 'Blauer Nue 700') return { fontFamily: 'var(--ff-ink)', fontWeight: 700 };
   if (font === 'Blauer Nue 600') return { fontFamily: 'var(--ff-ink)', fontWeight: 600 };
   return { fontFamily: 'var(--ff-outfit)', fontWeight: 400 }; // Outfit 400
@@ -44,8 +47,20 @@ function titleStyle(font: string): CSSProperties {
 // hand-set breathing room on D and E); applied only at 900px and wider.
 const CARD_MIN_H = ['674px', '642px', '674px', '676px', '644px', '642px'] as const; // A-F
 
-function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string }) {
-  const href = 'https://trulylois.work';
+function WorkCard({
+  project,
+  cardMinH,
+  onOpen,
+}: {
+  project: Project;
+  cardMinH: string;
+  onOpen: (project: Project, source: HTMLElement, trigger: HTMLElement) => void;
+}) {
+  const imageRef = useRef<HTMLDivElement>(null);
+  const open = (trigger: HTMLElement) => {
+    if (!imageRef.current) return;
+    onOpen(project, imageRef.current, trigger);
+  };
   return (
     <article
       data-accent={project.accent}
@@ -61,6 +76,7 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
     >
       {/* Image slot: placeholder solid until real covers land */}
       <div
+        ref={imageRef}
         className="relative w-full shrink-0"
         style={{
           aspectRatio: SPEC.imgAspect,
@@ -69,13 +85,15 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
         }}
       >
         {/* Hidden reveal CTA (visible on hover / keyboard focus). */}
-        <div className="absolute bottom-6 left-6 -translate-x-4 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-focus-within:translate-x-0 group-focus-within:opacity-100">
+        <div className="absolute bottom-6 left-6 z-10 -translate-x-4 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-focus-within:translate-x-0 group-focus-within:opacity-100">
           <Button
             label="View Project"
             arrow="up-right"
             strong
             fill="var(--orange-cta)"
-            href={href}
+            onClick={(event: ReactMouseEvent<HTMLButtonElement>) =>
+              open(event.currentTarget)
+            }
             data-cursor="link"
             aria-label={`View project: ${project.title}`}
           />
@@ -93,12 +111,13 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
             className="w-full font-ink text-ink text-[26px] min-[900px]:text-[32px]"
             style={{ ...titleStyle(project.titleFont), lineHeight: '38px', letterSpacing: '-0.03em' }}
           >
-            <a
-              href={href}
-              className="after:absolute after:inset-0 after:content-['']"
+            <button
+              type="button"
+              onClick={(event) => open(event.currentTarget)}
+              className="block w-full text-left after:absolute after:inset-0 after:content-['']"
             >
               {project.title}
-            </a>
+            </button>
           </h3>
           <span
             className="font-outfit text-[16px] leading-[20px] text-muted xl:absolute xl:left-[526px] xl:top-[9.5px] xl:w-[38px] xl:text-right"
@@ -142,6 +161,12 @@ function WorkCard({ project, cardMinH }: { project: Project; cardMinH: string })
 
 export function Work() {
   const projects = projectsJson.projects;
+  const [openProject, setOpenProject] = useState<{
+    project: Project;
+    source: HTMLElement;
+    trigger: HTMLElement;
+  } | null>(null);
+
   return (
     <section
       id="work"
@@ -185,7 +210,14 @@ export function Work() {
           className="mt-[60px] grid w-full max-w-[1312px] grid-cols-1 items-start gap-6 min-[900px]:grid-cols-2"
         >
           {projects.map((project, index) => (
-            <WorkCard key={project.id} project={project} cardMinH={CARD_MIN_H[index]} />
+            <WorkCard
+              key={project.id}
+              project={project}
+              cardMinH={CARD_MIN_H[index]}
+              onOpen={(next, source, trigger) =>
+                setOpenProject({ project: next, source, trigger })
+              }
+            />
           ))}
         </div>
 
@@ -198,6 +230,17 @@ export function Work() {
           aria-label="More from the portfolio"
         />
       </div>
+
+      {openProject ? (
+        <Suspense fallback={null}>
+          <ProjectOverlay
+            project={openProject.project}
+            source={openProject.source}
+            returnFocus={openProject.trigger}
+            onClose={() => setOpenProject(null)}
+          />
+        </Suspense>
+      ) : null}
     </section>
   );
 }

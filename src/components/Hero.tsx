@@ -28,9 +28,15 @@
 // checkerboard pattern origin sits at the frame corner (0.5px). Logged in
 // OPEN_QUESTIONS 30.
 
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import projectsJson from '../data/projects.json';
 import { Button } from './ui/Button';
+import type { Project } from './Overlay';
+
+// MOTION_SPEC 13 asks for the overlay to stay out of the initial bundle.
+const ProjectOverlay = lazy(() =>
+  import('./Overlay').then((module) => ({ default: module.ProjectOverlay })),
+);
 import { EASE } from '../motion/ease';
 import { gsap, ScrollTrigger, SplitText, Draggable } from '../motion/gsap';
 import { onLoaderRelease } from '../motion/loaderGate';
@@ -97,6 +103,9 @@ const CHECKER_BG =
   ` 0.5px 0.5px / ${SPEC.deck.checkPeriod} ${SPEC.deck.checkPeriod}`;
 
 const CARD_IDS = new Set<string>(projectsJson.projects.map((project) => project.id));
+const PROJECTS = new Map(
+  projectsJson.projects.map((project) => [project.id, project] as const),
+);
 
 const LAYER = {
   position: 'absolute',
@@ -156,6 +165,22 @@ export function Hero() {
   const buttonRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [dealDone, setDealDone] = useState(false);
+  const [openProject, setOpenProject] = useState<{
+    project: Project;
+    source: HTMLElement;
+    trigger: HTMLButtonElement;
+  } | null>(null);
+  // A card drag must not also open the project overlay (MOTION_SPEC 4.3). The
+  // Draggable release sets this ref, then clears it a beat later, so the
+  // synthetic click that follows a drag is treated as the tail of the drag.
+  const dragBlocked = useRef(false);
+
+  const openCard = (id: string, trigger: HTMLButtonElement, source: HTMLElement) => {
+    if (dragBlocked.current) return;
+    const project = PROJECTS.get(id);
+    if (!project) return;
+    setOpenProject({ project, source, trigger });
+  };
 
   // Entrance: stacked deck deal, paragraph word rise and button pop. Runs
   // once per activation, after the loader cover starts its wipe.
@@ -618,6 +643,7 @@ export function Hero() {
     const draggables: Array<{ kill: () => void }> = [];
     if (finePointer) {
       cards.forEach((card, index) => {
+        let wasDragged = false;
         const instance = Draggable.create(card.root, {
           type: 'x',
           bounds: {
@@ -628,6 +654,7 @@ export function Hero() {
           },
           dragClickables: true,
           onDragStart: () => {
+            wasDragged = true;
             dragging = index;
             stopIdle(index);
             card.root.style.zIndex = '60';
@@ -644,6 +671,13 @@ export function Hero() {
             card.root.style.zIndex = '60';
           },
           onRelease: () => {
+            if (wasDragged) {
+              wasDragged = false;
+              dragBlocked.current = true;
+              window.setTimeout(() => {
+                dragBlocked.current = false;
+              }, 250);
+            }
             gsap.to(card.root, {
               x: 0,
               duration: 0.6,
@@ -755,7 +789,8 @@ export function Hero() {
               placeholder raster; real covers expose alt text when they land. */}
           <div
             ref={deckRef}
-            role="presentation"
+            role="group"
+            aria-label="Featured projects"
             data-cursor="drag"
             data-skew
             className="relative hidden min-[1440px]:block"
@@ -811,6 +846,31 @@ export function Hero() {
                               style={{
                                 ...LAYER,
                                 background: CHECKER_BG,
+                              }}
+                            />
+                            <button
+                              type="button"
+                              aria-label={`View project: ${
+                                PROJECTS.get(card.id)?.title ?? card.id
+                              }`}
+                              onClick={(event) =>
+                                openCard(
+                                  card.id,
+                                  event.currentTarget,
+                                  event.currentTarget.parentElement ??
+                                    event.currentTarget,
+                                )
+                              }
+                              className="media-trigger"
+                              style={{
+                                position: 'absolute',
+                                inset: 0,
+                                zIndex: 6,
+                                padding: 0,
+                                border: 0,
+                                borderRadius: '36.5px',
+                                background: 'transparent',
+                                cursor: 'pointer',
                               }}
                             />
                           </div>
@@ -878,8 +938,8 @@ export function Hero() {
               (capped at 520 on tablet/laptop so it stays a deck), tilts kept,
               12% overlap. Shown below the desktop breakpoint. */}
           <div
-            aria-hidden="true"
-            role="presentation"
+            role="group"
+            aria-label="Featured projects"
             data-cursor="drag"
             className="hero-mobile-deck relative w-full overflow-x-auto min-[1440px]:hidden"
             style={{
@@ -893,20 +953,30 @@ export function Hero() {
           >
             <div className="flex h-full items-center">
               {SPEC.deck.cards.map((card, i) => (
-                <div
+                <button
                   key={card.id}
+                  type="button"
                   data-hero-mobile-card={card.id}
+                  aria-label={`View project: ${
+                    PROJECTS.get(card.id)?.title ?? card.id
+                  }`}
+                  onClick={(event) =>
+                    openCard(card.id, event.currentTarget, event.currentTarget)
+                  }
+                  className="media-trigger"
                   style={{
                     flex: 'none',
                     width: 'min(78vw, 520px)',
                     height: `calc(min(78vw, 520px) * ${SPEC.deck.cardH} / ${SPEC.deck.cardW})`,
                     boxSizing: 'border-box',
+                    padding: 0,
                     border: '1px solid var(--ink)',
                     borderRadius: 'var(--r-card)',
                     transform: `rotate(${card.rot}deg)`,
                     scrollSnapAlign: 'center',
                     marginLeft: i === 0 ? 'calc(0.14 * min(78vw, 520px))' : 'calc(-0.12 * min(78vw, 520px))',
                     background: CHECKER_BG,
+                    cursor: 'pointer',
                   }}
                 />
               ))}
@@ -941,6 +1011,17 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      {openProject ? (
+        <Suspense fallback={null}>
+          <ProjectOverlay
+            project={openProject.project}
+            source={openProject.source}
+            returnFocus={openProject.trigger}
+            onClose={() => setOpenProject(null)}
+          />
+        </Suspense>
+      ) : null}
     </section>
   );
 }
