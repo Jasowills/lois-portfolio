@@ -224,6 +224,207 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Contact drawer (DESIGN_SPEC 10, MOTION_SPEC 10): right-side sheet,   */
+/* bottom sheet on mobile. Slides with the glide ease; fields stagger   */
+/* in (Motion). Desktop is a 420px panel; mobile rules live in          */
+/* responsive.css. Backdrop is token-dimmed ink.                        */
+/* ------------------------------------------------------------------ */
+.cta-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.cta-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  width: 420px;
+  max-width: 94vw;
+  height: 100dvh;
+  overflow-y: auto;
+  background: var(--cream);
+  border-left: 1px solid var(--ink);
+  overscroll-behavior: contain;
+}
+
+.cta-drawer-inner {
+  padding: 32px 28px 40px;
+}
+
+.cta-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cta-drawer-title {
+  font-family: var(--ff-ink);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 38px;
+  letter-spacing: -0.02em;
+  color: var(--heading);
+  margin: 0;
+}
+
+.cta-drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.cta-drawer-close:hover {
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.cta-drawer-close:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.cta-drawer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cta-drawer-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cta-field-label {
+  font-family: var(--ff-outfit);
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--body);
+}
+
+.cta-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  background: var(--cream-white);
+  font-family: var(--ff-outfit);
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--ink);
+}
+
+.cta-input::placeholder {
+  color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.cta-input:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.cta-input[aria-invalid='true'] {
+  border-color: var(--error);
+}
+
+.cta-textarea {
+  resize: vertical;
+  min-height: 128px;
+}
+
+.cta-field-error {
+  margin: 0;
+  font-family: var(--ff-outfit);
+  font-size: 13px;
+  line-height: 17px;
+  color: var(--error);
+}
+
+.cta-form-error {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--error);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--error) 8%, var(--cream));
+  font-family: var(--ff-outfit);
+  font-size: 14px;
+  line-height: 19px;
+  color: var(--error);
+}
+
+.cta-form-error-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cta-drawer-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ------------------------------------------------------------------ */
+/* Confetti of stickers (MOTION_SPEC 10): outlined palette shapes burst */
+/* from the primary button before the drawer opens.                    */
+/* ------------------------------------------------------------------ */
+.cta-burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  margin-top: -12px;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 45;
+}
+
+.cta-drawer-sent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.cta-sent-title {
+  margin: 0;
+  font-family: var(--ff-ink);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  color: var(--heading);
+}
+
+.cta-sent-body {
+  margin: 0;
+  font-family: var(--ff-outfit);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--body);
+}
+
+/* ------------------------------------------------------------------ */
 /* Testimonials (MOTION_SPEC 9, DOM version). The attribution          */
 /* highlight is a scaleX bar that only appears during the reveal; the  */
 /* base transform clips it in static and reduced motion.               */

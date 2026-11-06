@@ -15,6 +15,10 @@
 @media (max-width: 1439px) {
   /* CTA (12: blob scales to container width, text scales down, button
      full width on mobile). The organic blob stretches to the section box. */
+  .cta-reveal {
+    position: static !important;
+  }
+
   .cta-section {
     height: auto !important;
     min-height: clamp(520px, 62vw, 760px);
@@ -470,6 +474,25 @@
 /* Tablet and mobile: structural stacks (DESIGN_SPEC 12 breakpoint 900) */
 /* ------------------------------------------------------------------ */
 @media (max-width: 899px) {
+  /* Contact drawer becomes a bottom sheet (MOTION_SPEC 10). */
+  .cta-drawer {
+    top: auto;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    height: auto;
+    max-height: 88vh;
+    border-left: none;
+    border-top: 1px solid var(--ink);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .cta-drawer-inner {
+    padding: 24px 20px 32px;
+  }
+
   .services-section h2 {
     font-size: clamp(30px, 7.5vw, 40px) !important;
     line-height: 1.15 !important;

@@ -124,6 +124,8 @@
   --overlay-dim: rgba(26, 22, 12, 0.32);
   --glare: rgba(255, 255, 255, 0.9);
   --shadow-paper: rgba(0, 0, 0, 0.28);
+  /* Form/drawer validation, chosen for AA on the cream surface. */
+  --error: #b42318;
   /* Work header colors (spec 1.1). */
   --ink-strong: #040100; /* work H2 */
   --ink-soft: #282727; /* card descriptions */
