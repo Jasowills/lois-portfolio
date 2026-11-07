@@ -21,10 +21,6 @@
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/outfit": "^5.3.0",
-    "@fontsource-variable/quicksand": "^5.3.0",
-    "@fontsource/lexend": "^5.3.0",
-    "@fontsource/outfit": "^5.3.0",
-    "@fontsource/poppins": "^5.3.0",
     "@fontsource/roboto-mono": "^5.3.0",
     "clsx": "^2.1.1",
     "gsap": "^3.15.0",
@@ -36,7 +32,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@fontsource/noto-color-emoji": "^5.3.2",
     "@tailwindcss/vite": "^4.3.4",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
