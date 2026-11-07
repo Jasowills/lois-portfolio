@@ -24,6 +24,12 @@ function readStaticMode(): boolean {
   return forced === '1' || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function readForcedQuality(): QualityTier | null {
+  if (typeof window === 'undefined') return null;
+  const forced = new URLSearchParams(window.location.search).get('quality');
+  return forced === 'high' || forced === 'medium' || forced === 'low' ? forced : null;
+}
+
 /**
  * One provider for the whole page: Lenis wired into the GSAP ticker, GSAP
  * plugins registered on import, the quality guard, anchor scrolling and the
@@ -31,8 +37,9 @@ function readStaticMode(): boolean {
  */
 export function MotionProvider({ children }: { children: ReactNode }) {
   const [staticMode] = useState(readStaticMode);
+  const forcedQuality = useState(readForcedQuality)[0];
   const [quality, setQuality] = useState<QualityTier>(() =>
-    readStaticMode() ? 'low' : detectQuality(),
+    readStaticMode() ? 'low' : (forcedQuality ?? detectQuality()),
   );
   const velocity = useRef(0);
   const lenisRef = useRef<Lenis | null>(null);
@@ -53,9 +60,9 @@ export function MotionProvider({ children }: { children: ReactNode }) {
   // Runtime guard: average frame time over 60 frames, step down one tier,
   // never step back up in the same session (MOTION_SPEC 13).
   useEffect(() => {
-    if (staticMode || quality === 'low') return;
+    if (staticMode || quality === 'low' || forcedQuality) return;
     return startQualityGuard(quality, (next) => setQuality(next));
-  }, [staticMode, quality]);
+  }, [staticMode, quality, forcedQuality]);
 
   // Lenis boot: lerp 0.09 on desktop, GSAP ticker drives raf, ScrollTrigger
   // follows every scroll event. Touch keeps native momentum (MOTION_SPEC 12),

@@ -522,6 +522,16 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Services scroll tour (MOTION_SPEC 7.2): a thin dashed progress      */
+/* thread along the bottom of the panel, filled left to right by the  */
+/* pinned scrub. Static/static-mode renders it at scaleX 0 or omits it. */
+/* ------------------------------------------------------------------ */
+.svc-progress-fill {
+  background: repeating-linear-gradient(to right, var(--ink) 0 8px, transparent 8px 14px);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ */
 /* Testimonials (MOTION_SPEC 9, DOM version). The attribution          */
 /* highlight is a scaleX bar that only appears during the reveal; the  */
 /* base transform clips it in static and reduced motion.               */

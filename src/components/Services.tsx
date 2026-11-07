@@ -21,7 +21,7 @@
 import { useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import data from '../data/services.json';
 import { EASE } from '../motion/ease';
-import { gsap, SplitText } from '../motion/gsap';
+import { gsap, SplitText, ScrollTrigger } from '../motion/gsap';
 import { useMediaQuery } from '../motion/useMediaQuery';
 import { useMotion } from '../motion/useMotion';
 import { useStaticMode } from '../motion/useStaticMode';
@@ -155,10 +155,12 @@ function PanelBody({ tab }: { tab: ServiceTab }) {
 
 export function Services() {
   const staticMode = useStaticMode();
-  const { quality, reducedMotion } = useMotion();
+  const { quality, reducedMotion, scrollTo } = useMotion();
   const active = !reducedMotion;
   const low = quality === 'low';
   const desktop = useMediaQuery('(min-width: 1440px)');
+  const tourViewport = useMediaQuery('(min-width: 1024px) and (orientation: landscape)');
+  const canTour = active && !low && tourViewport;
 
   const params = useMemo(() => (staticMode ? new URLSearchParams(window.location.search) : null), [staticMode]);
   const forcedPair = useMemo<[number, number] | null>(() => {
@@ -183,8 +185,10 @@ export function Services() {
   const [baseIdx, setBaseIdx] = useState(() => (forcedPair ? forcedPair[1] - 1 : 0));
 
   const panelRef = useRef<HTMLDivElement>(null);
+  const folderRef = useRef<HTMLDivElement>(null);
   const blobRef = useRef<SVGSVGElement>(null);
   const blobPathRef = useRef<SVGPathElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Array<HTMLDivElement | null>>([]);
   const pendingInRef = useRef(false);
   const splitsRef = useRef<SplitText[]>([]);
@@ -192,6 +196,9 @@ export function Services() {
   const blobTlRef = useRef<gsap.core.Timeline | null>(null);
   const contentTlRef = useRef<gsap.core.Timeline | null>(null);
   const inTlRef = useRef<gsap.core.Timeline | null>(null);
+  const tourTriggerRef = useRef<ScrollTrigger | null>(null);
+  const tourActiveRef = useRef(false);
+  const selectedIdxRef = useRef(selectedIdx);
   const lastHapticRef = useRef(0);
 
   const tabs = data.tabs;
@@ -215,14 +222,32 @@ export function Services() {
   }, []);
 
   const commitInstant = (next: number) => {
+    selectedIdxRef.current = next;
     setSelectedIdx(next);
     setShapeIdx(next);
     setDisplayIdx(next);
     setBaseIdx(next);
   };
 
-  const selectTab = (next: number, tabEl: HTMLElement | null, eventTime: number) => {
+  const selectTab = (
+    next: number,
+    tabEl: HTMLElement | null,
+    eventTime: number,
+    source: 'user' | 'scroll' = 'user',
+  ) => {
     if (forcedPair || next === selectedIdx) return;
+
+    // 7.2 while pinned, click and keyboard activation jump the tour to the
+    // stage instead of instant-selecting. The scrub state then runs the normal
+    // tab/colour/content transition.
+    if (source === 'user' && tourTriggerRef.current && tourActiveRef.current) {
+      const trigger = tourTriggerRef.current;
+      const range = trigger.end - trigger.start;
+      if (range > 0) {
+        scrollTo(trigger.start + (next / tabs.length) * range);
+        return;
+      }
+    }
 
     const panel = panelRef.current;
     const tab = tabEl ?? tabRefs.current[next];
@@ -249,6 +274,7 @@ export function Services() {
     }
     splitsRef.current = [];
 
+    selectedIdxRef.current = next;
     setSelectedIdx(next);
 
     // 7.1 tab rise: the face is a fixed 144px box clipped to the inactive
@@ -498,6 +524,70 @@ export function Services() {
     inTlRef.current = tl;
   }, [displayIdx, active, low]);
 
+  // 7.2 scroll tour: pin the folder as it reaches viewport centre and scrub it
+  // through 260vh of scroll. The 3D turntable angle and dashed progress thread
+  // are driven directly, so no layout changes happen during the pin.
+  useLayoutEffect(() => {
+    if (!canTour || forcedPair) return;
+    const folder = folderRef.current;
+    const progressElement = progressRef.current;
+    if (!folder) return;
+
+    const rotateTo = (progress: number) => {
+      gsap.set(folder, {
+        transformPerspective: 1600,
+        rotationY: progress * 8 - 4,
+      });
+    };
+
+    const trigger = ScrollTrigger.create({
+      trigger: folder,
+      start: 'top center',
+      end: '+=260%',
+      pin: true,
+      pinSpacing: true,
+      scrub: 0.2,
+      snap: 1 / tabs.length,
+      onToggle: (self) => {
+        tourActiveRef.current = self.isActive;
+        if (!self.isActive) {
+          gsap.to(folder, { rotationY: 0, duration: 0.6, ease: EASE.glide, overwrite: 'auto' });
+        }
+      },
+      onUpdate: (self) => {
+        tourActiveRef.current = self.isActive;
+        const progress = Math.max(0, Math.min(1, self.progress));
+        rotateTo(progress);
+        if (progressElement) {
+          gsap.set(progressElement, { scaleX: progress });
+        }
+        const next = Math.min(tabs.length - 1, Math.floor(progress * tabs.length));
+        if (next !== selectedIdxRef.current) {
+          selectTab(next, null, performance.now(), 'scroll');
+        }
+      },
+      onLeave: () => {
+        tourActiveRef.current = false;
+        gsap.to(folder, { rotationY: 0, duration: 0.6, ease: EASE.glide, overwrite: 'auto' });
+      },
+      onLeaveBack: () => {
+        tourActiveRef.current = false;
+        gsap.to(folder, { rotationY: 0, duration: 0.6, ease: EASE.glide, overwrite: 'auto' });
+      },
+    });
+    tourTriggerRef.current = trigger;
+
+    return () => {
+      tourTriggerRef.current = null;
+      tourActiveRef.current = false;
+      trigger.kill();
+      gsap.set(folder, { clearProps: 'transform' });
+      if (progressElement) gsap.set(progressElement, { scaleX: 0 });
+    };
+    // Tabs are fixed by services.json; the effect only needs tour availability.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canTour, forcedPair]);
+
   const onTabKeyDown = (event: KeyboardEvent<HTMLDivElement>, index: number) => {
     if (forcedPair) return;
     let next: number | null = null;
@@ -518,6 +608,7 @@ export function Services() {
       id="services"
       aria-label="Services"
       className="services-section relative w-full bg-cream px-5 pb-20 pt-[76px] min-[1440px]:h-[1226px] min-[1440px]:px-[64px] min-[1440px]:pb-0"
+      style={canTour ? { height: 'auto' } : undefined}
     >
       <SectionEdge variant="tear" from="var(--lav-exp)" />
       <div className="mx-auto flex w-full max-w-[1440px] flex-col">
@@ -538,7 +629,7 @@ export function Services() {
         </h2>
 
         {/* 7: folder */}
-        <div className="svc-folder" data-skew style={{ position: 'relative', width: 1312, height: 852, marginTop: '60px' }}>
+        <div ref={folderRef} className="svc-folder" data-skew style={{ position: 'relative', width: 1312, height: 852, marginTop: '60px' }}>
           {/* 7.2 panel */}
           <div
             ref={panelRef}
@@ -591,6 +682,11 @@ export function Services() {
             >
               <PanelBody key={displayIdx} tab={panelTab} />
             </div>
+            {canTour ? (
+              <div aria-hidden="true" className="svc-progress" style={{ position: 'absolute', bottom: 12, left: 24, right: 24, height: 8, zIndex: 2, pointerEvents: 'none' }}>
+                <div ref={progressRef} data-svc-progress className="svc-progress-fill" style={{ position: 'absolute', inset: 0, transform: 'scaleX(0)', transformOrigin: '0% 50%' }} />
+              </div>
+            ) : null}
           </div>
 
           {/* 7.1 tabs */}
