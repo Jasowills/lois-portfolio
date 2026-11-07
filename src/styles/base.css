@@ -532,32 +532,6 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 }
 
 /* ------------------------------------------------------------------ */
-/* WebGL stage (MOTION_SPEC 4.3b, 8, 11, 13): one fixed progressive    */
-/* canvas behind the page. Static rendering is untouched until the     */
-/* canvas has drawn successfully, at which point the dependent DOM     */
-/* backgrounds become transparent and the shader artwork shows through.*/
-/* ------------------------------------------------------------------ */
-.gl-stage {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-}
-
-html[data-gl-ready="true"] [data-section="hero"],
-html[data-gl-ready="true"] [data-section="footer"] {
-  background: transparent !important;
-}
-
-html[data-gl-ready="true"] [data-hero-art],
-html[data-gl-ready="true"] [data-hero-art-inner],
-html[data-gl-ready="true"] [data-section="about"] .about-left {
-  background: transparent !important;
-}
-
-/* ------------------------------------------------------------------ */
 /* Testimonials (MOTION_SPEC 9, DOM version). The attribution          */
 /* highlight is a scaleX bar that only appears during the reveal; the  */
 /* base transform clips it in static and reduced motion.               */

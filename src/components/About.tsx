@@ -24,7 +24,8 @@
 // (unrotated top-left (73, 65.05), center (369.5, 263.8)), card 2 rotated +1.64
 // (unrotated top-left (73, 505.75), center (369.5, 704.5)). Cloud sticker badges
 // counter-rotated against the cards at rot +3.32 fill #f5e8ec and rot -15.12
-// fill #ff9c39. Images are the #fafafa checker placeholder until Lois supplies
+// fill #ff9c39. Both cards use local project covers from the old portfolio
+// until Lois supplies portrait/work photography (OPEN_QUESTIONS 19).
 // portraits (OPEN_QUESTIONS 19).
 
 import { useLayoutEffect, useRef, type CSSProperties } from 'react';
@@ -42,9 +43,6 @@ import { Logo } from './svg/Logo';
 // 89px, ramp back to #fef5b6 at 94px (repeating period 94px).
 const STRIPES =
   'repeating-linear-gradient(to right, #fef5b6 0, #fef5b6 42px, #fbf1a8 47px, #fbf1a8 89px, #fef5b6 94px)';
-
-const CHECKER_BG =
-  'conic-gradient(var(--card-check-b) 0% 25%, var(--card-check-a) 25% 50%, var(--card-check-b) 50% 75%, var(--card-check-a) 75%) 0.5px 0.5px / 48px 48px';
 
 const ABOUT_PARAS = [
   "I'm Lois Amadi, a brand and visual designer with a soft spot for thoughtful ideas and the details that make them stick. I work across brand identity, campaign and marketing design, and digital content, bringing strategy and visuals into the same room (they get along better than you'd think).",
@@ -141,11 +139,39 @@ const MOTION = {
   },
 } as const;
 
-function CardImage() {
-  // The placeholder checker is design content (DESIGN_SPEC 8.1: #fafafa
-  // checker placeholder), not photography, so it is not masked; only real
-  // project photography would carry data-diff-ignore.
-  return <div style={{ position: 'absolute', inset: 0, background: CHECKER_BG }} />;
+const CARD_IMAGES = [
+  { src: '/images/old-portfolio/garri-granola.webp', srcSet: '/images/old-portfolio/garri-granola.webp 1600w', alt: 'Garri and Granola homeware brand cover from the old portfolio' },
+  { src: '/images/old-portfolio/heure-doree.webp', srcSet: '/images/old-portfolio/heure-doree.webp 1600w', alt: 'Heure Dorée sardine brand cover from the old portfolio' },
+] as const;
+
+function CardImage({ index }: { index: number }) {
+  const image = CARD_IMAGES[index % CARD_IMAGES.length];
+  return (
+    <picture
+      data-diff-ignore
+      style={{ position: 'absolute', inset: 0, display: 'block' }}
+    >
+      <img
+        src={image.src}
+        srcSet={image.srcSet}
+        sizes="593px"
+        alt={image.alt}
+        width={1600}
+        height={900}
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+        }}
+      />
+    </picture>
+  );
 }
 
 export function About() {
@@ -674,7 +700,7 @@ export function About() {
                         overflow: 'hidden',
                       }}
                     >
-                      <CardImage />
+                      <CardImage index={index} />
                     </div>
                   </div>
 

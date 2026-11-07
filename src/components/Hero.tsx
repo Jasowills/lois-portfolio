@@ -107,6 +107,30 @@ const PROJECTS = new Map(
   projectsJson.projects.map((project) => [project.id, project] as const),
 );
 
+const imageWidth = (url: string) => {
+  const match = /-(\d+)\.(?:avif|webp)$/.exec(url);
+  return Number(match?.[1] ?? 1024);
+};
+
+const buildSrcSet = (urls: string[]) =>
+  urls.map((url) => `${url} ${imageWidth(url)}w`).join(', ');
+
+const coverFor = (id: string) => {
+  const image = PROJECTS.get(id)?.images[0];
+  if (!image || ('placeholder' in image && image.placeholder === true)) return null;
+  const fallback = image.webp[image.webp.length - 1] ?? '';
+  return {
+    sources: [
+      { type: 'image/avif', srcSet: buildSrcSet(image.avif) },
+      { type: 'image/webp', srcSet: buildSrcSet(image.webp) },
+    ],
+    src: fallback,
+    alt: image.alt,
+    width: image.width,
+    height: image.height,
+  };
+};
+
 const LAYER = {
   position: 'absolute',
   inset: 0,
@@ -860,7 +884,7 @@ export function Hero() {
     <section
       ref={sectionRef}
       data-section="hero"
-      className="relative w-full bg-cream-hero px-5 pt-[64px] pb-16 md:px-10 md:pt-[84px] md:pb-16 md:pl-[72px] min-[1440px]:h-[866px]"
+      className="hero-section relative w-full bg-cream-hero px-5 pt-[64px] pb-16 md:px-10 md:pt-[84px] md:pb-16 md:pl-[72px] min-[1440px]:h-[866px]"
     >
       <div className="mx-auto w-full max-w-[1440px] flex flex-col items-center">
         <div className="flex w-full max-w-[1328px] flex-col items-center">
@@ -942,7 +966,45 @@ export function Hero() {
                                 ...LAYER,
                                 background: CHECKER_BG,
                               }}
-                            />
+                            >
+                              {(() => {
+                                const cover = coverFor(card.id);
+                                if (!cover) return null;
+                                return (
+                                  <picture
+                                    data-diff-ignore
+                                    style={{
+                                      position: 'absolute',
+                                      inset: 0,
+                                      display: 'block',
+                                    }}
+                                  >
+                                    {cover.sources.map((source) => (
+                                      <source key={source.type} type={source.type} srcSet={source.srcSet} sizes="392px" />
+                                    ))}
+                                    <img
+                                      src={cover.src}
+                                      sizes="392px"
+                                      alt=""
+                                      width={cover.width}
+                                      height={cover.height}
+                                      loading="eager"
+                                      decoding="async"
+                                      draggable={false}
+                                      style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        display: 'block',
+                                        borderRadius: '36.5px',
+                                      }}
+                                    />
+                                  </picture>
+                                );
+                              })()}
+                            </div>
                             <button
                               type="button"
                               aria-label={`View project: ${
@@ -1081,19 +1143,48 @@ export function Hero() {
                     onClick={(event) =>
                       openCard(card.id, event.currentTarget, event.currentTarget)
                     }
-                    className="media-trigger"
+                    className="media-trigger relative"
                     style={{
                       display: 'block',
                       width: '100%',
                       height: '100%',
                       padding: 0,
+                      overflow: 'hidden',
                       border: '1px solid var(--ink)',
                       borderRadius: 'var(--r-card)',
                       transform: `rotate(${card.rot}deg)`,
                       background: CHECKER_BG,
                       cursor: 'pointer',
                     }}
-                  />
+                  >
+                    {(() => {
+                      const cover = coverFor(card.id);
+                      if (!cover) return null;
+                      return (
+                        <img
+                          data-diff-ignore
+                          src={cover.src}
+                          srcSet={cover.sources.find((source) => source.type === 'image/webp')?.srcSet}
+                          sizes="(max-width: 767px) 78vw, 392px"
+                          alt=""
+                          width={cover.width}
+                          height={cover.height}
+                          loading="lazy"
+                          decoding="async"
+                          draggable={false}
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            display: 'block',
+                            borderRadius: 'var(--r-card)',
+                          }}
+                        />
+                      );
+                    })()}
+                  </button>
                 </div>
               ))}
             </div>

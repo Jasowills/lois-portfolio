@@ -1,7 +1,8 @@
 // Selected work (DESIGN_SPEC 5.1-5.6, 12, 13): plaid section with the six
 // verbatim project cards in two columns of 644px, then the orange archive
-// button. Card image slots are the exact #c9c9c9 Figma canvas fill until
-// covers ship (OPEN_QUESTIONS 19), matching the reference export.
+// button. Card covers are ordinary DOM images from the old portfolio when a
+// cover has shipped (OPEN_QUESTIONS 19); placeholders stay flat until more
+// covers are supplied, matching the Reference export where needed.
 //
 // Motion (MOTION_SPEC 5.1-5.3, 5.5) lives in nested wrappers so every
 // transform has one owner:
@@ -12,7 +13,7 @@
 //   zoom     hover image scale
 //   clip     zigzag mask reveal
 // The static render is untouched: all wrappers are transparent boxes, the
-// image slot still shows the flat placeholder, and static/reduced mode never
+// image slot still shows its fallback, and static/reduced mode never
 // runs any of the effects.
 //
 // Stroke geometry note (same as Hero, OPEN_QUESTIONS 30): Figma strokes are
@@ -103,6 +104,28 @@ function titleStyle(font: string): CSSProperties {
   if (font === 'Blauer Nue 600') return { fontFamily: 'var(--ff-ink)', fontWeight: 600 };
   return { fontFamily: 'var(--ff-outfit)', fontWeight: 400 }; // Outfit 400
 }
+
+const imageWidth = (url: string) => {
+  const match = /-(\d+)\.(?:avif|webp)$/.exec(url);
+  return Number(match?.[1] ?? 1024);
+};
+
+const buildSrcSet = (urls: string[]) =>
+  urls.map((url) => `${url} ${imageWidth(url)}w`).join(', ');
+
+const coverFor = (image: Project['images'][number]) => {
+  if ('placeholder' in image && image.placeholder === true) return null;
+  return {
+    sources: [
+      { type: 'image/avif', srcSet: buildSrcSet(image.avif) },
+      { type: 'image/webp', srcSet: buildSrcSet(image.webp) },
+    ],
+    src: image.webp[image.webp.length - 1] ?? '',
+    alt: image.alt,
+    width: image.width,
+    height: image.height,
+  };
+};
 
 // Per-card heights, verbatim from DESIGN_SPEC 5.5 (they include ~2px of
 // hand-set breathing room on D and E); applied only at 900px and wider.
@@ -602,7 +625,50 @@ function WorkCard({
                     ref={imageZoomRef}
                     className="absolute inset-0"
                     style={{ background: 'var(--image-placeholder)' }}
-                  />
+                  >
+                    {(() => {
+                      const cover = coverFor(project.images[0]);
+                      if (!cover) return null;
+                      return (
+                        <picture
+                          data-diff-ignore
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'block',
+                          }}
+                        >
+                          {cover.sources.map((source) => (
+                            <source
+                              key={source.type}
+                              type={source.type}
+                              srcSet={source.srcSet}
+                              sizes="(max-width: 899px) 100vw, (min-width: 1440px) 644px, 446px"
+                            />
+                          ))}
+                          <img
+                            src={cover.src}
+                            sizes="(max-width: 899px) 100vw, (min-width: 1440px) 644px, 446px"
+                            alt={cover.alt}
+                            width={cover.width}
+                            height={cover.height}
+                            loading="lazy"
+                            decoding="async"
+                            draggable={false}
+                            style={{
+                              position: 'absolute',
+                              inset: 0,
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              display: 'block',
+                              borderRadius: '0 0 var(--r-card) var(--r-card)',
+                            }}
+                          />
+                        </picture>
+                      );
+                    })()}
+                  </div>
                 </div>
               </div>
 
@@ -924,7 +990,7 @@ export function Work() {
       id="work"
       data-section="work"
       aria-label="Selected work"
-      className="relative w-full border-y border-ink px-5 pb-16 pt-[76px] min-[900px]:px-16 min-[1440px]:h-[2572px]"
+      className="work-section relative w-full border-y border-ink px-5 pb-16 pt-[76px] min-[900px]:px-16 min-[1440px]:h-[2572px]"
       style={{
         backgroundColor: 'var(--lav-work)',
         backgroundImage:
@@ -959,14 +1025,14 @@ export function Work() {
         <h2
           data-skew
           data-split="lines"
-          className="relative top-[2px] mt-[34px] w-full max-w-[1055px] text-center font-ink font-semibold text-[28px] leading-[34px] text-[var(--ink-strong)] min-[900px]:text-[45px] min-[900px]:leading-[50px]"
+          className="work-h2 relative top-[2px] mt-[34px] w-full max-w-[1055px] text-center font-ink font-semibold text-[28px] leading-[34px] text-[var(--ink-strong)] min-[900px]:text-[45px] min-[900px]:leading-[50px]"
           style={{ letterSpacing: '-0.03em' }}
         >
           A little bit of everything. Very much on purpose.
         </h2>
         <p
           data-split="words"
-          className="relative top-[2px] mt-7 w-full max-w-[1003px] text-center font-outfit text-[18px] leading-[28px] text-sub min-[900px]:text-[24px] min-[900px]:leading-[30.24px]"
+          className="work-subtitle relative top-[2px] mt-7 w-full max-w-[1003px] text-center font-outfit text-[18px] leading-[28px] text-sub min-[900px]:text-[24px] min-[900px]:leading-[30.24px]"
           style={{ letterSpacing: '-0.01em' }}
         >
           A selection of brand worlds, campaigns and digital work I've helped bring to life. Different briefs, different hats, same love for a good idea.
@@ -990,7 +1056,7 @@ export function Work() {
           ))}
         </div>
 
-        <div ref={archiveRef} className="mt-[60px]">
+        <div ref={archiveRef} className="mt-[60px] work-archive">
           <Button
             label="More from the portfolio"
             arrow="up-right"

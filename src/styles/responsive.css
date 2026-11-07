@@ -359,6 +359,34 @@
     font-size: clamp(20px, 1.67vw, 24px) !important;
   }
 
+  /* Work vertical rhythm on mobile/tablet: pull the grid and archive
+     closer to the subtitle so the cards begin one viewport earlier. */
+  .work-section {
+    padding-top: 56px !important;
+    padding-bottom: 40px !important;
+  }
+
+  .work-h2 {
+    margin-top: 24px !important;
+  }
+
+  .work-subtitle {
+    margin-top: 20px !important;
+  }
+
+  .work-section .grid {
+    margin-top: 36px !important;
+    gap: 18px !important;
+  }
+
+  .work-archive {
+    margin-top: 36px !important;
+  }
+
+  .work-section article {
+    row-gap: 24px !important;
+  }
+
   /* Services (12: tabs become a scrollable strip, panel stacks). */
   .services-section {
     height: auto !important;
@@ -564,12 +592,25 @@
 /* Mobile (<768): 20px page gutters and the type scale from 12          */
 /* ------------------------------------------------------------------ */
 @media (max-width: 767px) {
-  .cta-section {
-    padding-block: 48px;
+  .hero-section {
+    padding-top: 48px !important;
+    padding-bottom: 40px !important;
   }
 
-  .cta-h2 {
-    font-size: clamp(28px, 7.6vw, 34px) !important;
+  .hero-mobile-deck {
+    margin-top: 28px !important;
+  }
+
+  [data-section="hero"] p {
+    margin-top: 20px !important;
+  }
+
+  .cta-section {
+    padding-block: 48px !important;
+    min-height: 0 !important;
+  }
+
+  .cta-h2 {    font-size: clamp(28px, 7.6vw, 34px) !important;
   }
 
   .cta-button > a,
@@ -579,11 +620,16 @@
   }
 
   .testimonials-section {
-    padding: 56px 20px 48px;
+    padding: 48px 20px 40px !important;
   }
 
   .th2 {
     font-size: clamp(28px, 7.6vw, 36px) !important;
+  }
+
+  .tcards {
+    margin-top: 36px !important;
+    gap: 16px !important;
   }
 
   .tcard-inner {
@@ -591,14 +637,23 @@
   }
 
   .about-right-inner {
-    padding: 48px 20px 56px;
+    padding: 40px 20px 48px !important;
   }
 
   .footer-section {
-    padding: 56px 20px 48px;
+    padding: 40px 20px 40px !important;
+  }
+
+  .footer-logo-wrap {
+    max-width: 320px !important;
+  }
+
+  .footer-socials {
+    margin-top: 20px !important;
   }
 
   .footer-copy {
+    margin-top: 32px !important;
     font-size: 20px !important;
   }
 
@@ -606,7 +661,37 @@
     font-size: 18px !important;
   }
 
+  .footer-signpost-wrap {
+    height: 440px !important;
+    margin-top: 32px !important;
+  }
+
   .services-section {
-    padding: 56px 20px 48px !important;
+    padding: 48px 20px 40px !important;
+  }
+
+  .svc-head {
+    padding: 20px 20px 0;
+  }
+
+  .svc-title {
+    margin-top: 0 !important;
+  }
+
+  .svc-desc {
+    margin-top: 8px !important;
+  }
+
+  .svc-divider {
+    margin-top: 16px !important;
+  }
+
+  .svc-cols {
+    margin-top: 16px !important;
+    gap: 16px !important;
+  }
+
+  .svc-bottom {
+    margin-top: 24px !important;
   }
 }
