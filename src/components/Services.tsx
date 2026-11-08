@@ -749,6 +749,7 @@ export function Services() {
                   <span
                     data-svc-tab-label
                     className="svc-tab-label"
+                    title={tab.label}
                     style={{
                       position: 'absolute',
                       left: SPEC.tab.pad,
@@ -756,8 +757,8 @@ export function Services() {
                       top: SPEC.tab.pad,
                       fontFamily: 'var(--ff-outfit)',
                       fontWeight: 400,
-                      fontSize: 32,
-                      lineHeight: '40.3px',
+                      fontSize: desktop && !isSelected ? 28 : 32,
+                      lineHeight: desktop && !isSelected ? '35.3px' : '40.3px',
                       letterSpacing: '-0.03em',
                       color: 'var(--svc-title)',
                       whiteSpace: desktop && !isSelected ? 'nowrap' : 'normal',
