@@ -429,7 +429,8 @@
   }
 
   .svc-tab-label {
-    position: static !important;
+    position: relative !important;
+    z-index: 1;
     transform: none !important;
     font-size: clamp(20px, 2.2vw, 32px) !important;
     line-height: 1.2 !important;
@@ -589,6 +590,17 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Hero: use the same horizontal gutter as its inner padding at tablet */
+/* and laptop widths; the exact 1440 canvas keeps its spec geometry.   */
+/* ------------------------------------------------------------------ */
+@media (min-width: 768px) and (max-width: 1439px) {
+  .hero-section {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Mobile (<768): 20px page gutters and the type scale from 12          */
 /* ------------------------------------------------------------------ */
 @media (max-width: 767px) {
@@ -610,7 +622,26 @@
     min-height: 0 !important;
   }
 
-  .cta-h2 {    font-size: clamp(28px, 7.6vw, 34px) !important;
+  .cta-content {
+    padding-inline: 24px;
+  }
+
+  .cta-copy {
+    width: min(100%, 320px) !important;
+    margin-inline: auto;
+  }
+
+  .cta-h2 {
+    font-size: clamp(26px, 6.8vw, 30px) !important;
+    line-height: 1.16 !important;
+  }
+
+  .cta-para {
+    width: 100% !important;
+    max-width: 300px !important;
+    margin-inline: auto !important;
+    font-size: 17px !important;
+    line-height: 1.35 !important;
   }
 
   .cta-button > a,

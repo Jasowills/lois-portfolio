@@ -816,7 +816,6 @@ export function Work() {
   const sectionRef = useRef<HTMLElement>(null);
   const stickerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const archiveRef = useRef<HTMLDivElement>(null);
   const bloomARef = useRef<HTMLDivElement>(null);
   const bloomBRef = useRef<HTMLDivElement>(null);
 
@@ -825,8 +824,7 @@ export function Work() {
     const section = sectionRef.current;
     const stickerWrap = stickerRef.current;
     const grid = gridRef.current;
-    const archive = archiveRef.current;
-    if (!section || !stickerWrap || !grid || !archive) return;
+    if (!section || !stickerWrap || !grid) return;
 
     const sticker = stickerWrap.firstElementChild as HTMLElement | null;
     const blooms = [bloomARef.current, bloomBRef.current].filter(
@@ -882,45 +880,6 @@ export function Work() {
       tweens.push(slap);
     }
 
-    // 5.5 archive button drop, then arrow bob.
-    const drop = gsap.from(archive, {
-      y: -MOTION.archive.drop,
-      opacity: 0,
-      duration: 1,
-      ease: 'bounce.out',
-      scrollTrigger: {
-        trigger: archive,
-        start: 'top 92%',
-        once: true,
-      },
-    });
-    tweens.push(drop);
-
-    const bobEl = archive.querySelector<HTMLElement>('[data-button-bob]');
-    let bob: gsap.core.Timeline | null = null;
-    let bobTrigger: ScrollTrigger | null = null;
-    if (bobEl) {
-      bob = gsap.timeline({
-        paused: true,
-        repeat: -1,
-        repeatDelay: MOTION.archive.cycle - 0.4,
-      });
-      bob
-        .to(bobEl, { y: -MOTION.archive.bob, duration: 0.2, ease: EASE.glide })
-        .to(bobEl, { y: 0, duration: 0.2, ease: EASE.glide });
-      bobTrigger = ScrollTrigger.create({
-        trigger: archive,
-        start: 'top bottom',
-        end: 'bottom top',
-        onToggle: (self) => {
-          if (self.isActive && !document.hidden) bob?.play();
-          else bob?.pause();
-        },
-      });
-      triggers.push(bobTrigger);
-    }
-
-    // 5.2 background bloom: the left card in each row owns the accent.
     const cards = Array.from(
       grid.querySelectorAll<HTMLElement>('[data-work-card]'),
     );
@@ -959,22 +918,12 @@ export function Work() {
     });
     triggers.push(gridLeave);
 
-    const onVisibility = () => {
-      if (document.hidden) bob?.pause();
-      else if (bobTrigger?.isActive) bob?.play();
-    };
-    document.addEventListener('visibilitychange', onVisibility);
-
     return () => {
-      document.removeEventListener('visibilitychange', onVisibility);
       for (const trigger of triggers) trigger.kill();
       for (const tween of tweens) {
         tween.scrollTrigger?.kill();
         tween.kill();
       }
-      bob?.kill();
-      if (bobEl) gsap.set(bobEl, { clearProps: 'transform' });
-      gsap.set(archive, { clearProps: 'transform,opacity' });
       if (sticker) gsap.set(sticker, { clearProps: 'transform,boxShadow' });
       if (stickerWrap) gsap.set(stickerWrap, { clearProps: 'transform,opacity' });
       for (const layer of blooms) {
@@ -1054,16 +1003,6 @@ export function Work() {
               }
             />
           ))}
-        </div>
-
-        <div ref={archiveRef} className="mt-[60px] work-archive">
-          <Button
-            label="More from the portfolio"
-            arrow="up-right"
-            fill="var(--orange)"
-            href="https://trulylois.work"
-            aria-label="More from the portfolio"
-          />
         </div>
       </div>
 
