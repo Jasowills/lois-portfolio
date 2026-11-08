@@ -4,17 +4,39 @@
   "cards": [
     {
       "title": "Brand & Visual Design",
-      "tools": "Figma, Adobe Illustrator, Photoshop, Canva, After Effects",
+      "tools": [
+        { "name": "Figma", "slug": "figma" },
+        { "name": "Illustrator", "slug": "adobeillustrator" },
+        { "name": "Photoshop", "slug": "adobephotoshop" },
+        { "name": "Canva", "slug": "canva" },
+        { "name": "After Effects", "slug": "adobeaftereffects" }
+      ],
       "text": "Used to design visual identities, marketing campaigns, product interfaces, design systems, social content, and motion graphics that bring brands to life."
     },
     {
       "title": "Motion Design & Content Creation",
-      "tools": "After Effects, CapCut, HeyGen, Synthesia, Focusee, Canva",
+      "tools": [
+        { "name": "After Effects", "slug": "adobeaftereffects" },
+        { "name": "CapCut", "slug": null },
+        { "name": "HeyGen", "slug": null },
+        { "name": "Synthesia", "slug": null },
+        { "name": "Focusee", "slug": null },
+        { "name": "Canva", "slug": "canva" }
+      ],
       "text": "Used to create explainer videos, product demos, launch campaigns, social content, tutorials, AI-assisted videos, and motion graphics for digital products and brands."
     },
     {
       "title": "Strategy, Research & Creative Workflow",
-      "tools": "ChatGPT, Claude, Notion, Google Workspace, Pinterest, Freepik, Envato, Gemini",
+      "tools": [
+        { "name": "ChatGPT", "slug": "openai" },
+        { "name": "Claude", "slug": "claude" },
+        { "name": "Notion", "slug": "notion" },
+        { "name": "Google Workspace", "slug": "googledrive" },
+        { "name": "Pinterest", "slug": "pinterest" },
+        { "name": "Freepik", "slug": "freepik" },
+        { "name": "Envato", "slug": "envato" },
+        { "name": "Gemini", "slug": "googlegemini" }
+      ],
       "text": "My go-to toolkit for research, creative strategy, content planning, concept development, project organization, and sourcing visual inspiration."
     }
   ]

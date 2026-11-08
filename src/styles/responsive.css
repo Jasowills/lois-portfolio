@@ -105,13 +105,34 @@
     padding-bottom: 64px !important;
   }
 
-  .toolkit-tools {
+  .toolkit-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .toolkit-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream-white);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    padding: 5px 10px 5px 7px;
     font-family: var(--ff-outfit);
-    font-weight: 400;
-    font-size: clamp(18px, 2vw, 24px);
-    line-height: 1.33;
-    letter-spacing: -0.02em;
-    color: var(--body);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink-strong);
+    white-space: nowrap;
+  }
+
+  .toolkit-chip img {
+    width: 16px;
+    height: 16px;
+    display: block;
+    flex-shrink: 0;
   }
 
   .cta-content {
@@ -148,6 +169,10 @@
     gap: 20px;
   }
 
+  .tcards.toolkit-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .tcard {
     position: relative !important;
     top: auto !important;
@@ -174,6 +199,14 @@
 
   .toolkit-grid .tcard-inner {
     text-align: left;
+  }
+
+  .toolkit-grid .toolkit-title {
+    margin-top: 0 !important;
+  }
+
+  .toolkit-grid .toolkit-desc {
+    margin-top: 0 !important;
   }
 
   .toolkit-grid .tcard-inner p,
@@ -560,8 +593,45 @@
     gap: 20px;
   }
 
+  .toolkit-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .toolkit-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream-white);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    padding: 5px 10px 5px 7px;
+    font-family: var(--ff-outfit);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    color: var(--ink-strong);
+    white-space: nowrap;
+  }
+
   .testimonials-toolkit > .testimonials-inner {
     padding-inline: 72px !important;
+  }
+
+  .toolkit-grid .tcard-inner {
+    position: static !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 28px 24px;
+    text-align: left;
+  }
+
+  .toolkit-grid .toolkit-title,
+  .toolkit-grid .toolkit-desc {
+    margin-top: 0 !important;
   }
 
   .tcard {
@@ -632,7 +702,8 @@
     margin-inline: auto;
   }
 
-  .toolkit-grid {
+  .toolkit-grid,
+  .tcards.toolkit-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -782,9 +853,13 @@
     padding: 22px 20px 24px !important;
   }
 
-  .toolkit-tools {
-    font-size: 16px !important;
-    line-height: 1.3 !important;
+  .toolkit-logos {
+    gap: 6px !important;
+  }
+
+  .toolkit-chip {
+    font-size: 11px !important;
+    padding: 4px 9px 4px 6px !important;
   }
 
   .toolkit-title {

@@ -52,14 +52,16 @@ const MOTION = {
   highlight: { duration: 0.5 },
 } as const;
 
+type ToolMark = { name: string; slug: string | null };
+
 type CardProps = {
   title: string;
-  tools: string;
+  logos: ToolMark[];
   text: string;
   cardRef: (element: HTMLDivElement | null) => void;
   titleRef: (element: HTMLHeadingElement | null) => void;
   textRef: (element: HTMLParagraphElement | null) => void;
-  highlightRef: (element: HTMLSpanElement | null) => void;
+  logosRef: (element: HTMLDivElement | null) => void;
 };
 
 /**
@@ -68,7 +70,7 @@ type CardProps = {
  * never write the same property. Static and reduced motion keep the rest
  * state without any transform.
  */
-function TestimonialCard({ title, tools, text, cardRef, titleRef, textRef, highlightRef }: CardProps) {
+function TestimonialCard({ title, logos, text, cardRef, titleRef, textRef, logosRef }: CardProps) {
   // Static and reduced motion get no transform at all: a perspective() the
   // browser never uses still pushes the text onto a compositor layer and
   // shifts the anti-aliasing against the reference raster.
@@ -107,19 +109,76 @@ function TestimonialCard({ title, tools, text, cardRef, titleRef, textRef, highl
             padding: '32px 32px 40px',
           }}
         >
-          <p className="toolkit-tools" style={{ position: 'relative' }}>
-            <span className="tattr-wrap">
-              <span ref={highlightRef} className="tattr-hl" aria-hidden="true" />
-              <span className="tattr-text">{tools}</span>
-            </span>
-          </p>
+          <div
+            ref={logosRef}
+            className="toolkit-logos"
+            role="list"
+            aria-label={`Tools for ${title}`}
+            style={{ position: 'relative', display: 'flex', flexWrap: 'wrap', gap: '8px' }}
+          >
+            {logos.map((tool) => (
+              <span
+                key={tool.name}
+                role="listitem"
+                className="toolkit-chip"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'var(--cream-white)',
+                  border: '1px solid var(--ink)',
+                  borderRadius: '999px',
+                  padding: '5px 10px 5px 7px',
+                  fontFamily: 'var(--ff-outfit)',
+                  fontWeight: 500,
+                  fontSize: '12px',
+                  lineHeight: '16px',
+                  letterSpacing: '-0.01em',
+                  color: 'var(--ink-strong)',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {tool.slug ? (
+                  <img
+                    src={`/images/toolkit/${tool.slug}.svg`}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                    style={{ width: '16px', height: '16px', display: 'block', flexShrink: 0 }}
+                  />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '4px',
+                      background: 'var(--cream-white)',
+                      border: '1px solid var(--ink)',
+                      fontSize: '8px',
+                      fontWeight: 700,
+                      lineHeight: '16px',
+                      color: 'var(--ink-strong)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {tool.name.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+                {tool.name}
+              </span>
+            ))}
+          </div>
 
           <h3
             ref={titleRef}
             className="toolkit-title"
             style={{
               position: 'relative',
-              marginTop: '36px',
+              marginTop: '20px',
               fontFamily: 'var(--ff-ink)',
               fontWeight: 600,
               fontSize: '28px',
@@ -175,12 +234,12 @@ export function Testimonials() {
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const titleRefs = useRef<Array<HTMLHeadingElement | null>>([]);
   const textRefs = useRef<Array<HTMLParagraphElement | null>>([]);
-  const highlightRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const logosRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const cards = data.cards.map((card, i) => ({
     key: i,
     title: card.title,
-    tools: card.tools,
+    logos: card.tools as ToolMark[],
     text: card.text,
   }));
 
@@ -193,7 +252,7 @@ export function Testimonials() {
     const cardEls = cardRefs.current;
     const titles = titleRefs.current;
     const texts = textRefs.current;
-    const highlights = highlightRefs.current;
+    const logos = logosRefs.current;
     if (!section) return;
 
     const tweens: gsap.core.Animation[] = [];
@@ -236,7 +295,7 @@ export function Testimonials() {
     cardEls.forEach((card, index) => {
       const title = titles[index];
       const text = texts[index];
-      const highlight = highlights[index];
+      const logoRow = logos[index];
       if (!card) return;
 
       const cardTimeline = gsap.timeline();
@@ -246,6 +305,15 @@ export function Testimonials() {
         { y: MOTION.card.y, rotation: index === 0 ? -MOTION.card.tilt : MOTION.card.tilt },
         { y: 0, rotation: 0, duration: 1.0, ease: EASE.glide },
       );
+
+      if (logoRow) {
+        cardTimeline.fromTo(
+          logoRow,
+          { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, duration: 0.5, ease: EASE.pop },
+          '-=0.7',
+        );
+      }
 
       if (title) {
         cardTimeline.fromTo(
@@ -266,15 +334,6 @@ export function Testimonials() {
           '-=0.45',
         );
       }
-
-      if (highlight) {
-        cardTimeline.fromTo(
-          highlight,
-          { scaleX: 0 },
-          { scaleX: 1, duration: MOTION.highlight.duration, ease: EASE.glide },
-          '-=0.2',
-        );
-      }
     });
 
     return () => {
@@ -292,7 +351,7 @@ export function Testimonials() {
       }
       for (const card of cardEls) if (card) gsap.set(card, { clearProps: 'transform' });
       for (const title of titles) if (title) gsap.set(title, { clearProps: 'transform,opacity' });
-      for (const highlight of highlights) if (highlight) gsap.set(highlight, { clearProps: 'transform' });
+      for (const logoRow of logos) if (logoRow) gsap.set(logoRow, { clearProps: 'transform,opacity' });
       if (stickerWrap) gsap.set(stickerWrap, { clearProps: 'transform,opacity' });
       if (sticker) gsap.set(sticker, { clearProps: 'transform,boxShadow' });
     };
@@ -302,7 +361,7 @@ export function Testimonials() {
     <section
       data-section="testimonials"
       id="testimonials"
-      aria-label="Testimonials"
+      aria-label="My Digital Toolkit"
       ref={sectionRef}
       className="testimonials-section testimonials-toolkit relative w-full bg-cream-white border-y border-ink"
       style={{ height: 'auto' }}
@@ -342,7 +401,7 @@ export function Testimonials() {
             <TestimonialCard
               key={c.key}
               title={c.title}
-              tools={c.tools}
+              logos={c.logos}
               text={c.text}
               cardRef={(element) => {
                 cardRefs.current[index] = element;
@@ -353,8 +412,8 @@ export function Testimonials() {
               textRef={(element) => {
                 textRefs.current[index] = element;
               }}
-              highlightRef={(element) => {
-                highlightRefs.current[index] = element;
+              logosRef={(element) => {
+                logosRefs.current[index] = element;
               }}
             />
           ))}

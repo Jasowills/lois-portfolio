@@ -140,8 +140,8 @@ const MOTION = {
 } as const;
 
 const CARD_IMAGES = [
+  { src: '/images/projects/portrait-1024.webp', srcSet: '/images/projects/portrait-640.webp 640w, /images/projects/portrait-1024.webp 1024w, /images/projects/portrait-1600.webp 1600w', alt: 'Lois Amadi portrait from the old portfolio' },
   { src: '/images/old-portfolio/garri-granola.webp', srcSet: '/images/old-portfolio/garri-granola.webp 1600w', alt: 'Garri and Granola homeware brand cover from the old portfolio' },
-  { src: '/images/old-portfolio/heure-doree.webp', srcSet: '/images/old-portfolio/heure-doree.webp 1600w', alt: 'Heure Dorée sardine brand cover from the old portfolio' },
 ] as const;
 
 function CardImage({ index }: { index: number }) {
