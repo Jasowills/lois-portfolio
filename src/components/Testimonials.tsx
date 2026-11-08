@@ -133,6 +133,7 @@ function TestimonialCard({ title, tools, text, cardRef, titleRef, textRef, highl
 
           <p
             ref={textRef}
+            className="toolkit-desc"
             style={{
               position: 'relative',
               marginTop: '16px',

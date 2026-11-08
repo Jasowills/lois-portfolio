@@ -525,7 +525,7 @@ export function Services() {
   }, [displayIdx, active, low]);
 
   // 7.2 scroll tour: pin the folder as it reaches viewport centre and scrub it
-  // through 260vh of scroll. The 3D turntable angle and dashed progress thread
+  // through 180vh of scroll. The 3D turntable angle and dashed progress thread
   // are driven directly, so no layout changes happen during the pin.
   useLayoutEffect(() => {
     if (!canTour || forcedPair) return;
@@ -543,7 +543,7 @@ export function Services() {
     const trigger = ScrollTrigger.create({
       trigger: folder,
       start: 'top center',
-      end: '+=260%',
+      end: '+=180%',
       pin: true,
       pinSpacing: true,
       scrub: 0.2,

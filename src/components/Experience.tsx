@@ -413,7 +413,7 @@ export function Experience() {
                     ref={(element) => {
                       articleRefs.current[index] = element;
                     }}
-                    className="exp-card relative flex h-[330px] w-full flex-col overflow-hidden"
+                    className="exp-card relative flex min-h-[238px] h-auto w-full flex-col overflow-hidden"
                     style={cardStyle(card.fill)}
                   >
                     <h3

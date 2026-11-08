@@ -32,13 +32,39 @@
       "id": "marketing-campaign-design",
       "label": "Marketing & campaign design",
       "panelColor": "#f1fdd8",
-      "todoContent": "TODO(copy): title, description, what's included, good fit for. Not present in Figma and not found on the old site (see OPEN_QUESTIONS.md)."
+      "title": "Marketing & Campaign Design",
+      "description": "Social media design systems and Launch campaign assets",
+      "whatsIncluded": [
+        "Social media design systems and Launch campaign assets",
+        "Carousel, post, story, and Reel templates",
+        "Monthly creative support or one-off marketing designs",
+        "Animated social content",
+        "Promotional videos"
+      ],
+      "goodFitFor": [
+        "Brands that need consistent social content systems",
+        "Teams launching campaigns across social channels",
+        "Founders who need monthly creative support"
+      ]
     },
     {
       "id": "digital-content-design",
       "label": "Digital & content design",
       "panelColor": "#deedfa",
-      "todoContent": "TODO(copy): title, description, what's included, good fit for. Not present in Figma and not found on the old site (see OPEN_QUESTIONS.md)."
+      "title": "Digital & Content Design",
+      "description": "Product design for web and mobile",
+      "whatsIncluded": [
+        "Product design for web and mobile",
+        "Design systems and UI assets",
+        "Canva websites (landing pages, mini portfolios, link-in-bio websites)",
+        "Product demo and explainer videos",
+        "Motion graphics"
+      ],
+      "goodFitFor": [
+        "Products that need clean web and mobile interfaces",
+        "Teams that need design systems and UI assets",
+        "Creators who need landing pages and mini portfolios"
+      ]
     }
   ]
 }
