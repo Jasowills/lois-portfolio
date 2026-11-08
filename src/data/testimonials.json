@@ -1,32 +1,21 @@
 {
-  "label": "Kind words",
-  "heading": "Trusted by amazing people and teams across the globe.",
+  "label": "My Digital Toolkit",
+  "heading": "Brand & Visual Design",
   "cards": [
     {
-      "todoContent": true,
-      "quote": "When I’m not designing, I’m probably sewing something cute, blasting K-pop or neo-soul (Olivia Dean supremacy 😭), or mentally redesigning every poster I walk past.",
-      "attribution": "-Alyssa, @femfounderstudio",
-      "avatar": {
-        "placeholder": true,
-        "alt": "Placeholder avatar: soft abstract shapes",
-        "width": 144,
-        "height": 129,
-        "avif": "/images/placeholders/soft-placeholder-512.avif",
-        "webp": "/images/placeholders/soft-placeholder-512.webp"
-      }
+      "title": "Brand & Visual Design",
+      "tools": "Figma, Adobe Illustrator, Photoshop, Canva, After Effects",
+      "text": "Used to design visual identities, marketing campaigns, product interfaces, design systems, social content, and motion graphics that bring brands to life."
     },
     {
-      "todoContent": true,
-      "quote": "When I’m not designing, I’m probably sewing something cute, blasting K-pop or neo-soul (Olivia Dean supremacy 😭), or mentally redesigning every poster I walk past.",
-      "attribution": "-Alyssa, @femfounderstudio",
-      "avatar": {
-        "placeholder": true,
-        "alt": "Placeholder avatar: soft abstract shapes",
-        "width": 144,
-        "height": 129,
-        "avif": "/images/placeholders/soft-placeholder-512.avif",
-        "webp": "/images/placeholders/soft-placeholder-512.webp"
-      }
+      "title": "Motion Design & Content Creation",
+      "tools": "After Effects, CapCut, HeyGen, Synthesia, Focusee, Canva",
+      "text": "Used to create explainer videos, product demos, launch campaigns, social content, tutorials, AI-assisted videos, and motion graphics for digital products and brands."
+    },
+    {
+      "title": "Strategy, Research & Creative Workflow",
+      "tools": "ChatGPT, Claude, Notion, Google Workspace, Pinterest, Freepik, Envato, Gemini",
+      "text": "My go-to toolkit for research, creative strategy, content planning, concept development, project organization, and sourcing visual inspiration."
     }
   ]
 }

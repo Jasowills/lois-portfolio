@@ -1,23 +1,18 @@
-// Testimonials (DESIGN_SPEC 9, 12, 13): the cream-white bordered section with
-// the "Kind words" sticker, the Blauer Nue H2 and the two quote cards.
+// Testimonials (DESIGN_SPEC 9, 12, 13): now rendering the old portfolio's
+// "My Digital Toolkit" section while retaining the original cream-white
+// bordered section frame and motion language.
 //
-// Static geometry is unchanged. Motion (MOTION_SPEC 9, DOM version) is layered
-// so each transform has one owner:
-//   card          absolute frame, entrance y + opposite tilt, settle to 0
+// Motion (MOTION_SPEC 9, DOM version) is layered so each transform has one
+// owner:
+//   card          entrance y + opposite tilt, settle to 0
 //   tilt wrapper  pointer 3D tilt (+/-5deg) via Motion springs
 //   inner         resting border/radius/overflow, no transforms
-//   avatar        pop and wobble as its card enters
-//   quote words   SplitText reveal when the card settles
-//   highlight     hand-drawn swipe behind the attribution (scaleX 0 to 1)
+//   title         pop and wobble as its card enters
+//   text words    SplitText reveal when the card settles
+//   highlight     hand-drawn swipe behind the toolkit label (scaleX 0 to 1)
 // The label slaps in like the Work/About stickers and the H2 mask-rises via
 // the page-wide TextSystem. Static and reduced motion omit every layer, so
-// the DESIGN_SPEC render stays exact.
-//
-// Section (1440 x 819.4): bg #fffefe (bg-cream-white), 1px black border top and
-// bottom (framed in App), padding 76px 72px 64px, content 1296 wide at x=72,
-// left aligned. Sticker at (72, 76) rot +3.96, H2 box (72, 153.4) 652x100, two
-// cards at y=313.4, each 618x442 at x=72 and x=750, bg #deedfa (var --blue),
-// border 1px black, radius 36, padding 40px 32px.
+// the replaced section keeps the same static render behaviour.
 
 import { useLayoutEffect, useRef } from 'react';
 import { motion } from 'motion/react';
@@ -30,18 +25,8 @@ import { useTilt } from '../motion/useTilt';
 import { SectionEdge } from './SectionEdge';
 import { StickerLabel } from './ui/StickerLabel';
 
-const CHECKER_BG =
-  'conic-gradient(var(--card-check-b) 0% 25%, var(--card-check-a) 25% 50%, var(--card-check-b) 50% 75%, var(--card-check-a) 75%) 0.5px 0.5px / 48px 48px';
-
-// Exact Figma text for both cards (DESIGN_SPEC 9.3: build-as version, placeholder
-// until real testimonials exist). Static mode renders this for the visual diff.
-const FIGMA_QUOTE = "When I’m not designing, I’m probably sewing something cute, blasting K-pop or neo-soul (Olivia Dean supremacy 😭), or mentally redesigning every poster I walk past.";
-const FIGMA_ATTRIBUTION = '-Alyssa, @femfounderstudio';
-
 const SPEC = {
-  sticker: { top: '76px', left: '72px', w: '137px', h: '36px', rotate: 3.96 },
-  h2: { top: '153.4px', left: '72px', w: '652px', h: '100px' },
-  card: { top: '312.9px', left: ['71.5px', '749.5px'], w: '619px', h: '443px' }, // center-stroked, see entry 30
+  sticker: { top: '76px', left: '72px', w: '180px', h: '36px', rotate: 3.96 },
 } as const;
 
 /* MOTION_SPEC 9 values. */
@@ -59,10 +44,6 @@ const MOTION = {
     stagger: 0.12,
     start: 'top 75%',
   },
-  avatar: {
-    fromScale: 0.55,
-    wobble: [-5, 4, -2, 0] as const,
-  },
   words: {
     fromOpacity: 0.18,
     stagger: 0.035,
@@ -72,21 +53,22 @@ const MOTION = {
 } as const;
 
 type CardProps = {
-  index: number;
-  quote: string;
-  attribution: string;
+  title: string;
+  tools: string;
+  text: string;
   cardRef: (element: HTMLDivElement | null) => void;
-  avatarRef: (element: HTMLDivElement | null) => void;
-  quoteRef: (element: HTMLParagraphElement | null) => void;
+  titleRef: (element: HTMLHeadingElement | null) => void;
+  textRef: (element: HTMLParagraphElement | null) => void;
   highlightRef: (element: HTMLSpanElement | null) => void;
 };
 
 /**
- * One quote card. The pointer tilt is a Motion spring owned by the tilt
- * wrapper; the GSAP entrance owns the frame's y and rotation, so the two never
- * write the same property. Static and reduced motion keep the rest state.
+ * One toolkit card. The pointer tilt is a Motion spring owned by the tilt
+ * wrapper; the GSAP entrance owns the frame's y and rotation, so the two
+ * never write the same property. Static and reduced motion keep the rest
+ * state without any transform.
  */
-function TestimonialCard({ index, quote, attribution, cardRef, avatarRef, quoteRef, highlightRef }: CardProps) {
+function TestimonialCard({ title, tools, text, cardRef, titleRef, textRef, highlightRef }: CardProps) {
   // Static and reduced motion get no transform at all: a perspective() the
   // browser never uses still pushes the text onto a compositor layer and
   // shifts the anti-aliasing against the reference raster.
@@ -107,13 +89,7 @@ function TestimonialCard({ index, quote, attribution, cardRef, avatarRef, quoteR
     <div
       ref={cardRef}
       className="tcard"
-      style={{
-        position: 'absolute',
-        top: SPEC.card.top,
-        left: SPEC.card.left[index],
-        width: SPEC.card.w,
-        height: SPEC.card.h,
-      }}
+      style={{ position: 'relative', width: '100%', height: 'auto' }}
     >
       <motion.div
         className="tcard-tilt"
@@ -124,63 +100,52 @@ function TestimonialCard({ index, quote, attribution, cardRef, avatarRef, quoteR
         <div
           className="tcard-inner"
           style={{
-            position: 'absolute',
-            inset: 0,
+            position: 'relative',
             background: 'var(--blue)',
             borderRadius: '36.5px',
             overflow: 'hidden',
+            padding: '32px 32px 40px',
           }}
         >
-          {/* Avatar: 144x129, radius 24, 1px stroke, centered (x offset 205). */}
-          <div
-            ref={avatarRef}
-            className="tavatar"
+          <p className="toolkit-tools" style={{ position: 'relative' }}>
+            <span className="tattr-wrap">
+              <span ref={highlightRef} className="tattr-hl" aria-hidden="true" />
+              <span className="tattr-text">{tools}</span>
+            </span>
+          </p>
+
+          <h3
+            ref={titleRef}
+            className="toolkit-title"
             style={{
-              position: 'absolute',
-              top: '40px',
-              left: '237px',
-              width: '144px',
-              height: '129px',
-              borderRadius: '24px',
-              border: '1px solid var(--ink)',
-              background: CHECKER_BG,
+              position: 'relative',
+              marginTop: '36px',
+              fontFamily: 'var(--ff-ink)',
+              fontWeight: 600,
+              fontSize: '28px',
+              lineHeight: '32px',
+              letterSpacing: '-0.02em',
+              color: 'var(--heading)',
             }}
-          />
-          {/* Quote: 554x128, Outfit 400 24/32 ls -0.48. */}
-          <div className="tquote" style={{ position: 'absolute', top: '206.5px', left: '32px', width: '554px', height: '128px', textAlign: 'center' }}>
-            <p
-              ref={quoteRef}
-              style={{
-                fontFamily: 'var(--ff-outfit)',
-                fontWeight: 400,
-                fontSize: '24px',
-                lineHeight: '32px',
-                letterSpacing: '-0.02em',
-                color: 'var(--body)',
-              }}
-            >
-              {quote}
-            </p>
-          </div>
-          {/* Attribution: Outfit 500 28/44.6 ls -0.54, with a hand-drawn
-              highlighter swipe behind the line. */}
-          <div className="tattr" style={{ position: 'absolute', top: '360.5px', left: '32px', width: '554px', height: '44.6px', textAlign: 'center' }}>
-            <p
-              style={{
-                fontFamily: 'var(--ff-outfit)',
-                fontWeight: 500,
-                fontSize: '28px',
-                lineHeight: '44.6px',
-                letterSpacing: '-0.0193em',
-                color: 'var(--heading)',
-              }}
-            >
-              <span className="tattr-wrap">
-                <span ref={highlightRef} className="tattr-hl" aria-hidden="true" />
-                <span className="tattr-text">{attribution}</span>
-              </span>
-            </p>
-          </div>
+          >
+            {title}
+          </h3>
+
+          <p
+            ref={textRef}
+            style={{
+              position: 'relative',
+              marginTop: '16px',
+              fontFamily: 'var(--ff-outfit)',
+              fontWeight: 400,
+              fontSize: '24px',
+              lineHeight: '32px',
+              letterSpacing: '-0.02em',
+              color: 'var(--body)',
+            }}
+          >
+            {text}
+          </p>
 
           {/* Card stroke overlay (painted over children, no content offset). */}
           <div
@@ -207,14 +172,15 @@ export function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null);
   const stickerWrapRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const avatarRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const quoteRefs = useRef<Array<HTMLParagraphElement | null>>([]);
+  const titleRefs = useRef<Array<HTMLHeadingElement | null>>([]);
+  const textRefs = useRef<Array<HTMLParagraphElement | null>>([]);
   const highlightRefs = useRef<Array<HTMLSpanElement | null>>([]);
 
   const cards = data.cards.map((card, i) => ({
     key: i,
-    quote: staticMode || card.todoContent ? FIGMA_QUOTE : card.quote,
-    attribution: staticMode || card.todoContent ? FIGMA_ATTRIBUTION : card.attribution,
+    title: card.title,
+    tools: card.tools,
+    text: card.text,
   }));
 
   useLayoutEffect(() => {
@@ -224,8 +190,8 @@ export function Testimonials() {
     const stickerWrap = stickerWrapRef.current;
     const sticker = stickerWrap?.querySelector<HTMLElement>('[data-tsticker-slap]') ?? null;
     const cardEls = cardRefs.current;
-    const avatars = avatarRefs.current;
-    const quotes = quoteRefs.current;
+    const titles = titleRefs.current;
+    const texts = textRefs.current;
     const highlights = highlightRefs.current;
     if (!section) return;
 
@@ -259,17 +225,16 @@ export function Testimonials() {
       timelines.push(slap);
     }
 
-    // 9 cards: enter from below with opposite tilts that settle to 0, avatar
-    // pops and wobbles, quote words typeset in as the card settles, then the
-    // attribution highlight swipes in. One timeline, staggered by index.
+    // Cards enter from below with opposite tilts that settle to 0, then
+    // their text typesets in and the toolkit highlight swipes in.
     const cardsTimeline = gsap.timeline({
       scrollTrigger: { trigger: section, start: MOTION.card.start, once: true },
     });
     timelines.push(cardsTimeline);
 
     cardEls.forEach((card, index) => {
-      const avatar = avatars[index];
-      const quote = quotes[index];
+      const title = titles[index];
+      const text = texts[index];
       const highlight = highlights[index];
       if (!card) return;
 
@@ -281,29 +246,17 @@ export function Testimonials() {
         { y: 0, rotation: 0, duration: 1.0, ease: EASE.glide },
       );
 
-      if (avatar) {
+      if (title) {
         cardTimeline.fromTo(
-          avatar,
-          { scale: MOTION.avatar.fromScale, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, ease: EASE.pop },
+          title,
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.5, ease: EASE.pop },
           '-=0.35',
         );
-        // Wobble, then rest on 0.
-        MOTION.avatar.wobble.forEach((angle, wobbleIndex) => {
-          cardTimeline.to(
-            avatar,
-            {
-              rotation: angle,
-              duration: wobbleIndex === MOTION.avatar.wobble.length - 1 ? 0.2 : 0.13,
-              ease: angle === 0 ? EASE.glide : 'power2.out',
-            },
-            '>',
-          );
-        });
       }
 
-      if (quote) {
-        const split = SplitText.create(quote, { type: 'words', aria: 'auto' });
+      if (text) {
+        const split = SplitText.create(text, { type: 'words', aria: 'auto' });
         splits.push(split);
         cardTimeline.fromTo(
           split.words,
@@ -337,7 +290,7 @@ export function Testimonials() {
         split.kill();
       }
       for (const card of cardEls) if (card) gsap.set(card, { clearProps: 'transform' });
-      for (const avatar of avatars) if (avatar) gsap.set(avatar, { clearProps: 'transform,opacity' });
+      for (const title of titles) if (title) gsap.set(title, { clearProps: 'transform,opacity' });
       for (const highlight of highlights) if (highlight) gsap.set(highlight, { clearProps: 'transform' });
       if (stickerWrap) gsap.set(stickerWrap, { clearProps: 'transform,opacity' });
       if (sticker) gsap.set(sticker, { clearProps: 'transform,boxShadow' });
@@ -350,32 +303,28 @@ export function Testimonials() {
       id="testimonials"
       aria-label="Testimonials"
       ref={sectionRef}
-      className="testimonials-section relative w-full bg-cream-white border-y border-ink"
-      style={{ height: '821px' }}
+      className="testimonials-section testimonials-toolkit relative w-full bg-cream-white border-y border-ink"
+      style={{ height: 'auto' }}
     >
       <SectionEdge variant="tear" from="var(--yellow)" />
-      {/* content context (inset to the framed area; children use section-absolute coords) */}
-      <div className="testimonials-inner" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-        {/* Sticker, left aligned at x=72, y=76, rot +3.96. */}
-        <div ref={stickerWrapRef} className="tsticker" data-depth="0.4" style={{ position: 'absolute', top: '76px', left: '72px', width: '137px', height: '36px' }}>
+      <div className="testimonials-inner" style={{ position: 'relative', padding: '76px 72px 64px', maxWidth: '1440px', marginInline: 'auto' }}>
+        <div ref={stickerWrapRef} className="tsticker" data-depth="0.4" style={{ width: SPEC.sticker.w, height: SPEC.sticker.h }}>
           <div className="sticker-base" style={{ transform: `rotate(${SPEC.sticker.rotate}deg)`, transformOrigin: 'center center' }}>
             <div data-tsticker-slap className="tsticker-slap">
-              <StickerLabel label="Kind words" fill="var(--lime)" />
+              <StickerLabel label={data.label} fill="var(--lime)" />
             </div>
           </div>
         </div>
 
-        {/* H2, box 652x100 at (72, 153.4), two lines, Blauer Nue 600 45/50 ls -1.35. */}
         <h2
           data-skew
           data-split="lines"
           className="th2"
           style={{
-            position: 'absolute',
-            top: '153.4px',
-            left: '72px',
-            width: '652px',
-            height: '100px',
+            position: 'static',
+            width: '100%',
+            maxWidth: '652px',
+            marginTop: '34px',
             fontFamily: 'var(--ff-ink)',
             fontWeight: 600,
             fontSize: '45px',
@@ -384,24 +333,24 @@ export function Testimonials() {
             color: 'var(--heading)',
           }}
         >
-          Trusted by amazing people and teams across the globe.
+          {data.heading}
         </h2>
 
-        <div className="tcards" data-skew>
+        <div className="tcards toolkit-grid" data-skew>
           {cards.map((c, index) => (
             <TestimonialCard
               key={c.key}
-              index={index}
-              quote={c.quote}
-              attribution={c.attribution}
+              title={c.title}
+              tools={c.tools}
+              text={c.text}
               cardRef={(element) => {
                 cardRefs.current[index] = element;
               }}
-              avatarRef={(element) => {
-                avatarRefs.current[index] = element;
+              titleRef={(element) => {
+                titleRefs.current[index] = element;
               }}
-              quoteRef={(element) => {
-                quoteRefs.current[index] = element;
+              textRef={(element) => {
+                textRefs.current[index] = element;
               }}
               highlightRef={(element) => {
                 highlightRefs.current[index] = element;
