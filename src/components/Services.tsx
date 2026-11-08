@@ -159,8 +159,12 @@ export function Services() {
   const active = !reducedMotion;
   const low = quality === 'low';
   const desktop = useMediaQuery('(min-width: 1440px)');
-  const tourViewport = useMediaQuery('(min-width: 1024px) and (orientation: landscape)');
-  const canTour = active && !low && tourViewport;
+  // Scroll tour disabled after review: clicking a tab while pinned only jumped scroll
+  // and left the panel stuck on the old tab, which read as empty tabs. Clicks now swap
+  // instantly at all widths; the tour code stays for an opt in re enable.
+  const _tourViewport = useMediaQuery('(min-width: 1024px) and (orientation: landscape)');
+  void _tourViewport;
+  const canTour = false;
 
   const params = useMemo(() => (staticMode ? new URLSearchParams(window.location.search) : null), [staticMode]);
   const forcedPair = useMemo<[number, number] | null>(() => {
