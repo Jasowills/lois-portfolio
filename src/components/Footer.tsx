@@ -34,7 +34,7 @@ import { Instagram } from './svg/Instagram';
 import { SectionEdge } from './SectionEdge';
 
 const COPYRIGHT = ' © 2026 Lois Amadi. All rights reserved, all wrongs forgiven... eventually. No pixels were harmed in the making of this site.';
-const CREDIT = 'Designed by me. Tweaked approximately a thousand times.';
+const BUILDER_HREF = 'https://amadi-jason.vercel.app';
 
 // Social row (11.1). LinkedIn and Mail are the Figma icons; Behance and
 // Instagram are the approved placeholders for the two unknown slots
@@ -546,7 +546,16 @@ export function Footer() {
             color: 'var(--footer-sub)',
           }}
         >
-          {CREDIT}
+          Designed by Lois, Build by{' '}
+          <a
+            href={BUILDER_HREF}
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+          >
+            Jason
+          </a>
+          . Tweaked approximately a thousand times.
         </p>
 
         {/* Signpost at x=1132, y=76, with five HTML signs. One parallax unit. */}
