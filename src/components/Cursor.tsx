@@ -97,14 +97,17 @@ function labelStyle(active: boolean, color: string, extra?: CSSProperties): CSSP
 }
 
 export function Cursor() {
-  const { quality, reducedMotion } = useMotion();
+  const { reducedMotion } = useMotion();
   const [finePointer, setFinePointer] = useState(
     () =>
       typeof window !== 'undefined' &&
       window.matchMedia('(pointer: fine)').matches,
   );
   const [state, setState] = useState<CursorState>('default');
-  const enabled = !reducedMotion && quality !== 'low' && finePointer;
+  // Quality is deliberately not part of this gate: the guard can step the
+  // session down once mid-browsing, and that unmounted the cursor right after
+  // a scroll, which reads as a page bug (OPEN_QUESTIONS 69).
+  const enabled = !reducedMotion && finePointer;
 
   const stateRef = useRef<CursorState>('default');
   const dotRef = useRef<HTMLDivElement>(null);

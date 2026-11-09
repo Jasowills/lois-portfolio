@@ -177,9 +177,8 @@ function readCardParts(root: HTMLDivElement, rotation: number): CardParts | null
 }
 
 export function Hero() {
-  const { quality, reducedMotion } = useMotion();
+  const { reducedMotion } = useMotion();
   const active = !reducedMotion;
-  const rich = active && quality !== 'low';
   const desktop = useMediaQuery('(min-width: 1440px)');
   const finePointer = useMediaQuery('(pointer: fine)');
 
@@ -524,8 +523,12 @@ export function Hero() {
   }, [active, desktop]);
 
   // After the deal: idle breathing, pointer parallax, hover stitch and drag.
+  // Core deck interaction is deliberately NOT gated on the quality tier: the
+  // runtime guard can step the session down once mid-browsing, and gating here
+  // made hover and the cursor vanish permanently right after a scroll
+  // (OPEN_QUESTIONS 69). Tier only strips decorative extras, never this.
   useEffect(() => {
-    if (!dealDone || !rich || !desktop) return;
+    if (!dealDone || !desktop) return;
     const debugHero =
       typeof window !== 'undefined' &&
       new URLSearchParams(window.location.search).get('debug') === 'hero';
@@ -891,7 +894,7 @@ export function Hero() {
         if (card.needle) gsap.set(card.needle, { opacity: 0 });
       }
     };
-  }, [dealDone, rich, desktop, finePointer]);
+  }, [dealDone, desktop, finePointer]);
 
   return (
     <section
