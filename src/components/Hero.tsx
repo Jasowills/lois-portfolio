@@ -458,6 +458,14 @@ export function Hero() {
           clearProps: 'opacity,box-shadow',
         });
       }
+      if (!desktop) {
+        const mobileCards = Array.from(
+          section.querySelectorAll<HTMLElement>('[data-hero-mobile-card]'),
+        );
+        for (const mobileCard of mobileCards) {
+          gsap.set(mobileCard, { clearProps: 'opacity,transform' });
+        }
+      }
       if (button) gsap.set(button, { clearProps: 'opacity,transform' });
     });
 
@@ -480,7 +488,6 @@ export function Hero() {
     if (!cards.length) return;
 
     const tweens: gsap.core.Tween[] = [];
-    const fades: gsap.core.Tween[] = [];
     for (const [index, card] of cards.entries()) {
       const sign = index < 2 ? -1 : 1;
       const drift = [18, 44, -20, 52][index] ?? 0;
@@ -503,24 +510,10 @@ export function Hero() {
           },
         ),
       );
-      // Clear only once the cards are already leaving the viewport, not while
-      // the deck is still the main subject.
-      fades.push(
-        gsap.to(card.fan, {
-          opacity: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top-=520',
-            end: 'bottom top',
-            scrub: true,
-          },
-        }),
-      );
     }
 
     return () => {
-      for (const tween of [...tweens, ...fades]) {
+      for (const tween of [...tweens]) {
         tween.scrollTrigger?.kill();
         tween.kill();
       }
@@ -989,7 +982,8 @@ export function Hero() {
                                       width={cover.width}
                                       height={cover.height}
                                       loading="eager"
-                                      decoding="async"
+                                      fetchPriority="high"
+                                      decoding="sync"
                                       draggable={false}
                                       style={{
                                         position: 'absolute',
@@ -1134,27 +1128,18 @@ export function Hero() {
                     transformStyle: 'preserve-3d',
                   }}
                 >
-                  <button
-                    type="button"
+                  <div
                     data-hero-mobile-card={card.id}
-                    aria-label={`View project: ${
-                      PROJECTS.get(card.id)?.title ?? card.id
-                    }`}
-                    onClick={(event) =>
-                      openCard(card.id, event.currentTarget, event.currentTarget)
-                    }
-                    className="media-trigger relative"
+                    className="relative"
                     style={{
                       display: 'block',
                       width: '100%',
                       height: '100%',
-                      padding: 0,
                       overflow: 'hidden',
                       border: '1px solid var(--ink)',
                       borderRadius: 'var(--r-card)',
                       transform: `rotate(${card.rot}deg)`,
                       background: CHECKER_BG,
-                      cursor: 'pointer',
                     }}
                   >
                     {(() => {
@@ -1169,8 +1154,9 @@ export function Hero() {
                           alt=""
                           width={cover.width}
                           height={cover.height}
-                          loading="lazy"
-                          decoding="async"
+                          loading="eager"
+                          fetchPriority="high"
+                          decoding="sync"
                           draggable={false}
                           style={{
                             position: 'absolute',
@@ -1184,7 +1170,27 @@ export function Hero() {
                         />
                       );
                     })()}
-                  </button>
+                    <button
+                      type="button"
+                      aria-label={`View project: ${
+                        PROJECTS.get(card.id)?.title ?? card.id
+                      }`}
+                      onClick={(event) =>
+                        openCard(card.id, event.currentTarget, event.currentTarget)
+                      }
+                      className="media-trigger"
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        zIndex: 6,
+                        padding: 0,
+                        border: 0,
+                        borderRadius: 'var(--r-card)',
+                        background: 'transparent',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
