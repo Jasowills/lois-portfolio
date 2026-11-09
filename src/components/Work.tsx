@@ -127,9 +127,9 @@ const coverFor = (image: Project['images'][number]) => {
   };
 };
 
-// Per-card heights, verbatim from DESIGN_SPEC 5.5 (they include ~2px of
-// hand-set breathing room on D and E); applied only at 900px and wider.
-const CARD_MIN_H = ['674px', '642px', '674px', '676px', '644px', '642px'] as const; // A-F
+// Uniform card height. Per-card mins in DESIGN_SPEC 5.5 differed by up to
+// 32px (640 to 676); they are unified to 706px so every box matches.
+const CARD_MIN_H = ['706px', '706px', '706px', '706px', '706px', '706px'] as const; // A-F
 
 /** A polygon that reveals the image from the bottom up with a zigzag cut. */
 function cutClip(progress: number): string {
@@ -574,8 +574,8 @@ function WorkCard({
 
   return (
     <div ref={revealRef} data-work-reveal className="relative">
-      <div ref={tiltRef} className="relative">
-        <div ref={liftRef} className="relative">
+      <div ref={tiltRef} className="relative h-full">
+        <div ref={liftRef} className="relative h-full">
           <div
             aria-hidden="true"
             data-work-shadow
@@ -593,7 +593,7 @@ function WorkCard({
             data-work-card
             data-cursor="view"
             aria-label={project.title}
-            className="group relative flex w-full flex-col items-stretch overflow-hidden min-[900px]:min-h-[var(--card-min-h)]"
+            className="group relative flex h-full w-full self-stretch flex-col items-stretch overflow-hidden min-[900px]:min-h-[var(--card-min-h)]"
             style={{
               background: 'var(--card)',
               borderRadius: SPEC.radius,
@@ -697,7 +697,7 @@ function WorkCard({
 
             {/* Body */}
             <div
-              className="flex flex-col px-5 pb-6 min-[900px]:px-10 min-[900px]:pb-10"
+              className="flex flex-1 flex-col px-5 pb-6 min-[900px]:px-10 min-[900px]:pb-10"
               style={{ gap: SPEC.cardGap }}
             >
               {/* Title row: title 502 wide at (0,0), year right-aligned at x=526 on xl */}
@@ -736,7 +736,7 @@ function WorkCard({
               </p>
 
               {/* Tags */}
-              <ul ref={tagsRef} aria-label="Tags" className="flex flex-wrap gap-4 min-[1440px]:flex-nowrap">
+              <ul ref={tagsRef} aria-label="Tags" className="mt-auto flex flex-wrap gap-4 min-[1440px]:flex-nowrap">
                 {project.tags.map((tag) => (
                   <li
                     key={tag}
@@ -990,7 +990,7 @@ export function Work() {
         <div
           ref={gridRef}
           data-skew
-          className="mt-[60px] grid w-full max-w-[1312px] grid-cols-1 items-start gap-6 min-[900px]:grid-cols-2"
+          className="mt-[60px] grid w-full max-w-[1312px] grid-cols-1 items-stretch gap-6 min-[900px]:grid-cols-2"
         >
           {projects.map((project, index) => (
             <WorkCard

@@ -603,7 +603,7 @@ export function Hero() {
     };
 
     const enter = (index: number) => {
-      if (hovered === index || dragging >= 0) return;
+      if (hovered === index || dragging >= 0 || hoverSuspended) return;
       if (hovered >= 0) leave(hovered);
       hovered = index;
       stopIdle(index);
@@ -723,6 +723,13 @@ export function Hero() {
 
     const onPointerMove = (event: PointerEvent) => {
       if (dragging >= 0) return;
+      if (hoverSuspended) {
+        hoverSuspended = false;
+        const el = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
+        const root = el?.closest?.('[data-hero-card]');
+        const idx = root ? cards.findIndex((card) => card.root === root) : -1;
+        if (idx >= 0) enter(idx);
+      }
       const rect = deck.getBoundingClientRect();
       const nx = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
       const ny = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
@@ -756,7 +763,9 @@ export function Hero() {
     // reliable pointerleave on all browsers. Clear hover as soon as scroll
     // starts so a stale straightened, scaled, raised card does not look
     // stuck when the user returns, and a fresh hover can trigger.
+    let hoverSuspended = false;
     const onScrollClearHover = () => {
+      hoverSuspended = true;
       if (hovered >= 0) leave(hovered);
     };
     window.addEventListener('scroll', onScrollClearHover, { passive: true });

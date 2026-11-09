@@ -109,6 +109,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    min-height: 186px;
   }
 
   .toolkit-chip {
@@ -606,6 +607,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    min-height: 118px;
   }
 
   .toolkit-chip {
@@ -714,6 +716,18 @@
   .toolkit-grid,
   .tcards.toolkit-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .toolkit-logos {
+    min-height: 110px;
+  }
+
+  .tcard {
+    min-height: 410px;
+  }
+
+  .work-section .grid article {
+    min-height: 585px;
   }
 
   .svc-panel {
