@@ -473,7 +473,7 @@ function MobileMenu({
               color: 'var(--cream)',
             }}
           >
-            Let's Talk!
+            Let’s Talk!
           </span>
         </a>
       </nav>

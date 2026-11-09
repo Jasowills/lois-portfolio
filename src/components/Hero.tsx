@@ -1196,7 +1196,7 @@ export function Hero() {
             className="w-full text-center font-outfit text-ink text-[18px] leading-[26px] tracking-[-0.02em] md:max-w-[924px] md:text-[26px] md:leading-[36px]"
             style={{ marginTop: `${SPEC.paraGap}px` }}
           >
-            I'm Lois, a brand and visual designer turning good ideas into
+            I’m Lois, a brand and visual designer turning good ideas into
             thoughtful identities, useful visuals and brands people remember.
             Strategy brain, design eyes. Very serious about the details.
           </p>

@@ -341,7 +341,7 @@ export function CTA() {
                   textAlign: 'center',
                 }}
               >
-                Got a project in mind? Let&apos;s talk.
+                Got a project in mind? Let’s talk.
               </h2>
 
               {/* Paragraph, box 1055x72 at (192.5, 380.1), centered, two lines. */}
@@ -363,13 +363,13 @@ export function CTA() {
                   textAlign: 'center',
                 }}
               >
-                Tell me what you&apos;re building, what&apos;s not working yet, or what you need an extra pair of creative hands for. We&apos;ll take it from there.
+                Tell me what you’re building, what’s not working yet, or what you need an extra pair of creative hands for. We’ll take it from there.
               </p>
 
               {/* Button, 317x58 at (561.5, 484.1). Bursts stickers, then opens the drawer. */}
               <div className="cta-button" data-cta-trigger style={{ position: 'absolute', top: '184px', left: 0, width: '1055px', height: '58px', display: 'flex', justifyContent: 'center' }}>
                 <Button
-                  label="Tell me what you're working on"
+                  label="Tell me what you’re working on"
                   arrow="up-right"
                   fill="var(--yellow)"
                   className="w-[317px]"

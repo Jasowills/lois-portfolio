@@ -28,6 +28,7 @@ export type StickerLabelProps = {
 export function StickerLabel({ label, fill, rotate = 0, className, ...rest }: StickerLabelProps) {
   const style: CSSProperties = {
     transform: rotate ? `rotate(${rotate}deg)` : undefined,
+    transformOrigin: 'center center',
     background: fill,
     paddingInline: SPEC.padX,
     paddingBlock: SPEC.padY,

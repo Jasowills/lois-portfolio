@@ -984,7 +984,7 @@ export function Work() {
           className="work-subtitle relative top-[2px] mt-7 w-full max-w-[1003px] text-center font-outfit text-[18px] leading-[28px] text-sub min-[900px]:text-[24px] min-[900px]:leading-[30.24px]"
           style={{ letterSpacing: '-0.01em' }}
         >
-          A selection of brand worlds, campaigns and digital work I've helped bring to life. Different briefs, different hats, same love for a good idea.
+          A selection of brand worlds, campaigns and digital work I’ve helped bring to life. Different briefs, different hats, same love for a good idea.
         </p>
 
         <div

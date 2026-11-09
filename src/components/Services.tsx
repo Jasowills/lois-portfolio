@@ -73,80 +73,78 @@ function PanelBody({ tab }: { tab: ServiceTab }) {
   const included = tab.whatsIncluded ?? [];
   const goodFit = tab.goodFitFor ?? [];
 
-  // Coordinates inside the inner card content box (content top = 523.9 abs,
-  // card content bottom = 1093.9 abs, height 570), per DESIGN_SPEC 7.2.
-  const titleTop = 0; // 7.2: title y=0, desc y=59 rel. inner content
-  const descTop = 59.3; // 7.2: gap 24 between title (35.3) and desc
-  const dividerTop = descTop + 32; // 7.2: divider 32 below desc
-  const columnsTop = dividerTop + 1; // below the 1px divider
-  const bottomRowTop = 486; // bottom row top; meta rows end at content bottom (570)
-
   const meta: Array<[string, string]> = [
     ['TIMELINE:', 'Timeline agreed together'],
     ['PROJECT SCOPE:', 'Scoped to your project'],
   ];
 
   return (
-    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '36px' }} className="svc-body" data-svc-body>
-      {/* 7.2.1 title + desc */}
-      <div className="svc-head" style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+    <div
+      style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '36px', display: 'flex', flexDirection: 'column' }}
+      className="svc-body"
+      data-svc-body
+    >
+      <div className="svc-head">
         <h3
           data-svc-title
           className="svc-title font-outfit"
-          style={{ position: 'absolute', top: titleTop, left: 0, right: 0, fontSize: '28px', lineHeight: '35.3px', letterSpacing: '-0.03em', fontWeight: 500, color: 'var(--svc-title)' }}
+          style={{ fontSize: '28px', lineHeight: '35.3px', letterSpacing: '-0.03em', fontWeight: 500, color: 'var(--svc-title)' }}
         >
           {tab.title}
         </h3>
         <p
           data-svc-desc
           className="svc-desc"
-          style={{ position: 'absolute', top: descTop, left: 0, right: 0, fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)' }}
+          style={{ marginTop: '24px', fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)' }}
         >
           {tab.description}
         </p>
       </div>
 
-      {/* 7.2.2 divider */}
-      <div data-svc-divider className="svc-divider" style={{ position: 'absolute', top: dividerTop, left: 0, right: 0, height: 1, background: 'var(--divider)' }} />
+      <div
+        data-svc-divider
+        className="svc-divider"
+        style={{ marginTop: '32px', height: 1, width: '1176px', background: 'var(--divider)', flexShrink: 0 }}
+      />
 
-      {/* 7.2.3 two columns */}
-      <div data-svc-cols className="svc-cols" style={{ position: 'absolute', top: columnsTop, left: 0, right: 0, display: 'flex', gap: 24 }}>
+      <div data-svc-cols className="svc-cols" style={{ marginTop: '32px', display: 'flex', gap: 24, flexShrink: 0 }}>
         <div className="svc-col" style={{ width: 576, flexShrink: 0 }}>
-          <p data-svc-col-head style={{ fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)' }}>WHAT&#x27;S INCLUDED:</p>
-          <ul style={{ marginTop: 12, paddingLeft: 0, listStyle: 'none' }}>
+          <p data-svc-col-head style={{ fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)' }}>WHAT’S INCLUDED:</p>
+          <ul style={{ marginTop: 12, paddingLeft: 0, listStyle: 'none', marginBottom: 0 }}>
             {included.map((item) => (
-              <li key={item} data-svc-item style={{ fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)', whiteSpace: 'normal', paddingLeft: 16 }}>
-                <span data-svc-bullet className="svc-bullet">{'\u2022'}</span> {item}
+              <li key={item} data-svc-item style={{ position: 'relative', fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)', whiteSpace: 'normal', paddingLeft: '33px' }}>
+                <span data-svc-bullet className="svc-bullet" style={{ position: 'absolute', left: '15px', top: '0px', lineHeight: '32px' }}>{'•'}</span>{item}
               </li>
             ))}
           </ul>
         </div>
         <div className="svc-col" style={{ width: 576, flexShrink: 0 }}>
           <p data-svc-col-head style={{ fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)' }}>A GOOD FIT FOR:</p>
-          <ul style={{ marginTop: 12, paddingLeft: 0, listStyle: 'none' }}>
+          <ul style={{ marginTop: 12, paddingLeft: 0, listStyle: 'none', marginBottom: 0 }}>
             {goodFit.map((item) => (
-              <li key={item} data-svc-item style={{ fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)', whiteSpace: 'normal', paddingLeft: 16 }}>
-                <span data-svc-bullet className="svc-bullet">{'\u2022'}</span> {item}
+              <li key={item} data-svc-item style={{ position: 'relative', fontSize: '22px', lineHeight: '32px', letterSpacing: '-0.02em', fontWeight: 400, color: 'var(--body)', whiteSpace: 'normal', paddingLeft: '33px' }}>
+                <span data-svc-bullet className="svc-bullet" style={{ position: 'absolute', left: '15px', top: '0px', lineHeight: '32px' }}>{'•'}</span>{item}
               </li>
             ))}
           </ul>
         </div>
       </div>
 
-      {/* 7.2.4 bottom row: meta lines + See what I do button */}
-      <div data-svc-bottom className="svc-bottom" style={{ position: 'absolute', top: bottomRowTop, left: 0, right: 0, display: 'flex', alignItems: 'center' }}>
+      <div
+        data-svc-bottom
+        className="svc-bottom"
+        style={{ marginTop: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}
+      >
         <div className="svc-meta" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {meta.map(([label, value]) => (
             <div key={label} data-svc-chip style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
-              <span style={{ background: 'var(--svc-chip)', height: 32, padding: '0 8px', borderRadius: 32, display: 'inline-flex', alignItems: 'center' }}>
-                <span style={{ fontSize: '22px', lineHeight: '32px', fontWeight: 500, color: 'var(--svc-title)' }}>{label}</span>
-              </span>
+              <span style={{ fontSize: '22px', lineHeight: '32px', fontWeight: 600, color: 'var(--svc-title)' }}>{label}</span>
               <span style={{ fontSize: '22px', lineHeight: '32px', fontWeight: 400, color: 'var(--body)' }}>{value}</span>
             </div>
           ))}
         </div>
-        <div className="svc-btn" style={{ position: 'absolute', left: 990, top: 0, bottom: 0, display: 'flex', alignItems: 'center' }}>
-          <Button label="See what I do" arrow="up-right" fill="var(--yellow)" href="#contact" aria-label="See what I do" />
+        <div className="svc-btn" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, width: '186px' }}>
+          <Button label="See what I do" arrow="up-right" fill="var(--yellow)" href="#contact" aria-label="See what I do" className="w-[186px]" />
         </div>
       </div>
     </div>
@@ -158,7 +156,6 @@ export function Services() {
   const { quality, reducedMotion, scrollTo } = useMotion();
   const active = !reducedMotion;
   const low = quality === 'low';
-  const desktop = useMediaQuery('(min-width: 1440px)');
   // Scroll tour disabled after review: clicking a tab while pinned only jumped scroll
   // and left the panel stuck on the old tab, which read as empty tabs. Clicks now swap
   // instantly at all widths; the tour code stays for an opt in re enable.
@@ -280,62 +277,9 @@ export function Services() {
 
     selectedIdxRef.current = next;
     setSelectedIdx(next);
-
-    // 7.1 tab rise: the face is a fixed 144px box clipped to the inactive
-    // 104px, so only clip-path and transforms move. Below 1440 the tabs are a
-    // flow strip with no rise.
-    if (desktop) {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          setShapeIdx(next);
-        },
-      });
-      tabs.forEach((_, i) => {
-        const root = tabRefs.current[i];
-        if (!root) return;
-        const face = root.querySelector<HTMLElement>('[data-svc-tab-bg]');
-        const label = root.querySelector<HTMLElement>('[data-svc-tab-label]');
-        const line = root.querySelector<HTMLElement>('[data-svc-tab-line]');
-        const isNext = i === next;
-        if (face) {
-          tl.to(
-            face,
-            {
-              clipPath: isNext ? MOTION.tab.clipActive : MOTION.tab.clipRest,
-              duration: MOTION.tab.duration,
-              ease: EASE.glide,
-            },
-            0,
-          );
-        }
-        if (label) {
-          tl.to(
-            label,
-            {
-              y: isNext ? 0 : MOTION.tab.rise,
-              duration: MOTION.tab.duration,
-              ease: EASE.glide,
-            },
-            0,
-          );
-        }
-        if (line) {
-          tl.to(
-            line,
-            {
-              y: isNext ? 0 : -MOTION.tab.rise,
-              opacity: isNext ? 0 : 1,
-              duration: MOTION.tab.duration,
-              ease: EASE.glide,
-            },
-            0,
-          );
-        }
-      });
-      tabTlRef.current = tl;
-    } else {
-      setShapeIdx(next);
-    }
+    // Tab shape is real geometry (active 0/144, inactive 20/104), so the
+    // height commits with the re-render. No clip rise; blob and content carry motion.
+    setShapeIdx(next);
 
     // 7.1 blob wipe: the CTA silhouette expands from the clicked tab down
     // across the panel. The low tier keeps the colour change but skips the
@@ -702,6 +646,9 @@ export function Services() {
           >
             {tabs.map((tab, i) => {
               const isSelected = i === selectedIdx;
+              const isShape = i === shapeIdx;
+              const tabH = isShape ? SPEC.tab.height : SPEC.tab.restHeight;
+              const tabTop = isShape ? 0 : SPEC.tab.restOffset;
               return (
                 <div
                   key={tab.id}
@@ -719,11 +666,13 @@ export function Services() {
                   onKeyDown={(event) => onTabKeyDown(event, i)}
                   className="svc-tab absolute"
                   style={{
-                    top: 0,
+                    top: tabTop,
                     left: TAB_X[i],
                     width: SPEC.tab.width,
-                    height: SPEC.tab.height,
+                    height: tabH,
                     cursor: 'pointer',
+                    borderRadius: '36px 36px 0 0',
+                    zIndex: isShape ? 2 : 1,
                   }}
                 >
                   <span
@@ -735,7 +684,7 @@ export function Services() {
                       inset: 0,
                       background: tab.panelColor,
                       border: '1px solid var(--ink)',
-                      borderBottom: 'none',
+                      borderBottom: isShape ? 'none' : '1px solid var(--ink)',
                       borderTopLeftRadius: '36px',
                       borderTopRightRadius: '36px',
                     }}
@@ -744,12 +693,11 @@ export function Services() {
                     data-svc-tab-line
                     aria-hidden="true"
                     className="svc-tab-line"
-                    style={{ position: 'absolute', left: 0, right: 0, top: 143, height: 1, background: 'var(--ink)' }}
+                    style={{ position: 'absolute', left: 0, right: 0, top: tabH - 1, height: 1, background: 'var(--ink)', opacity: isShape ? 0 : 1 }}
                   />
                   <span
                     data-svc-tab-label
                     className="svc-tab-label"
-                    title={tab.label}
                     style={{
                       position: 'absolute',
                       left: SPEC.tab.pad,
@@ -757,11 +705,11 @@ export function Services() {
                       top: SPEC.tab.pad,
                       fontFamily: 'var(--ff-outfit)',
                       fontWeight: 400,
-                      fontSize: desktop && !isSelected ? 28 : 32,
-                      lineHeight: desktop && !isSelected ? '35.3px' : '40.3px',
+                      fontSize: 32,
+                      lineHeight: '40.3px',
                       letterSpacing: '-0.03em',
                       color: 'var(--svc-title)',
-                      whiteSpace: desktop && !isSelected ? 'nowrap' : 'normal',
+                      whiteSpace: isShape ? 'normal' : 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                     }}

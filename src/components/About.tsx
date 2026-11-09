@@ -45,8 +45,8 @@ const STRIPES =
   'repeating-linear-gradient(to right, #fef5b6 0, #fef5b6 42px, #fbf1a8 47px, #fbf1a8 89px, #fef5b6 94px)';
 
 const ABOUT_PARAS = [
-  "I'm Lois Amadi, a brand and visual designer with a soft spot for thoughtful ideas and the details that make them stick. I work across brand identity, campaign and marketing design, and digital content, bringing strategy and visuals into the same room (they get along better than you'd think).",
-  "My experience spans consumer brands, creative projects and tech teams. I've shaped brand and content work, designed for digital channels, and helped turn big piles of information into clear, engaging stories.",
+  "I’m Lois Amadi, a brand and visual designer with a soft spot for thoughtful ideas and the details that make them stick. I work across brand identity, campaign and marketing design, and digital content, bringing strategy and visuals into the same room (they get along better than you’d think).",
+  "My experience spans consumer brands, creative projects and tech teams. I’ve shaped brand and content work, designed for digital channels, and helped turn big piles of information into clear, engaging stories.",
 ];
 
 // Exact geometry from DESIGN_SPEC section 8 (px, section-local).
@@ -846,8 +846,8 @@ export function About() {
                 color: 'var(--body)',
               }}
             >
-              I started in fashion, so I&apos;ll always care about the details. When I&apos;m not
-              designing, I&apos;m probably sewing something, watching a K-drama, or mentally
+              I started in fashion, so I’ll always care about the details. When I’m not
+              designing, I’m probably sewing something, watching a K-drama, or mentally
               redesigning a sign I passed on the way here.
             </p>
 

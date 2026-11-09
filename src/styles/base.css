@@ -137,29 +137,15 @@ html[data-bg-tone='dark'] [data-scroll-progress] {
 
 @media (min-width: 1440px) {
   .svc-tab-bg {
-    clip-path: inset(20px 0 20px 0);
-  }
-
-  .svc-tab[data-active='true'] .svc-tab-bg {
-    clip-path: inset(0 0 0 0);
+    clip-path: none;
   }
 
   .svc-tab-label {
-    transform: translateY(20px);
-  }
-
-  .svc-tab[data-active='true'] .svc-tab-label {
-    transform: translateY(0);
+    transform: none;
   }
 
   .svc-tab-line {
-    transform: translateY(-20px);
-    opacity: 1;
-  }
-
-  .svc-tab[data-active='true'] .svc-tab-line {
-    transform: translateY(0);
-    opacity: 0;
+    transform: none;
   }
 }
 

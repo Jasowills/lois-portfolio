@@ -230,7 +230,7 @@ export function ContactDrawer({ open, onClose }: ContactDrawerProps) {
             <div className="cta-drawer-inner">
               <div className="cta-drawer-head">
                 <h3 id="cta-drawer-title" className="cta-drawer-title">
-                  Let&apos;s talk
+                  Let’s talk
                 </h3>
                 <button
                   type="button"
@@ -325,7 +325,7 @@ export function ContactDrawer({ open, onClose }: ContactDrawerProps) {
 
                   {state === 'error' ? (
                     <p className="cta-form-error" role="alert">
-                      That didn&apos;t send. It might be the connection, so try again, or email me at{' '}
+                      That didn’t send. It might be the connection, so try again, or email me at{' '}
                       <a className="cta-form-error-link" href="mailto:loisjasmine03@gmail.com">
                         loisjasmine03@gmail.com
                       </a>
