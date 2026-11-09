@@ -786,6 +786,20 @@
   .hero-section {
     padding-right: 72px !important;
   }
+
+  .about-left {
+    left: calc(50% - 720px) !important;
+  }
+
+  .about-right {
+    left: 50% !important;
+  }
+
+  .footer-left {
+    left: calc(50% - 720px) !important;
+    width: 1440px !important;
+    right: auto !important;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1439px) {

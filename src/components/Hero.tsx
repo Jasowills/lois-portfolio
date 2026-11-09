@@ -752,6 +752,16 @@ export function Hero() {
       deck.removeEventListener('pointerleave', onPointerLeave);
     });
 
+    // Scrolling moves cards out from under a stationary cursor without a
+    // reliable pointerleave on all browsers. Clear hover as soon as scroll
+    // starts so a stale straightened, scaled, raised card does not look
+    // stuck when the user returns, and a fresh hover can trigger.
+    const onScrollClearHover = () => {
+      if (hovered >= 0) leave(hovered);
+    };
+    window.addEventListener('scroll', onScrollClearHover, { passive: true });
+    listeners.push(() => window.removeEventListener('scroll', onScrollClearHover));
+
     const draggables: Array<{ kill: () => void }> = [];
     if (finePointer) {
       cards.forEach((card, index) => {
