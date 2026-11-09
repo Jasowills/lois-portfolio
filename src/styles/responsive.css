@@ -325,6 +325,7 @@
     width: 100% !important;
     max-width: 596px;
     height: auto !important;
+    margin-inline: auto;
     margin-top: 38.2px;
     font-size: clamp(32px, 3.125vw, 45px) !important;
     line-height: 1.111 !important;
@@ -338,7 +339,9 @@
     top: auto !important;
     left: auto !important;
     width: 100% !important;
+    max-width: 596px;
     height: auto !important;
+    margin-inline: auto;
     margin-top: 32px;
   }
 
@@ -350,6 +353,8 @@
   .about-btn {
     position: static !important;
     margin-top: 40px;
+    margin-inline: auto;
+    width: fit-content;
   }
 
   /* Footer (12: logo scales, signpost below the copyright, centered). */

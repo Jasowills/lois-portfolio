@@ -91,14 +91,14 @@ const SPEC = {
   ],
   rightPadT: '76px',
   rightPadB: '64px',
-  rightPadL: '52px',
-  rightPadR: '72px',
-  contentX: '772px',
+  rightPadL: '62px',
+  rightPadR: '62px',
+  contentX: '782px',
   contentW: '596px',
-  sticker: { text: 'About', rotate: -5.4, fill: 'var(--lime)', w: '68px', h: '36px', top: '76px', left: '772px' },
-  h2: { text: "Hi, I'm Lois. I make the thinking visible.", fs: '45px', lh: '50px', ls: '-0.03em', color: 'var(--heading)', top: '150.2px', left: '772px', w: '596px', h: '100px' },
+  sticker: { text: 'About', rotate: -5.4, fill: 'var(--lime)', w: '68px', h: '36px', top: '76px', left: '782px' },
+  h2: { text: "Hi, I’m Lois. I make the thinking visible.", fs: '45px', lh: '50px', ls: '-0.03em', color: 'var(--heading)', top: '150.2px', left: '782px', w: '596px', h: '100px' },
   bio: { top: '282.2px', h: '512px', fs: '24px', lh: '32px', ls: '-0.02em', color: 'var(--body)' },
-  btn: { label: 'A little more about me', arrow: 'up-right', fill: 'var(--orange-cta)', top: '846.2px', left: '772px', w: '252px', h: '58px' },
+  btn: { label: 'A little more about me', arrow: 'up-right', fill: 'var(--orange-cta)', top: '846.2px', left: '782px', w: '252px', h: '58px' },
 } as const;
 
 const CARD_ROT = [SPEC.card1.rot, SPEC.card2.rot] as const;
@@ -784,7 +784,7 @@ export function About() {
         {/* content context for the right half (children use absolute coords) */}
         <div className="about-right-inner" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
           {/* sticker */}
-          <div ref={stickerWrapRef} className="about-sticker" data-depth="0.4" style={{ position: 'absolute', top: '76px', left: '52px', width: '68px', height: '36px' }}>
+          <div ref={stickerWrapRef} className="about-sticker" data-depth="0.4" style={{ position: 'absolute', top: '76px', left: '62px', width: '68px', height: '36px' }}>
             <div className="sticker-base" style={{ transform: `rotate(${SPEC.sticker.rotate}deg)`, transformOrigin: 'center center' }}>
               <div data-about-sticker-slap className="about-sticker-slap">
                 <StickerLabel label="About" fill="var(--lime)" />
@@ -800,7 +800,7 @@ export function About() {
             style={{
               position: 'absolute',
               top: '150.2px',
-              left: '52px',
+              left: '62px',
               width: '596px',
               height: '100px',
               fontFamily: 'var(--ff-ink)',
@@ -815,7 +815,7 @@ export function About() {
           </h2>
 
           {/* bio */}
-          <div ref={bioRef} className="about-bio" style={{ position: 'absolute', top: '282.2px', left: '52px', width: '596px', height: '512px' }}>
+          <div ref={bioRef} className="about-bio" style={{ position: 'absolute', top: '282.2px', left: '62px', width: '596px', height: '512px' }}>
             {ABOUT_PARAS.map((p, i) => (
               <p
                 key={i}
@@ -908,7 +908,7 @@ export function About() {
           </div>
 
           {/* button */}
-          <div className="about-btn" style={{ position: 'absolute', top: '846.2px', left: '52px' }}>
+          <div className="about-btn" style={{ position: 'absolute', top: '846.2px', left: '62px' }}>
             <Button
               label="A little more about me"
               arrow="up-right"
