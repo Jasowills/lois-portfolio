@@ -106,16 +106,25 @@
   }
 
   .toolkit-logos {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    min-height: 186px;
+    min-height: 140px;
+  }
+
+  .tcard-tilt {
+    height: 100%;
   }
 
   .toolkit-chip {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
     background: var(--cream-white);
     border: 1px solid var(--ink);
     border-radius: 999px;
@@ -604,16 +613,21 @@
   }
 
   .toolkit-logos {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    min-height: 118px;
+    min-height: 140px;
   }
 
   .toolkit-chip {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
     background: var(--cream-white);
     border: 1px solid var(--ink);
     border-radius: 999px;
@@ -624,6 +638,10 @@
     font-weight: 500;
     color: var(--ink-strong);
     white-space: nowrap;
+  }
+
+  .tcard-tilt {
+    height: 100%;
   }
 
   .testimonials-toolkit > .testimonials-inner {
@@ -892,6 +910,7 @@
 
   .toolkit-logos {
     gap: 6px !important;
+    min-height: 132px !important;
   }
 
   .toolkit-chip {

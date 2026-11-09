@@ -56,12 +56,12 @@ const SPEC = {
     ls1: '-0.0183333em', // -1.1px at 60 (ref line 1 ink width 570px)
     ls2: '-0.0416667em', // -2.5px at 60 (ref line 2 ink width 762px)
   },
-  h1Gap: 40, // 4.1 gap H1 -> deck
-  paraGap: 31, // 4.1 says 40; ink lands on ref row 601 (see header note)
-  btnGap: 43, // 4.1: button top y=743.9 (line boxes add 18; see header note)
+  h1Gap: 24, // 4.1 gap H1 -> deck, tightened for deck breathing room
+  paraGap: 24, // deck -> paragraph, tightened for deck breathing room
+  btnGap: 18, // pre-button gap, tightened for deck breathing room
   deck: {
-    h: '293.9px', // 4.2 container height
-    top: '21.9px', // 4.2 container-relative top of each unrotated (frame) card
+    h: '341.9px', // 4.2 container height plus 24px top and bottom breathing room
+    top: '45.9px', // frame top so the 251 box is centered in the taller deck
     cardW: 391, // 4.2 true size (the Figma frame the stroke is centered on)
     cardH: 250,
     boxW: 392, // stroke-centered border box (see header note)
@@ -526,6 +526,12 @@ export function Hero() {
   // After the deal: idle breathing, pointer parallax, hover stitch and drag.
   useEffect(() => {
     if (!dealDone || !rich || !desktop) return;
+    const debugHero =
+      typeof window !== 'undefined' &&
+      new URLSearchParams(window.location.search).get('debug') === 'hero';
+    const log = (...args: unknown[]) => {
+      if (debugHero) console.log('[hero:debug]', ...args);
+    };
     const section = sectionRef.current;
     const deck = deckRef.current;
     if (!section || !deck) return;
@@ -603,6 +609,7 @@ export function Hero() {
     };
 
     const enter = (index: number) => {
+      log('enter', { index, hovered, dragging, y: Math.round(window.scrollY), active: sectionActive });
       if (hovered === index || dragging >= 0) return;
       if (hovered >= 0) leave(hovered);
       hovered = index;
@@ -658,6 +665,7 @@ export function Hero() {
     };
 
     const leave = (index: number) => {
+      log('leave', { index, hovered, y: Math.round(window.scrollY), active: sectionActive });
       const card = cards[index];
       if (!card) return;
       if (hovered === index) hovered = -1;
@@ -757,6 +765,7 @@ export function Hero() {
     // starts so a stale straightened, scaled, raised card does not look
     // stuck when the user returns.
     const onScrollClearHover = () => {
+      log('scroll-clear', { hovered, dragging, y: Math.round(window.scrollY) });
       if (hovered >= 0) leave(hovered);
     };
     window.addEventListener('scroll', onScrollClearHover, { passive: true });
@@ -821,6 +830,7 @@ export function Hero() {
       start: 'top bottom',
       end: 'bottom top',
       onToggle: (self) => {
+        log('fanToggle', { isActive: self.isActive, progress: +self.progress.toFixed(3), y: Math.round(window.scrollY) });
         sectionActive = self.isActive;
         for (const tweens of idleByCard.values()) {
           for (const tween of tweens) {

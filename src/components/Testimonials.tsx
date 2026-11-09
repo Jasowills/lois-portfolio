@@ -103,6 +103,8 @@ function TestimonialCard({ title, logos, text, cardRef, titleRef, textRef, logos
           className="tcard-inner"
           style={{
             position: 'relative',
+            height: '100%',
+            boxSizing: 'border-box',
             background: 'var(--blue)',
             borderRadius: '36.5px',
             overflow: 'hidden',
@@ -114,16 +116,18 @@ function TestimonialCard({ title, logos, text, cardRef, titleRef, textRef, logos
             className="toolkit-logos"
             role="list"
             aria-label={`Tools for ${title}`}
-            style={{ position: 'relative', display: 'flex', flexWrap: 'wrap', gap: '8px' }}
+            style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '8px' }}
           >
             {logos.map((tool) => (
               <span
                 key={tool.name}
                 role="listitem"
                 className="toolkit-chip"
+                title={tool.name}
                 style={{
-                  display: 'inline-flex',
+                  display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '6px',
                   background: 'var(--cream-white)',
                   border: '1px solid var(--ink)',
